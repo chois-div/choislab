@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>초이스랩 — 디지털 콘텐츠 스튜디오</title>
+  <link>https://chois-lab.site/</link>
+  <description>기획부터 제작, 마케팅까지 한 팀이 끝까지 책임지는 디지털 콘텐츠 스튜디오, 초이스랩입니다.</description>
+  <language>ko-kr</language>
+  <atom:link href="https://chois-lab.site/feed.xml" rel="self" type="application/rss+xml" />
+  
+  <item>
+    <title>초이스랩 정식 런칭 및 서비스 안내</title>
+    <link>https://chois-lab.site/</link>
+    <guid>https://chois-lab.site/</guid>
+    <pubDate>Fri, 22 May 2026 00:00:00 +0900</pubDate>
+    <description>아임웹 홈페이지 제작 및 반응형 랜딩페이지 디자인 전문 초이스랩 스튜디오가 오픈되었습니다.</description>
+  </item>
+</channel>
+</rss>
