@@ -1,0 +1,76 @@
+{
+  "portfolio": [
+    {
+      "image": "/images/portfolio/project-01.jpg",
+      "category": "web",
+      "name": "부산요트투어",
+      "sub": "요트 투어 예약 홈페이지"
+    },
+    {
+      "image": "/images/portfolio/project-02.jpg",
+      "category": "web",
+      "name": "꽃숯갈비",
+      "sub": "한식 갈비 식당 홈페이지"
+    },
+    {
+      "image": "/images/portfolio/project-03.jpg",
+      "category": "landing",
+      "name": "폰플러스",
+      "sub": "갤럭시 S25 이벤트 랜딩"
+    },
+    {
+      "image": "/images/portfolio/project-04.jpg",
+      "category": "landing",
+      "name": "원샷다이렉트",
+      "sub": "보험 비교 랜딩페이지"
+    },
+    {
+      "image": "/images/portfolio/project-05.jpg",
+      "category": "web",
+      "name": "위고런",
+      "sub": "러닝 크루 이벤트 페이지"
+    },
+    {
+      "image": "/images/portfolio/project-06.jpg",
+      "category": "web",
+      "name": "신승무역",
+      "sub": "중국 무역 B2B 홈페이지"
+    },
+    {
+      "image": "/images/portfolio/project-07.jpg",
+      "category": "web",
+      "name": "인스티드",
+      "sub": "플레이스 마케팅 에이전시"
+    },
+    {
+      "image": "/images/portfolio/project-08.jpg",
+      "category": "web",
+      "name": "애드드림즈",
+      "sub": "마케팅 플랫폼 홈페이지"
+    },
+    {
+      "image": "/images/portfolio/project-09.jpg",
+      "category": "landing",
+      "name": "냠냠유니버스",
+      "sub": "플레이스 마케팅 랜딩"
+    },
+    {
+      "image": "/images/portfolio/project-10.jpg",
+      "category": "web",
+      "name": "새털구름상담소",
+      "sub": "커리어 컨설팅 홈페이지"
+    },
+    {
+      "image": "/images/portfolio/project-11.jpg",
+      "category": "web",
+      "name": "카피라이더",
+      "sub": "사무기기 쇼핑몰"
+    },
+    {
+      "image": "/images/portfolio/project-12.jpg",
+      "category": "web",
+      "name": "초이스랩",
+      "sub": "자사 브랜드 홈페이지"
+    }
+  ]
+}
