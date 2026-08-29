@@ -80,7 +80,16 @@
 
 `.hero-title`, `.hero-bottom`(설명+CTA)의 `max-width`를 겹치지 않도록 `620px` 정도로 제한해 목업 스택과 텍스트가 시각적으로 부딪히지 않게 한다.
 
-## 3. 포트폴리오 카드 — 상시 노출 구조
+## 3. 포트폴리오 카드 — 상시 노출 구조 + 섹션 배경 다크 통일
+
+**섹션 배경 (설계 중 발견한 보정 사항):** 현재 `.portfolio-section`은 `background: var(--white); color: var(--black)`로, 다크 페이지 중간에 흰 배경 섹션이 하나 끼워진 구조다(why-section과 동일한 패턴). 파이브프로의 포트폴리오 카드는 다크 배경 위에 있고, "다크 네이비 톤 자체"가 사용자가 꼽은 핵심 요소이므로, 포트폴리오 섹션도 흰 배경 대신 다크 네이비로 통일한다. 단 `.why-section`은 이번 스코프에서 명시적으로 제외했으므로(범위 참고) 그대로 흰 배경 유지 — 다크 통일은 포트폴리오 섹션에만 적용한다.
+
+- `.portfolio-section { background: var(--white); color: var(--black); }` → `background: var(--black); color: var(--white);`
+- `.portfolio-section .section-title { color: var(--black); }` → `color: var(--white);`
+- `.filter-tab { background: var(--violet-tint); color: var(--black); }`는 유지(다크 배경 위 밝은 필 배지로 자연스럽게 동작).
+- `.filter-tab.active, .filter-tab:hover { background: var(--black); color: var(--white); }` → `background: var(--accent); color: var(--white);` (다크 배경 위에서 검정 필은 배경과 거의 구분이 안 되므로 포인트 컬러로 교체)
+- `.portfolio-more .btn-secondary { border-color: var(--black); color: var(--black); }` → `border-color: var(--white); color: var(--white);`
+- `.portfolio-more .btn-secondary:hover { background: var(--black); color: var(--white); }` → `background: var(--white); color: var(--black);`
 
 현재 `.portfolio-item`은 마우스 오버 시에만 `.portfolio-overlay`(반투명 다크 스크림 위 텍스트)가 나타나는 방식(`index.html:1590-1599`의 JS 템플릿). 이를 이미지 위/아래로 분리된 상시 노출 카드로 바꾼다.
 
@@ -122,3 +131,4 @@
 - **일관성:** `--yellow`를 `--accent2`와 동일 블루값으로 통일하는 결정이 색상 표와 "다색→2색 단순화" 설명에서 일치함을 확인.
 - **범위:** nav/why/services/pricing/process/testimonials/CTA/footer는 명시적으로 스코프 제외 — 사용자가 파이브프로에서 언급한 3요소(톤, 히어로, 포트폴리오 카드)에만 집중.
 - **에셋 검증:** `images/portfolio/project-01.jpg` 등 실제 파일 존재 확인 완료(저장소에 12개 파일 존재), `data/portfolio.json` 필드명(`image`, `category`, `name`, `sub`) 실제 코드와 일치 확인 완료.
+- **보정 이력:** 최초 초안에서 `.portfolio-section`이 흰 배경 섹션이라는 점을 놓쳐, 사용자 승인용 미리보기(다크 배경 기준)와 실제 반영 시 불일치가 생길 뻔했다. 사용자에게 알리고 3번 섹션에 다크 통일 보정을 추가했다.
