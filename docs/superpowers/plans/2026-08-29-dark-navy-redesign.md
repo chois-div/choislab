@@ -464,6 +464,23 @@ git add index.html
 git commit -m "feat: unify portfolio section to dark and rework cards to always-visible layout"
 ```
 
+### Task 3b: index.html — 히어로 타이틀 투톤 복원 (Task 4 검증 중 발견, 추가)
+
+Task 4 브라우저 검증 중 발견: `--yellow`와 `--accent2`를 동일한 블루값(`#3D82F7`)으로 통일하면서, 히어로 타이틀의 `<em>만들고</em>`(`--yellow` 사용)와 `<span class="outline">팔립니다</span>`(`--accent2` 사용)가 완전히 같은 파란색이 되어 원래 있던 투톤 강조가 사라졌다. "퍼플+블루 2색 체계"라는 설계 의도를 살려, 팔립니다 쪽을 퍼플(`--accent`)로 바꿔 두 단어가 다시 구분되게 한다.
+
+**Files:**
+- Modify: `index.html` (`.hero-title .outline` 규칙, `.hero-title em` 규칙 근처, 정확한 라인은 `grep -n "hero-title .outline"`로 확인)
+
+- [ ] **Step 1:** `.hero-title .outline { -webkit-text-stroke: 0; color: var(--accent2); }`에서 `color: var(--accent2);`를 `color: var(--accent);`로 변경한다. `.hero-title em { color: var(--yellow); ... }`는 변경하지 않는다(그대로 블루 유지).
+- [ ] **Step 2:** 다른 어떤 규칙도 건드리지 않는다.
+- [ ] **Step 3:** 브라우저에서 히어로 타이틀을 확인 — "만들고"는 블루, "팔립니다"는 퍼플로 서로 다른 색이어야 한다.
+- [ ] **Step 4:** Git 커밋
+
+```bash
+git add index.html
+git commit -m "style: restore two-tone hero title accent (blue + purple)"
+```
+
 ### Task 4: 전체 검증 + 미리보기 브랜치 푸시
 
 **Files:** 없음 (검증 + git/push만)
