@@ -76,16 +76,16 @@
 </script>
 <style>
 :root {
-  --black: #0a0a0a;
-  --white: #f5f3ee;
+  --black: #0B1220;
+  --white: #F2F4F8;
   --accent: #5B4FFF;
-  --accent2: #FF4D4D;
-  --yellow: #FFD23F;
+  --accent2: #3D82F7;
+  --yellow: #3D82F7;
   --violet-tint: #E4E1FF;
   --yellow-tint: #FFF3D6;
   --red-tint: #FFE2E2;
-  --gray1: #141414;
-  --gray2: #232323;
+  --gray1: #111827;
+  --gray2: #1C2333;
   --gray3: #6b6b6b;
   --gray4: #9a9a9a;
   --border: rgba(255,255,255,0.08);
@@ -213,7 +213,7 @@ nav {
 }
 .hero-title .outline {
   -webkit-text-stroke: 0;
-  color: var(--accent2);
+  color: var(--accent);
 }
 
 .hero-bottom {
@@ -273,6 +273,36 @@ nav {
 @keyframes scrollPulse {
   0%, 100% { opacity: 0.3; transform: scaleY(1); }
   50% { opacity: 1; transform: scaleY(0.6); transform-origin: top; }
+}
+
+/* HERO MOCKUP STACK */
+.hero-mockup-stack {
+  position: absolute;
+  right: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 380px;
+  height: 460px;
+  pointer-events: none;
+  z-index: 1;
+}
+.hero-mockup {
+  position: absolute;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+.hero-mockup img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hm-1 { top: 0; left: 0; width: 280px; aspect-ratio: 4/5; transform: rotate(-6deg); z-index: 1; }
+.hm-2 { top: 60px; left: 90px; width: 280px; aspect-ratio: 4/5; transform: rotate(4deg); z-index: 2; }
+.hm-3 { top: 20px; left: 170px; width: 200px; aspect-ratio: 3/4; transform: rotate(-2deg); z-index: 3; }
+@media (max-width: 1024px) {
+  .hero-mockup-stack { display: none; }
+}
+@media (min-width: 1025px) {
+  .hero-title { max-width: 600px; }
+  .hero-bottom { max-width: 620px; }
 }
 
 /* MARQUEE */
@@ -410,8 +440,8 @@ section { padding: 120px 48px; }
 }
 
 /* PORTFOLIO SECTION (light) */
-.portfolio-section { background: var(--white); color: var(--black); }
-.portfolio-section .section-title { color: var(--black); }
+.portfolio-section { background: var(--black); color: var(--white); }
+.portfolio-section .section-title { color: var(--white); }
 .portfolio-section .section-label { background: var(--accent2); }
 .filter-tabs {
   display: flex;
@@ -432,7 +462,7 @@ section { padding: 120px 48px; }
   transition: all 0.2s;
 }
 .filter-tab.active, .filter-tab:hover {
-  background: var(--black);
+  background: var(--accent);
   color: var(--white);
 }
 
@@ -442,51 +472,64 @@ section { padding: 120px 48px; }
   gap: 20px;
 }
 .portfolio-item {
-  position: relative;
-  aspect-ratio: 4/3;
-  background: var(--gray1);
   border-radius: var(--radius-md);
   overflow: hidden;
-  cursor: pointer;
+  background: var(--gray1);
   transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
 }
 .portfolio-item:hover { transform: translateY(-4px); }
-.portfolio-item.tall { aspect-ratio: 4/5; grid-row: span 1; }
+.portfolio-img-wrap {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+.portfolio-badge {
+  position: absolute;
+  top: 14px; left: 14px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--white);
+  background: rgba(10,10,10,0.6);
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+}
 .portfolio-img {
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
 .portfolio-item:hover .portfolio-img { transform: scale(1.05); }
-.portfolio-overlay {
-  position: absolute; inset: 0;
-  background: rgba(10,10,10,0.85);
+.portfolio-info {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 28px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.portfolio-item:hover .portfolio-overlay { opacity: 1; }
-.portfolio-tag {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--yellow);
-  margin-bottom: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px;
 }
 .portfolio-name {
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 800;
   margin-bottom: 4px;
+  color: var(--white);
 }
-.portfolio-sub { font-size: 13px; color: rgba(245,243,238,0.7); }
+.portfolio-sub { font-size: 13px; color: var(--gray4); }
+.portfolio-arrow {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.portfolio-item:hover .portfolio-arrow { transform: translate(3px, -3px); background: var(--accent2); }
 
 /* placeholder images using gradient */
 .p1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
@@ -511,8 +554,8 @@ section { padding: 120px 48px; }
   text-align: center;
   margin-top: 48px;
 }
-.portfolio-more .btn-secondary { border-color: var(--black); color: var(--black); }
-.portfolio-more .btn-secondary:hover { background: var(--black); color: var(--white); }
+.portfolio-more .btn-secondary { border-color: var(--white); color: var(--white); }
+.portfolio-more .btn-secondary:hover { background: var(--white); color: var(--black); }
 
 /* SERVICES SECTION */
 .services-section { background: var(--black); }
@@ -1048,8 +1091,7 @@ footer {
 
   /* PORTFOLIO */
   .portfolio-grid { grid-template-columns: 1fr; }
-  .portfolio-item { aspect-ratio: 3/2; }
-  .portfolio-overlay { opacity: 1; background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 60%); }
+  .portfolio-img-wrap { aspect-ratio: 3/2; }
   .filter-tabs { flex-wrap: wrap; gap: 6px; margin-bottom: 32px; }
   .filter-tab { font-size: 12px; padding: 8px 16px; }
 
@@ -1175,6 +1217,12 @@ footer {
   <div class="hero-scroll animate-in delay-4">
     <div class="scroll-line"></div>
     <span>Scroll</span>
+  </div>
+
+  <div class="hero-mockup-stack">
+    <div class="hero-mockup hm-1"><img src="images/portfolio/project-05.jpg" alt="위고런 프로젝트 스크린샷" loading="lazy"></div>
+    <div class="hero-mockup hm-2"><img src="images/portfolio/project-01.jpg" alt="부산요트투어 프로젝트 스크린샷" loading="lazy"></div>
+    <div class="hero-mockup hm-3"><img src="images/portfolio/project-08.jpg" alt="애드드림즈 프로젝트 스크린샷" loading="lazy"></div>
   </div>
 </section>
 
@@ -1573,31 +1621,24 @@ document.querySelectorAll('a, button, .portfolio-item, .why-card, .service-card'
 const CATEGORY_LABELS = { web: '홈페이지 제작', landing: '랜딩페이지', sns: 'SNS 콘텐츠' };
 const portfolioGrid = document.getElementById('portfolioGrid');
 
-function bindPortfolioTouch() {
-  document.querySelectorAll('.portfolio-item').forEach(item => {
-    item.addEventListener('touchstart', () => {
-      const overlay = item.querySelector('.portfolio-overlay');
-      if (overlay) overlay.style.opacity = overlay.style.opacity === '1' ? '0' : '1';
-    }, {passive: true});
-  });
-}
-
 fetch('data/portfolio.json')
   .then(res => res.json())
   .then(data => {
     const items = data.portfolio || [];
     portfolioGrid.innerHTML = items.map(p => `
     <div class="portfolio-item" data-cat="${p.category}">
-      <div class="portfolio-img" style="background:#111;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-        <img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;" loading="lazy">
+      <div class="portfolio-img-wrap">
+        <span class="portfolio-badge">${CATEGORY_LABELS[p.category] || p.category}</span>
+        <img class="portfolio-img" src="${p.image}" alt="${p.name}" loading="lazy">
       </div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-tag">${CATEGORY_LABELS[p.category] || p.category}</div>
-        <div class="portfolio-name">${p.name}</div>
-        <div class="portfolio-sub">${p.sub}</div>
+      <div class="portfolio-info">
+        <div>
+          <div class="portfolio-name">${p.name}</div>
+          <div class="portfolio-sub">${p.sub}</div>
+        </div>
+        <a class="portfolio-arrow" href="${p.image}" target="_blank" rel="noopener" aria-label="${p.name} 크게 보기">→</a>
       </div>
     </div>`).join('');
-    bindPortfolioTouch();
   })
   .catch(err => console.error('Failed to load portfolio data:', err));
 
