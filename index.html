@@ -15,6 +15,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta property="og:title" content="초이스랩 | 디지털 콘텐츠 스튜디오">
 <meta property="og:description" content="기획하고, 만들고, 팔립니다. 초이스랩에서 원스톱 크리에이티브 솔루션을 만나보세요.">
 <meta property="og:image" content="https://chois-lab.site/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://chois-lab.site/">
+<meta property="og:site_name" content="초이스랩">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="초이스랩 | 디지털 콘텐츠 스튜디오">
+<meta name="twitter:description" content="기획하고, 만들고, 팔립니다. 초이스랩에서 원스톱 크리에이티브 솔루션을 만나보세요.">
+<meta name="twitter:image" content="https://chois-lab.site/og-image.png">
 <link rel="shortcut icon" href="https://chois-lab.site/favicon.ico" type="image/x-icon">
 <link rel="icon" href="https://chois-lab.site/favicon.ico" type="image/x-icon">
 <meta name="description" content="기획부터 제작, 마케팅까지 끝까지 함께 고민하는 디지털 콘텐츠 스튜디오. 아임웹 및 맞춤형 웹사이트 제작 전문 초이스랩입니다.">
@@ -28,11 +36,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "name": "초이스랩 (Chois Lab)",
-  "image": "https://chois-lab.site/images/og-image.png",
+  "image": "https://chois-lab.site/og-image.png",
+  "logo": "https://chois-lab.site/favicon.ico",
   "@id": "https://chois-lab.site/#website",
   "url": "https://chois-lab.site/",
-  "telephone": "", 
   "priceRange": "$$$",
+  "email": "choislab.studio@gmail.com",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Seoul",
@@ -42,6 +51,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     "@type": "GeoCoordinates",
     "latitude": 37.5665,
     "longitude": 126.9780
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "opens": "09:00",
+    "closes": "18:00"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": "choislab.studio@gmail.com",
+    "areaServed": "KR",
+    "availableLanguage": ["Korean"]
   },
   "sameAs": [
     "http://pf.kakao.com/_xaGxaAn"
@@ -358,6 +380,31 @@ section { padding: 120px 48px; }
   font-weight: 900;
   letter-spacing: -0.02em;
   margin-bottom: 56px;
+}
+
+/* FAQ SECTION (light) */
+.faq-section { background: var(--white); color: var(--black); }
+.faq-section .section-title { color: var(--black); }
+.faq-list { display: flex; flex-direction: column; gap: 16px; max-width: 760px; }
+.faq-item {
+  background: var(--violet-tint);
+  border-radius: var(--radius-lg);
+  padding: 32px 40px;
+}
+.faq-q {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--black);
+  margin-bottom: 10px;
+}
+.faq-a {
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(10,10,10,0.72);
+  font-weight: 400;
+}
+@media (max-width: 640px) {
+  .faq-item { padding: 24px 26px; }
 }
 
 /* WHY SECTION (light) */
@@ -1185,6 +1232,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><a href="#portfolio">Work</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
   </ul>
   <a href="http://pf.kakao.com/_xaGxaAn" target="_blank" class="nav-cta" style="text-decoration:none;display:inline-block;">문의하기</a>
   <button class="nav-hamburger" id="hamburger" aria-label="메뉴 열기">
@@ -1198,6 +1246,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="portfolio.html" target="_blank" onclick="closeMobileMenu()">Work</a>
   <a href="#services" onclick="closeMobileMenu()">Services</a>
   <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+  <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
   <a href="http://pf.kakao.com/_xaGxaAn" target="_blank" class="mobile-cta">문의하기 →</a>
 </div>
 
@@ -1543,6 +1592,95 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 </section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="section-label">FAQ</div>
+  <h2 class="section-title">자주 묻는<br>질문</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">홈페이지 제작 비용은 얼마인가요?</div>
+      <div class="faq-a">단일 랜딩·상세페이지는 30만원부터, 5페이지 완성형 홈페이지는 80만원부터, 홈페이지·SNS·브랜드 가이드를 포함한 풀 패키지는 150만원부터 시작합니다. 정확한 견적은 상담 후 안내드립니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">제작 기간은 얼마나 걸리나요?</div>
+      <div class="faq-a">단일 페이지는 납기 5~7일, 5페이지 완성형 홈페이지는 2~3주가 기준입니다. 상담·견적은 문의 후 1영업일 내에 답변드립니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">어떤 플랫폼으로 홈페이지를 만드나요?</div>
+      <div class="faq-a">아임웹, 프레이머, 워드프레스 기반의 반응형 홈페이지를 기획부터 디자인, 개발, 납품까지 한 팀이 원스톱으로 제작합니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">기획이 전혀 안 잡혀 있어도 의뢰할 수 있나요?</div>
+      <div class="faq-a">네, 가능합니다. 참고할 레퍼런스 사이트나 브랜드 키워드만 공유해주시면 전체 사이트맵과 콘텐츠 구성안을 먼저 제안해드립니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">납품 후에도 수정이나 AS가 가능한가요?</div>
+      <div class="faq-a">Deluxe 플랜은 30일 무제한 수정, Premium 플랜은 3개월 AS가 포함됩니다. 납품 후에는 텍스트·이미지 등 간단한 수정을 직접 할 수 있도록 가이드도 함께 드립니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">상담은 어떻게 신청하나요?</div>
+      <div class="faq-a">이메일(choislab.studio@gmail.com) 또는 카카오채널 상담을 통해 서비스 종류와 예산을 알려주시면 됩니다. 상담 가능 시간은 평일 09:00~18:00입니다.</div>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "홈페이지 제작 비용은 얼마인가요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "단일 랜딩·상세페이지는 30만원부터, 5페이지 완성형 홈페이지는 80만원부터, 홈페이지·SNS·브랜드 가이드를 포함한 풀 패키지는 150만원부터 시작합니다. 정확한 견적은 상담 후 안내드립니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "제작 기간은 얼마나 걸리나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "단일 페이지는 납기 5~7일, 5페이지 완성형 홈페이지는 2~3주가 기준입니다. 상담·견적은 문의 후 1영업일 내에 답변드립니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "어떤 플랫폼으로 홈페이지를 만드나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아임웹, 프레이머, 워드프레스 기반의 반응형 홈페이지를 기획부터 디자인, 개발, 납품까지 한 팀이 원스톱으로 제작합니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "기획이 전혀 안 잡혀 있어도 의뢰할 수 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네, 가능합니다. 참고할 레퍼런스 사이트나 브랜드 키워드만 공유해주시면 전체 사이트맵과 콘텐츠 구성안을 먼저 제안해드립니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "납품 후에도 수정이나 AS가 가능한가요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Deluxe 플랜은 30일 무제한 수정, Premium 플랜은 3개월 AS가 포함됩니다. 납품 후에는 텍스트·이미지 등 간단한 수정을 직접 할 수 있도록 가이드도 함께 드립니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "상담은 어떻게 신청하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "이메일(choislab.studio@gmail.com) 또는 카카오채널 상담을 통해 서비스 종류와 예산을 알려주시면 됩니다. 상담 가능 시간은 평일 09:00~18:00입니다."
+      }
+    }
+  ]
+}
+</script>
 
 <!-- CTA / CONTACT -->
 <section class="cta-section" id="contact">
