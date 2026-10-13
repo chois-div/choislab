@@ -2,30 +2,35 @@
   "portfolio": [
     {
       "image": "/images/portfolio/project-01.jpg",
+      "url": "https://busanyachttour.imweb.me/",
       "category": "web",
       "name": "부산요트투어",
       "sub": "요트 투어 예약 홈페이지"
     },
     {
       "image": "/images/portfolio/project-02.jpg",
+      "url": "https://flowerrib-sample.imweb.me/",
       "category": "web",
       "name": "꽃숯갈비",
       "sub": "한식 갈비 식당 홈페이지"
     },
     {
       "image": "/images/portfolio/project-03.jpg",
+      "url": "https://choisphone.imweb.me/",
       "category": "landing",
       "name": "폰플러스",
       "sub": "갤럭시 S25 이벤트 랜딩"
     },
     {
       "image": "/images/portfolio/project-04.jpg",
+      "url": "https://chois-sample4.imweb.me/",
       "category": "landing",
       "name": "원샷다이렉트",
       "sub": "보험 비교 랜딩페이지"
     },
     {
       "image": "/images/portfolio/project-05.jpg",
+      "url": "https://wegorun2024.imweb.me/",
       "category": "web",
       "name": "위고런",
       "sub": "러닝 크루 이벤트 페이지"

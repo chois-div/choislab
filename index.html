@@ -107,9 +107,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 :root {
   --black: #0B1220;
   --white: #F2F4F8;
-  --accent: #5B4FFF;
-  --accent2: #3D82F7;
-  --yellow: #3D82F7;
+  --accent: #1F5FD1;
+  --accent2: #1F5FD1;
+  --yellow: #1F5FD1;
   --violet-tint: #E4E1FF;
   --yellow-tint: #FFF3D6;
   --red-tint: #FFE2E2;
@@ -136,6 +136,8 @@ body {
   font-family: var(--font-body);
   font-weight: 400;
   overflow-x: hidden;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* CUSTOM CURSOR (disabled) */
@@ -160,7 +162,6 @@ nav {
   text-decoration: none;
 }
 .nav-logo-img { height: 34px; width: auto; filter: brightness(1); display: block; }
-.nav-logo span { color: var(--accent); }
 .nav-links { display: flex; gap: 36px; list-style: none; }
 .nav-links a {
   font-family: var(--font-body);
@@ -183,7 +184,7 @@ nav {
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
 }
-.nav-cta:hover { background: var(--yellow); transform: scale(0.97); }
+.nav-cta:hover { background: var(--yellow); color: var(--white); transform: scale(0.97); }
 
 /* HERO */
 .hero {
@@ -215,7 +216,7 @@ nav {
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
-  color: var(--black);
+  color: var(--white);
   background: var(--yellow);
   border-radius: var(--radius-pill);
   margin-bottom: 32px;
@@ -244,6 +245,15 @@ nav {
   -webkit-text-stroke: 0;
   color: var(--accent);
 }
+.hero-title .htl {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.htl-1 { animation-delay: 0.1s; }
+.htl-2 { animation-delay: 0.32s; }
+.htl-3 { animation-delay: 0.54s; }
 
 .hero-bottom {
   display: flex;
@@ -274,7 +284,7 @@ nav {
   display: inline-block;
   transition: transform 0.2s, background 0.2s;
 }
-.btn-primary:hover { background: var(--yellow); transform: translateY(-2px); }
+.btn-primary:hover { background: var(--yellow); color: var(--white); transform: translateY(-2px); }
 .btn-secondary {
   color: var(--white);
   font-family: var(--font-body);
@@ -312,8 +322,9 @@ nav {
   transform: translateY(-50%);
   width: 380px;
   height: 460px;
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 1;
+  transition: transform 0.2s ease-out;
 }
 .hero-mockup {
   position: absolute;
@@ -321,11 +332,34 @@ nav {
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease;
 }
 .hero-mockup img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.hm-1 { top: 0; left: 0; width: 280px; aspect-ratio: 4/5; transform: rotate(-6deg); z-index: 1; }
-.hm-2 { top: 60px; left: 90px; width: 280px; aspect-ratio: 4/5; transform: rotate(4deg); z-index: 2; }
-.hm-3 { top: 20px; left: 170px; width: 200px; aspect-ratio: 3/4; transform: rotate(-2deg); z-index: 3; }
+.hm-1 {
+  top: 0; left: 0; width: 280px; aspect-ratio: 4/5; z-index: 1;
+  animation: hmIn1 0.7s cubic-bezier(0.16,1,0.3,1) 0.45s forwards;
+}
+.hm-2 {
+  top: 60px; left: 90px; width: 280px; aspect-ratio: 4/5; z-index: 2;
+  animation: hmIn2 0.7s cubic-bezier(0.16,1,0.3,1) 0.67s forwards;
+}
+.hm-3 {
+  top: 20px; left: 170px; width: 200px; aspect-ratio: 3/4; z-index: 3;
+  animation: hmIn3 0.7s cubic-bezier(0.16,1,0.3,1) 0.89s forwards;
+}
+@keyframes hmIn1 { from { opacity: 0; transform: translateY(24px) scale(0.92) rotate(0deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(-6deg); } }
+@keyframes hmIn2 { from { opacity: 0; transform: translateY(24px) scale(0.92) rotate(0deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(4deg); } }
+@keyframes hmIn3 { from { opacity: 0; transform: translateY(24px) scale(0.92) rotate(0deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(-2deg); } }
+.hero-mockup.hm-settled { animation: none; opacity: 1; }
+.hm-1.hm-settled { transform: rotate(-6deg); }
+.hm-2.hm-settled { transform: rotate(4deg); }
+.hm-3.hm-settled { transform: rotate(-2deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-mockup-stack:hover .hm-1.hm-settled { transform: translate(-20px, -12px) rotate(-14deg) scale(1.04); box-shadow: 0 32px 70px rgba(0,0,0,0.55); }
+  .hero-mockup-stack:hover .hm-2.hm-settled { transform: translate(2px, 16px) rotate(3deg) scale(1.02); }
+  .hero-mockup-stack:hover .hm-3.hm-settled { transform: translate(24px, -14px) rotate(9deg) scale(1.04); box-shadow: 0 32px 70px rgba(0,0,0,0.55); }
+}
 @media (max-width: 1024px) {
   .hero-mockup-stack { display: none; }
 }
@@ -334,45 +368,17 @@ nav {
   .hero-bottom { max-width: 620px; }
 }
 
-/* MARQUEE */
-.marquee-wrap {
-  padding: 20px 0;
-  overflow: hidden;
-  background: var(--accent);
+@media (prefers-reduced-motion: reduce) {
+  .testimonial-track { animation: none; }
+  .hero-title .htl { animation: none; opacity: 1; transform: none; }
+  .hm-1, .hm-2, .hm-3 { animation: none; opacity: 1; transform: none; }
+  .hm-1 { transform: rotate(-6deg); }
+  .hm-2 { transform: rotate(4deg); }
+  .hm-3 { transform: rotate(-2deg); }
 }
-.marquee-track {
-  display: flex;
-  gap: 0;
-  animation: marquee 24s linear infinite;
-  width: max-content;
-}
-.marquee-item {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0;
-  color: var(--white);
-  padding: 0 32px;
-  white-space: nowrap;
-}
-.marquee-item .dot { color: var(--yellow); margin: 0 8px; }
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* SECTION COMMON */
 section { padding: 120px 48px; }
-.section-label {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--white);
-  background: var(--black);
-  border-radius: var(--radius-pill);
-  margin-bottom: 20px;
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 20px;
-  width: fit-content;
-}
-.section-label::before { content: none; }
 .section-title {
   font-family: var(--font-display);
   font-size: clamp(34px, 5.2vw, 64px);
@@ -387,11 +393,13 @@ section { padding: 120px 48px; }
 .faq-section .section-title { color: var(--black); }
 .faq-list { display: flex; flex-direction: column; gap: 16px; max-width: 760px; }
 .faq-item {
-  background: var(--violet-tint);
+  background: var(--white);
+  border: 1px solid rgba(10,10,10,0.1);
   border-radius: var(--radius-lg);
   padding: 32px 40px;
 }
 .faq-q {
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 800;
   color: var(--black);
@@ -410,54 +418,46 @@ section { padding: 120px 48px; }
 /* WHY SECTION (light) */
 .why-section { background: var(--white); color: var(--black); }
 .why-section .section-title { color: var(--black); }
-.why-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.why-list { border-top: 1px solid rgba(10,10,10,0.1); margin-bottom: 20px; }
+.why-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 40px 0;
+  border-bottom: 1px solid rgba(10,10,10,0.1);
+  transition: transform 0.25s ease;
 }
-.why-card {
-  background: var(--violet-tint);
-  border-radius: var(--radius-lg);
-  padding: 44px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.why-card:nth-child(1) { background: var(--violet-tint); }
-.why-card:nth-child(2) { background: var(--yellow-tint); }
-.why-card:nth-child(3) { background: var(--red-tint); }
-.why-card:nth-child(4) { background: var(--violet-tint); }
-.why-card:hover { transform: translateY(-6px); box-shadow: 0 16px 32px rgba(10,10,10,0.1); }
-.why-card::before { content: none; }
-.why-num {
+.why-row:hover { transform: translateX(12px); }
+.why-row-title {
   font-family: var(--font-display);
-  font-size: 15px;
+  font-size: clamp(26px, 3.6vw, 40px);
   font-weight: 800;
-  color: var(--accent);
-  position: absolute;
-  top: 32px; right: 36px;
-  line-height: 1;
-}
-.why-card:nth-child(2) .why-num { color: #C99A00; }
-.why-card:nth-child(3) .why-num { color: var(--accent2); }
-.why-icon {
-  font-size: 32px;
-  margin-bottom: 22px;
-}
-.why-title {
-  font-size: 21px;
-  font-weight: 800;
-  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--black);
+  flex: 0 0 auto;
+  max-width: 420px;
+  transition: color 0.25s ease;
 }
-.why-desc {
+.why-row:hover .why-row-title { color: var(--accent); }
+.why-row-desc {
   font-size: 15px;
   line-height: 1.75;
-  color: rgba(10,10,10,0.62);
+  color: rgba(10,10,10,0.6);
   font-weight: 400;
+  flex: 1 1 320px;
+  max-width: 420px;
 }
+.why-row-arrow {
+  width: 22px; height: 22px;
+  flex-shrink: 0;
+  color: var(--black);
+  opacity: 0.25;
+  transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
+}
+.why-row:hover .why-row-arrow { opacity: 1; transform: translateX(6px); color: var(--accent); }
 .why-full {
-  grid-column: 1 / -1;
   background: var(--black);
   border-radius: var(--radius-lg);
   padding: 52px;
@@ -466,12 +466,9 @@ section { padding: 120px 48px; }
   justify-content: space-between;
   gap: 40px;
   flex-wrap: wrap;
-  transition: opacity 0.2s;
 }
-.why-full:hover { opacity: 0.96; }
-.why-full .why-title { font-size: 24px; color: var(--white); font-weight: 800; }
-.why-full .why-desc { color: rgba(245,243,238,0.65); max-width: 460px; }
-.why-full .why-num { display: none; }
+.why-full-title { font-size: 24px; color: var(--white); font-weight: 800; }
+.why-full-desc { color: rgba(245,243,238,0.65); max-width: 460px; margin-top: 12px; }
 .stat-group { display: flex; gap: 48px; flex-shrink: 0; }
 .stat { text-align: center; }
 .stat-num {
@@ -479,10 +476,8 @@ section { padding: 120px 48px; }
   font-size: 44px;
   font-weight: 900;
   line-height: 1;
-  color: var(--accent);
+  color: var(--white);
 }
-.stat:nth-child(2) .stat-num { color: var(--yellow); }
-.stat:nth-child(3) .stat-num { color: var(--accent2); }
 .stat-label {
   font-family: var(--font-body);
   font-size: 11px;
@@ -496,7 +491,6 @@ section { padding: 120px 48px; }
 /* PORTFOLIO SECTION (light) */
 .portfolio-section { background: var(--black); color: var(--white); }
 .portfolio-section .section-title { color: var(--white); }
-.portfolio-section .section-label { background: var(--accent2); }
 .filter-tabs {
   display: flex;
   gap: 8px;
@@ -619,18 +613,15 @@ section { padding: 120px 48px; }
   gap: 20px;
 }
 .service-card {
-  background: var(--accent);
+  background: var(--gray1);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 40px 36px;
   position: relative;
-  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
-.service-card:nth-child(1) { background: var(--accent); }
-.service-card:nth-child(2) { background: var(--accent2); }
-.service-card:nth-child(3) { background: var(--yellow); }
-.service-card:hover { transform: translateY(-6px); }
-.service-card:hover .service-arrow { transform: translate(3px, -3px); }
-.service-icon { font-size: 36px; margin-bottom: 26px; }
+.service-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+.service-card:hover .service-arrow { transform: translate(3px, -3px); background: var(--accent); }
 .service-name {
   font-family: var(--font-display);
   font-size: 28px;
@@ -638,20 +629,20 @@ section { padding: 120px 48px; }
   letter-spacing: -0.02em;
   margin-bottom: 16px;
   line-height: 1.15;
-  color: var(--black);
+  color: var(--white);
 }
-.service-desc { font-size: 14px; line-height: 1.75; color: rgba(10,10,10,0.68); font-weight: 500; }
+.service-desc { font-size: 14px; line-height: 1.75; color: rgba(245,243,238,0.65); font-weight: 500; }
 .service-arrow {
   position: absolute;
   top: 36px; right: 36px;
   width: 44px; height: 44px;
   border-radius: 50%;
-  background: var(--black);
-  color: var(--white);
-  font-size: 18px;
+  background: var(--white);
+  color: var(--black);
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.3s;
+  transition: transform 0.3s, background 0.3s;
 }
+.service-arrow svg { width: 18px; height: 18px; }
 .service-price {
   margin-top: 26px;
   display: inline-block;
@@ -673,6 +664,7 @@ section { padding: 120px 48px; }
 }
 .price-card {
   background: var(--gray1);
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
   padding: 48px 36px;
   position: relative;
@@ -680,14 +672,15 @@ section { padding: 120px 48px; }
 }
 .price-card:hover { transform: translateY(-4px); }
 .price-card.featured {
-  background: var(--accent);
+  background: var(--gray2);
+  border-color: var(--accent);
 }
 .price-badge {
   position: absolute;
   top: 0; left: 50%;
   transform: translate(-50%, -50%);
   background: var(--yellow);
-  color: var(--black);
+  color: var(--white);
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 800;
@@ -703,7 +696,6 @@ section { padding: 120px 48px; }
   color: var(--gray4);
   margin-bottom: 16px;
 }
-.price-card.featured .price-plan { color: rgba(255,255,255,0.7); }
 .price-num {
   font-family: var(--font-display);
   font-size: 52px;
@@ -712,7 +704,6 @@ section { padding: 120px 48px; }
   margin-bottom: 8px;
 }
 .price-unit { font-size: 14px; color: var(--gray4); margin-bottom: 32px; font-weight: 500; }
-.price-card.featured .price-unit { color: rgba(255,255,255,0.7); }
 .price-features { list-style: none; }
 .price-features li {
   font-size: 14px;
@@ -724,15 +715,13 @@ section { padding: 120px 48px; }
   gap: 10px;
   font-weight: 500;
 }
-.price-card.featured .price-features li { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.18); }
 .price-features li::before {
   content: '✓';
-  color: var(--yellow);
+  color: var(--white);
   font-size: 13px;
   font-weight: 800;
   flex-shrink: 0;
 }
-.price-card.featured .price-features li::before { color: var(--white); }
 .price-cta {
   margin-top: 36px;
   display: block;
@@ -744,36 +733,31 @@ section { padding: 120px 48px; }
   border-radius: var(--radius-pill);
   text-decoration: none;
   background: var(--black);
-  border: none;
+  border: 1px solid var(--border);
   color: var(--white);
   transition: all 0.2s;
 }
-.price-cta:hover { background: var(--yellow); color: var(--black); }
+.price-cta:hover { border-color: var(--accent); background: var(--accent); }
 .price-card.featured .price-cta {
-  background: var(--white);
-  color: var(--accent);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
 }
-.price-card.featured .price-cta:hover { background: var(--yellow); color: var(--black); }
+.price-card.featured .price-cta:hover { background: var(--black); border-color: var(--white); }
 
 /* TESTIMONIALS */
 .testimonial-section { background: var(--white); color: var(--black); overflow: hidden; }
 .testimonial-section .section-title { color: var(--black); }
-.testimonial-section .section-label { background: var(--yellow); color: var(--black); }
-.testimonial-track-wrap { overflow: hidden; }
-.testimonial-track {
-  display: flex;
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  animation: testScroll 32s linear infinite;
-  width: max-content;
 }
-.testimonial-track:hover { animation-play-state: paused; }
-@keyframes testScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .test-card {
-  background: var(--violet-tint);
+  background: var(--white);
+  border: 1px solid rgba(10,10,10,0.08);
   border-radius: var(--radius-lg);
   padding: 40px;
-  width: 360px;
-  flex-shrink: 0;
 }
 .test-stars { color: #E8A317; font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
 .test-text { font-size: 14px; line-height: 1.85; color: rgba(10,10,10,0.72); font-weight: 500; margin-bottom: 24px; }
@@ -782,6 +766,7 @@ section { padding: 120px 48px; }
   width: 38px; height: 38px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-body); font-size: 13px; font-weight: 700;
+  background: var(--black);
   color: var(--white);
   flex-shrink: 0;
 }
@@ -809,10 +794,8 @@ section { padding: 120px 48px; }
   color: var(--accent);
   line-height: 1;
 }
-.process-item:nth-child(2) .process-step-num { color: var(--yellow); }
-.process-item:nth-child(3) .process-step-num { color: var(--accent2); }
-.process-item:nth-child(4) .process-step-num { color: var(--accent); }
 .process-step-title {
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 8px;
@@ -824,7 +807,7 @@ section { padding: 120px 48px; }
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  color: var(--black);
+  color: var(--white);
   background: var(--yellow);
   border-radius: var(--radius-pill);
   text-transform: uppercase;
@@ -834,7 +817,7 @@ section { padding: 120px 48px; }
 
 /* CONTACT / CTA */
 .cta-section {
-  background: linear-gradient(135deg, var(--accent) 0%, #8B7FFF 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, #5F53E0 100%);
   padding: 120px 48px;
   text-align: center;
   position: relative;
@@ -852,12 +835,10 @@ section { padding: 120px 48px; }
   white-space: nowrap;
   pointer-events: none;
 }
-.cta-section .section-label { justify-content: center; margin-left: auto; margin-right: auto; background: rgba(255,255,255,0.18); color: var(--white); }
-.cta-section .section-label::before { content: none; }
 .cta-title {
   font-family: var(--font-display);
-  font-size: clamp(42px, 7vw, 84px);
-  line-height: 1.05;
+  font-size: clamp(34px, 5.2vw, 64px);
+  line-height: 1.08;
   font-weight: 900;
   letter-spacing: -0.02em;
   margin-bottom: 28px;
@@ -877,7 +858,7 @@ section { padding: 120px 48px; }
   display: inline-block;
   transition: opacity 0.2s, transform 0.2s;
 }
-.btn-white:hover { background: var(--yellow); color: var(--black); transform: translateY(-2px); }
+.btn-white:hover { background: var(--yellow); color: var(--white); transform: translateY(-2px); }
 .btn-outline-white {
   border: 1.5px solid rgba(255,255,255,0.5);
   color: var(--white);
@@ -913,7 +894,7 @@ section { padding: 120px 48px; }
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
-  color: var(--black);
+  color: var(--white);
   text-decoration: none;
   box-shadow: 0 8px 20px rgba(0,0,0,0.25);
   transition: all 0.2s;
@@ -937,15 +918,6 @@ footer {
   gap: 48px;
   margin-bottom: 48px;
 }
-.footer-logo {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--white);
-  margin-bottom: 12px;
-}
-.footer-logo span { color: var(--accent); }
 .footer-tagline { font-size: 13px; color: var(--gray4); line-height: 1.8; font-weight: 400; }
 .footer-col-title {
   font-family: var(--font-body);
@@ -953,7 +925,7 @@ footer {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--yellow);
+  color: var(--white);
   margin-bottom: 20px;
 }
 .footer-links { list-style: none; }
@@ -979,7 +951,7 @@ footer {
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.03em;
-  color: var(--gray3);
+  color: var(--gray4);
 }
 
 /* ANIMATIONS */
@@ -997,7 +969,7 @@ footer {
 .noise {
   position: fixed; inset: 0; z-index: 1;
   pointer-events: none;
-  opacity: 0.015;
+  opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -1072,10 +1044,10 @@ footer {
   section { padding: 80px 32px; }
   .hero { padding: 120px 32px 80px; }
 
-  .why-grid { grid-template-columns: 1fr 1fr; }
   .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+  .testimonial-grid { grid-template-columns: 1fr 1fr; }
 
   .process-item {
     grid-template-columns: 60px 1fr;
@@ -1128,12 +1100,9 @@ footer {
   section { padding: 64px 20px; }
   .section-title { font-size: clamp(30px, 8.5vw, 48px); margin-bottom: 36px; }
 
-  /* MARQUEE */
-  .marquee-item { font-size: 12px; padding: 0 20px; }
-
   /* WHY */
-  .why-grid { grid-template-columns: 1fr; }
-  .why-card { padding: 32px 24px; }
+  .why-row { flex-direction: column; align-items: flex-start; gap: 12px; padding: 28px 0; }
+  .why-row-arrow { display: none; }
   .why-full {
     flex-direction: column;
     align-items: flex-start;
@@ -1169,7 +1138,8 @@ footer {
   .price-num { font-size: 44px; }
 
   /* TESTIMONIALS */
-  .test-card { width: 280px; padding: 28px 24px; }
+  .testimonial-grid { grid-template-columns: 1fr; gap: 16px; }
+  .test-card { padding: 28px 24px; }
   .test-text { font-size: 13px; }
 
   /* PROCESS */
@@ -1184,7 +1154,7 @@ footer {
 
   /* CTA */
   .cta-section { padding: 80px 20px; }
-  .cta-title { font-size: clamp(38px, 10vw, 56px); }
+  .cta-title { font-size: clamp(30px, 8.5vw, 48px); }
   .cta-desc { font-size: 14px; margin-bottom: 32px; }
   .cta-buttons { flex-direction: column; align-items: stretch; gap: 10px; }
   .btn-white { text-align: center; padding: 16px; }
@@ -1210,8 +1180,6 @@ footer {
    ============================================ */
 @media (max-width: 390px) {
   .hero-title { font-size: 44px; }
-  .why-card { padding: 28px 20px; }
-  .test-card { width: 260px; }
 }
 </style>
 </head>
@@ -1256,10 +1224,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="hero-tag animate-in delay-1">디지털 콘텐츠 스튜디오 · Since 2025</div>
 
-  <h1 class="hero-title animate-in delay-2">
-    기획하고<br>
-    <em>만들고</em><br>
-    <span class="outline">팔립니다</span>
+  <h1 class="hero-title">
+    <span class="htl htl-1">기획하고</span><br>
+    <em class="htl htl-2">만들고</em><br>
+    <span class="outline htl htl-3">팔립니다</span>
   </h1>
 
   <div class="hero-bottom animate-in delay-3">
@@ -1286,73 +1254,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="marquee-track" id="marquee">
-    <span class="marquee-item">홈페이지 제작 <span class="dot">◆</span></span>
-    <span class="marquee-item">상세페이지 <span class="dot">◆</span></span>
-    <span class="marquee-item">SNS 콘텐츠 <span class="dot">◆</span></span>
-    <span class="marquee-item">브랜드 기획 <span class="dot">◆</span></span>
-    <span class="marquee-item">영상 편집 <span class="dot">◆</span></span>
-    <span class="marquee-item">로고 디자인 <span class="dot">◆</span></span>
-    <span class="marquee-item">랜딩페이지 <span class="dot">◆</span></span>
-    <span class="marquee-item">홈페이지 제작 <span class="dot">◆</span></span>
-    <span class="marquee-item">상세페이지 <span class="dot">◆</span></span>
-    <span class="marquee-item">SNS 콘텐츠 <span class="dot">◆</span></span>
-    <span class="marquee-item">브랜드 기획 <span class="dot">◆</span></span>
-    <span class="marquee-item">영상 편집 <span class="dot">◆</span></span>
-    <span class="marquee-item">로고 디자인 <span class="dot">◆</span></span>
-    <span class="marquee-item">랜딩페이지 <span class="dot">◆</span></span>
-  </div>
-</div>
-
 <!-- WHY -->
 <section class="why-section" id="why">
-  <div class="section-label">Why Chois Lab</div>
   <h2 class="section-title">왜 초이스랩을<br>선택할까요</h2>
-  <div class="why-grid">
-    <div class="why-card">
-      <div class="why-num">01</div>
-      <div class="why-icon">🎯</div>
-      <div class="why-title">기획이 막혀도 괜찮아요</div>
-      <div class="why-desc">"뭘 넣어야 할지 모르겠어요"라는 말, 자주 들어요. 레퍼런스 하나만 보내주시면 전체 구성을 먼저 제안해드립니다.</div>
+  <div class="why-list">
+    <div class="why-row">
+      <h3 class="why-row-title">기획이 막혀도 괜찮아요</h3>
+      <div class="why-row-desc">"뭘 넣어야 할지 모르겠어요"라는 말, 자주 들어요. 레퍼런스 하나만 보내주시면 전체 구성을 먼저 제안해드립니다.</div>
+      <svg class="why-row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
     </div>
-    <div class="why-card">
-      <div class="why-num">02</div>
-      <div class="why-icon">⚡</div>
-      <div class="why-title">한 팀이 끝까지 합니다</div>
-      <div class="why-desc">기획자·디자이너·개발자가 따로 놀지 않아요. 한 팀이 처음부터 납품까지 책임지니까 연락 돌릴 일이 없습니다.</div>
+    <div class="why-row">
+      <h3 class="why-row-title">한 팀이 끝까지 합니다</h3>
+      <div class="why-row-desc">기획자·디자이너·개발자가 따로 놀지 않아요. 한 팀이 처음부터 납품까지 책임지니까 연락 돌릴 일이 없습니다.</div>
+      <svg class="why-row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
     </div>
-    <div class="why-card">
-      <div class="why-num">03</div>
-      <div class="why-icon">🔧</div>
-      <div class="why-title">납품 후에도 내가 직접 수정</div>
-      <div class="why-desc">납품 후 간단한 텍스트·이미지 수정은 직접 할 수 있게 가이드를 드립니다. 매번 연락하지 않아도 돼요.</div>
+    <div class="why-row">
+      <h3 class="why-row-title">납품 후에도 내가 직접 수정</h3>
+      <div class="why-row-desc">납품 후 간단한 텍스트·이미지 수정은 직접 할 수 있게 가이드를 드립니다. 매번 연락하지 않아도 돼요.</div>
+      <svg class="why-row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
     </div>
-    <div class="why-card">
-      <div class="why-num">04</div>
-      <div class="why-icon">💬</div>
-      <div class="why-title">가격 대비 솔직한 퀄리티</div>
-      <div class="why-desc">"이 금액에 이 퀄리티가 나온다고?" — 실제로 고객분들이 가장 많이 하시는 말입니다. 과장 없이, 결과로 보여드려요.</div>
+    <div class="why-row">
+      <h3 class="why-row-title">작업 과정을 실시간으로 공유해요</h3>
+      <div class="why-row-desc">디자인 시안부터 완성까지 진행 상황을 계속 보여드립니다. 다 끝나고 나서야 결과물을 처음 보는 일은 없어요.</div>
+      <svg class="why-row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
     </div>
-    <div class="why-full">
-      <div>
-        <div class="why-title">8년째 같은 마음으로</div>
-        <div class="why-desc">한 번 맡기고 끝이 아니라, 브랜드가 성장하는 내내 옆에 있는 팀이 되고 싶습니다.</div>
+  </div>
+  <div class="why-full">
+    <div>
+      <div class="why-full-title">대표가 8년째 다져온 실력으로</div>
+      <div class="why-full-desc">2025년 초이스랩을 시작했지만, 손끝의 실력은 하루아침에 나온 게 아닙니다. 한 번 맡기고 끝이 아니라, 브랜드가 성장하는 내내 옆에 있는 팀이 되고 싶습니다.</div>
+    </div>
+    <div class="stat-group">
+      <div class="stat">
+        <div class="stat-num">8+</div>
+        <div class="stat-label">대표 경력</div>
       </div>
-      <div class="stat-group">
-        <div class="stat">
-          <div class="stat-num">8+</div>
-          <div class="stat-label">Years</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">100+</div>
-          <div class="stat-label">Projects</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">98%</div>
-          <div class="stat-label">Satisfaction</div>
-        </div>
+      <div class="stat">
+        <div class="stat-num">50+</div>
+        <div class="stat-label">누적 프로젝트</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">고객 만족도</div>
       </div>
     </div>
   </div>
@@ -1362,7 +1305,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="portfolio-section" id="portfolio">
   <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:48px;">
     <div>
-      <div class="section-label">Our Work</div>
       <h2 class="section-title" style="margin-bottom:0">직접 만든<br>결과물들</h2>
     </div>
     <div class="filter-tabs">
@@ -1385,27 +1327,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- SERVICES -->
 <section class="services-section" id="services">
-  <div class="section-label">Services</div>
   <h2 class="section-title">제공하는<br>서비스</h2>
   <div class="services-grid">
     <div class="service-card">
-      <div class="service-arrow">↗</div>
-      <div class="service-icon">🖥</div>
-      <div class="service-name">홈페이지<br>제작</div>
+      <div class="service-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
+      <h3 class="service-name">홈페이지 제작</h3>
       <div class="service-desc">아임웹, 프레이머, 워드프레스 기반 반응형 홈페이지. 기획·디자인·개발·납품까지 원스톱 제공.</div>
       <div class="service-price">From 300,000 KRW</div>
     </div>
     <div class="service-card">
-      <div class="service-arrow">↗</div>
-      <div class="service-icon">📄</div>
-      <div class="service-name">상세페이지<br>& 랜딩</div>
+      <div class="service-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
+      <h3 class="service-name">상세페이지 & 랜딩</h3>
       <div class="service-desc">전환율을 높이는 상세페이지와 이벤트 랜딩페이지. 스마트스토어, 쿠팡 등 플랫폼 최적화.</div>
       <div class="service-price">From 150,000 KRW</div>
     </div>
     <div class="service-card">
-      <div class="service-arrow">↗</div>
-      <div class="service-icon">📸</div>
-      <div class="service-name">SNS<br>콘텐츠</div>
+      <div class="service-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
+      <h3 class="service-name">SNS 콘텐츠</h3>
       <div class="service-desc">인스타그램, 유튜브 썸네일, 피드 디자인부터 영상 편집까지. 월간 운영 플랜으로 꾸준히.</div>
       <div class="service-price">From 200,000 KRW / 월</div>
     </div>
@@ -1414,11 +1352,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- PRICING -->
 <section class="pricing-section" id="pricing">
-  <div class="section-label">Pricing</div>
   <h2 class="section-title">합리적인<br>가격 플랜</h2>
   <div class="pricing-grid">
     <div class="price-card">
-      <div class="price-plan">Standard</div>
+      <h3 class="price-plan">Standard</h3>
       <div class="price-num">30<span style="font-size:24px;color:var(--gray4)">만원~</span></div>
       <div class="price-unit">단일 랜딩 / 상세페이지</div>
       <ul class="price-features">
@@ -1432,8 +1369,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div class="price-card featured">
       <div class="price-badge">인기</div>
-      <div class="price-plan">Deluxe</div>
-      <div class="price-num">80<span style="font-size:24px;color:rgba(255,255,255,0.5)">만원~</span></div>
+      <h3 class="price-plan">Deluxe</h3>
+      <div class="price-num">80<span style="font-size:24px;color:var(--gray4)">만원~</span></div>
       <div class="price-unit">완성형 홈페이지 (5페이지)</div>
       <ul class="price-features">
         <li>5페이지 풀 구성</li>
@@ -1446,7 +1383,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="#contact" class="price-cta">시작하기</a>
     </div>
     <div class="price-card">
-      <div class="price-plan">Premium</div>
+      <h3 class="price-plan">Premium</h3>
       <div class="price-num">150<span style="font-size:24px;color:var(--gray4)">만원~</span></div>
       <div class="price-unit">브랜드 풀 패키지</div>
       <ul class="price-features">
@@ -1464,90 +1401,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- TESTIMONIALS -->
 <section class="testimonial-section">
-  <div class="section-label">Reviews</div>
   <h2 class="section-title" style="margin-bottom:48px">클라이언트가<br>직접 한 말</h2>
-  <div class="testimonial-track-wrap">
-    <div class="testimonial-track">
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"홈페이지 뭘 넣어야 할지 막막했는데, 기획안부터 같이 잡아주셨어요. 이 금액에 이 퀄리티가 나온다고? 주변에 다 추천했습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#1a1a3e;color:#8080ff">김</div>
-          <div><div class="test-name">김○○ 대표</div><div class="test-role">뷰티 브랜드 / 홈페이지 제작</div></div>
-        </div>
+  <div class="testimonial-grid">
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"홈페이지 뭘 넣어야 할지 막막했는데, 기획안부터 같이 잡아주셨어요. 이 금액에 이 퀄리티가 나온다고? 주변에 다 추천했습니다."</div>
+      <div class="test-author">
+        <div class="test-avatar">김</div>
+        <div><div class="test-name">김○○ 대표</div><div class="test-role">뷰티 브랜드 / 홈페이지 제작</div></div>
       </div>
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"공모전 홈페이지 기획부터 운영까지 다 맡겼는데 조회수 45만 회 나왔어요. 기획력이 확실히 달랐습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#1e1e3a;color:#a0a0ff">박</div>
-          <div><div class="test-name">박○○ 담당자</div><div class="test-role">게임사 / 캠페인 랜딩페이지</div></div>
-        </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"공모전 홈페이지 기획부터 운영까지 다 맡겼는데 조회수 45만 회 나왔어요. 기획력이 확실히 달랐습니다."</div>
+      <div class="test-author">
+        <div class="test-avatar">박</div>
+        <div><div class="test-name">박○○ 담당자</div><div class="test-role">게임사 / 캠페인 랜딩페이지</div></div>
       </div>
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"SNS 콘텐츠 맡긴 후 팔로워 7,000명 달성했어요. 단순 디자인이 아니라 전략을 같이 짜준다는 느낌이 달랐습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#1e3a2e;color:#4adb8a">이</div>
-          <div><div class="test-name">이○○ 매니저</div><div class="test-role">공공기관 / SNS 운영</div></div>
-        </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"SNS 콘텐츠 맡긴 후 팔로워 7,000명 달성했어요. 단순 디자인이 아니라 전략을 같이 짜준다는 느낌이 달랐습니다."</div>
+      <div class="test-author">
+        <div class="test-avatar">이</div>
+        <div><div class="test-name">이○○ 매니저</div><div class="test-role">공공기관 / SNS 운영</div></div>
       </div>
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"레퍼런스 하나 보내드렸는데 더 멋지게 만들어주셨어요. 수정 요청도 당일에 반영해주시고, 납품 기간도 정확히 지켜주셨습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#1e2e3a;color:#80c8ff">최</div>
-          <div><div class="test-name">최○○ 대표</div><div class="test-role">F&B 브랜드 / 홈페이지</div></div>
-        </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"레퍼런스 하나 보내드렸는데 더 멋지게 만들어주셨어요. 수정 요청도 당일에 반영해주시고, 납품 기간도 정확히 지켜주셨습니다."</div>
+      <div class="test-author">
+        <div class="test-avatar">최</div>
+        <div><div class="test-name">최○○ 대표</div><div class="test-role">F&B 브랜드 / 홈페이지</div></div>
       </div>
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"캠페인 기획부터 앱 광고, 언론 PR까지 한 팀이 다 해줬어요. 여러 업체 돌아다닐 필요가 없어서 너무 편했습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#2a1e3a;color:#c080ff">정</div>
-          <div><div class="test-name">정○○ 팀장</div><div class="test-role">제약사 / 캠페인 운영</div></div>
-        </div>
-      </div>
-      <!-- duplicate for scroll loop -->
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"홈페이지 뭘 넣어야 할지 막막했는데, 기획안부터 같이 잡아주셨어요. 이 금액에 이 퀄리티가 나온다고? 주변에 다 추천했습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#1a1a3e;color:#8080ff">김</div>
-          <div><div class="test-name">김○○ 대표</div><div class="test-role">뷰티 브랜드 / 홈페이지 제작</div></div>
-        </div>
-      </div>
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"공모전 홈페이지 기획부터 운영까지 다 맡겼는데 조회수 45만 회 나왔어요. 기획력이 확실히 달랐습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#1e1e3a;color:#a0a0ff">박</div>
-          <div><div class="test-name">박○○ 담당자</div><div class="test-role">게임사 / 캠페인 랜딩페이지</div></div>
-        </div>
-      </div>
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"SNS 콘텐츠 맡긴 후 팔로워 7,000명 달성했어요. 단순 디자인이 아니라 전략을 같이 짜준다는 느낌이 달랐습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#1e3a2e;color:#4adb8a">이</div>
-          <div><div class="test-name">이○○ 매니저</div><div class="test-role">공공기관 / SNS 운영</div></div>
-        </div>
-      </div>
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"레퍼런스 하나 보내드렸는데 더 멋지게 만들어주셨어요. 수정 요청도 당일에 반영해주시고, 납품 기간도 정확히 지켜주셨습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#1e2e3a;color:#80c8ff">최</div>
-          <div><div class="test-name">최○○ 대표</div><div class="test-role">F&B 브랜드 / 홈페이지</div></div>
-        </div>
-      </div>
-      <div class="test-card">
-        <div class="test-stars">★★★★★</div>
-        <div class="test-text">"캠페인 기획부터 앱 광고, 언론 PR까지 한 팀이 다 해줬어요. 여러 업체 돌아다닐 필요가 없어서 너무 편했습니다."</div>
-        <div class="test-author">
-          <div class="test-avatar" style="background:#2a1e3a;color:#c080ff">정</div>
-          <div><div class="test-name">정○○ 팀장</div><div class="test-role">제약사 / 캠페인 운영</div></div>
-        </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"캠페인 기획부터 앱 광고, 언론 PR까지 한 팀이 다 해줬어요. 여러 업체 돌아다닐 필요가 없어서 너무 편했습니다."</div>
+      <div class="test-author">
+        <div class="test-avatar">정</div>
+        <div><div class="test-name">정○○ 팀장</div><div class="test-role">제약사 / 캠페인 운영</div></div>
       </div>
     </div>
   </div>
@@ -1555,13 +1448,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- PROCESS -->
 <section class="process-section">
-  <div class="section-label">Process</div>
   <h2 class="section-title">어떻게<br>진행되나요</h2>
   <div class="process-list">
     <div class="process-item">
       <div class="process-step-num">01</div>
       <div>
-        <div class="process-step-title">상담 & 견적</div>
+        <h3 class="process-step-title">상담 & 견적</h3>
         <div class="process-duration">Day 1</div>
       </div>
       <div class="process-step-desc">문의 폼을 통해 서비스 종류와 예산을 공유해주시면, 1영업일 내 맞춤 견적과 함께 연락드립니다. 카카오 채널로도 빠르게 소통 가능합니다.</div>
@@ -1569,7 +1461,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="process-item">
       <div class="process-step-num">02</div>
       <div>
-        <div class="process-step-title">기획 & 레퍼런스</div>
+        <h3 class="process-step-title">기획 & 레퍼런스</h3>
         <div class="process-duration">Day 2~3</div>
       </div>
       <div class="process-step-desc">레퍼런스 사이트와 브랜드 키워드를 공유해주시면, 전체 사이트맵과 콘텐츠 구성안을 먼저 제안드립니다.</div>
@@ -1577,7 +1469,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="process-item">
       <div class="process-step-num">03</div>
       <div>
-        <div class="process-step-title">디자인 & 개발</div>
+        <h3 class="process-step-title">디자인 & 개발</h3>
         <div class="process-duration">Day 4~14</div>
       </div>
       <div class="process-step-desc">확정된 기획을 바탕으로 디자인 초안을 공유드리고, 피드백을 받아 완성합니다. 작업 진행 현황은 실시간으로 공유됩니다.</div>
@@ -1585,7 +1477,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="process-item">
       <div class="process-step-num">04</div>
       <div>
-        <div class="process-step-title">검수 & 납품</div>
+        <h3 class="process-step-title">검수 & 납품</h3>
         <div class="process-duration">Day 15~</div>
       </div>
       <div class="process-step-desc">최종 검수 후 도메인 연결 및 납품을 진행합니다. 관리자 사용법 가이드와 함께 30일 무상 AS를 제공합니다.</div>
@@ -1595,31 +1487,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- FAQ -->
 <section class="faq-section" id="faq">
-  <div class="section-label">FAQ</div>
   <h2 class="section-title">자주 묻는<br>질문</h2>
   <div class="faq-list">
     <div class="faq-item">
-      <div class="faq-q">홈페이지 제작 비용은 얼마인가요?</div>
+      <h3 class="faq-q">홈페이지 제작 비용은 얼마인가요?</h3>
       <div class="faq-a">단일 랜딩·상세페이지는 30만원부터, 5페이지 완성형 홈페이지는 80만원부터, 홈페이지·SNS·브랜드 가이드를 포함한 풀 패키지는 150만원부터 시작합니다. 정확한 견적은 상담 후 안내드립니다.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">제작 기간은 얼마나 걸리나요?</div>
+      <h3 class="faq-q">제작 기간은 얼마나 걸리나요?</h3>
       <div class="faq-a">단일 페이지는 납기 5~7일, 5페이지 완성형 홈페이지는 2~3주가 기준입니다. 상담·견적은 문의 후 1영업일 내에 답변드립니다.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">어떤 플랫폼으로 홈페이지를 만드나요?</div>
+      <h3 class="faq-q">어떤 플랫폼으로 홈페이지를 만드나요?</h3>
       <div class="faq-a">아임웹, 프레이머, 워드프레스 기반의 반응형 홈페이지를 기획부터 디자인, 개발, 납품까지 한 팀이 원스톱으로 제작합니다.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">기획이 전혀 안 잡혀 있어도 의뢰할 수 있나요?</div>
+      <h3 class="faq-q">기획이 전혀 안 잡혀 있어도 의뢰할 수 있나요?</h3>
       <div class="faq-a">네, 가능합니다. 참고할 레퍼런스 사이트나 브랜드 키워드만 공유해주시면 전체 사이트맵과 콘텐츠 구성안을 먼저 제안해드립니다.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">납품 후에도 수정이나 AS가 가능한가요?</div>
+      <h3 class="faq-q">납품 후에도 수정이나 AS가 가능한가요?</h3>
       <div class="faq-a">Deluxe 플랜은 30일 무제한 수정, Premium 플랜은 3개월 AS가 포함됩니다. 납품 후에는 텍스트·이미지 등 간단한 수정을 직접 할 수 있도록 가이드도 함께 드립니다.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">상담은 어떻게 신청하나요?</div>
+      <h3 class="faq-q">상담은 어떻게 신청하나요?</h3>
       <div class="faq-a">이메일(choislab.studio@gmail.com) 또는 카카오채널 상담을 통해 서비스 종류와 예산을 알려주시면 됩니다. 상담 가능 시간은 평일 09:00~18:00입니다.</div>
     </div>
   </div>
@@ -1685,7 +1576,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- CTA / CONTACT -->
 <section class="cta-section" id="contact">
   <div class="cta-bg-text">START</div>
-  <div class="section-label">Contact</div>
   <h2 class="cta-title">일단 물어봐도<br>괜찮아요</h2>
   <p class="cta-desc">견적 부담 없이 어떤 게 필요한지만 말씀해 주세요.<br>1영업일 내에 방향부터 같이 잡아드립니다.</p>
   <div class="cta-buttons">
@@ -1720,6 +1610,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li><a href="portfolio.html" target="_blank">Portfolio</a></li>
         <li><a href="#services">Services</a></li>
         <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
         <li><a href="http://pf.kakao.com/_xaGxaAn" target="_blank">Contact</a></li>
       </ul>
     </div>
@@ -1734,7 +1625,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="footer-bottom">
     <div class="footer-copy">© 2025 Chois Lab · Digital Contents Studio</div>
-    <div class="footer-copy"><a href="#" style="color:var(--gray3);text-decoration:none;">개인정보처리방침</a></div>
+    <div class="footer-copy"><a href="#" style="color:var(--gray4);text-decoration:none;">개인정보처리방침</a></div>
   </div>
 </footer>
 
@@ -1756,14 +1647,35 @@ hamburger.addEventListener('click', () => {
 // Custom cursor
 const cursor = document.getElementById('cursor');
 const isTouchDevice = () => window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
+const heroMockupStack = document.querySelector('.hero-mockup-stack');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let mockupRafPending = false;
 document.addEventListener('mousemove', e => {
   if (isTouchDevice()) return;
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
+  if (heroMockupStack && !reduceMotion && !mockupRafPending) {
+    mockupRafPending = true;
+    requestAnimationFrame(() => {
+      const xPct = (e.clientX / window.innerWidth - 0.5) * 2;
+      const yPct = (e.clientY / window.innerHeight - 0.5) * 2;
+      heroMockupStack.style.transform = `translateY(-50%) rotate(${xPct * 2}deg) translate(${xPct * 10}px, ${yPct * 8}px)`;
+      mockupRafPending = false;
+    });
+  }
 });
-document.querySelectorAll('a, button, .portfolio-item, .why-card, .service-card').forEach(el => {
+document.querySelectorAll('a, button, .portfolio-item, .why-row, .service-card').forEach(el => {
   el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
   el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+});
+
+// Hero mockup cards: hand off from entrance animation to a settled resting state
+// so the hover "fan out" rule (see CSS) can take over cleanly.
+['hm-1', 'hm-2', 'hm-3'].forEach(cls => {
+  const el = document.querySelector('.' + cls);
+  if (!el) return;
+  if (reduceMotion) { el.classList.add('hm-settled'); return; }
+  el.addEventListener('animationend', () => el.classList.add('hm-settled'), { once: true });
 });
 
 // Portfolio: render cards from data/portfolio.json (CMS-editable)
@@ -1823,7 +1735,7 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.why-card, .service-card, .price-card, .process-item').forEach((el, i) => {
+document.querySelectorAll('.why-row, .service-card, .price-card, .process-item').forEach((el, i) => {
   el.style.opacity = '0';
   el.style.transform = 'translateY(30px)';
   el.style.transitionDelay = (i % 3 * 0.1) + 's';

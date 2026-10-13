@@ -126,6 +126,72 @@ nav{
 }
 .portfolio-name{font-size:18px;font-weight:500;margin-bottom:4px;}
 .portfolio-sub{font-size:13px;color:var(--gray4);}
+.portfolio-item{cursor:pointer;}
+.portfolio-item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
+.pf-hint{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(10,10,10,0.35);
+  opacity:0;transition:opacity 0.25s ease;
+  pointer-events:none;
+}
+.portfolio-item:hover .pf-hint,.portfolio-item:focus-visible .pf-hint{opacity:1;}
+.pf-hint span{
+  font-size:12px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--white);background:rgba(10,10,10,0.55);
+  border:1px solid rgba(255,255,255,0.25);
+  padding:10px 18px;backdrop-filter:blur(6px);
+}
+
+/* PORTFOLIO MODAL */
+.pf-modal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:32px;}
+.pf-modal[hidden]{display:none;}
+.pf-modal-backdrop{position:absolute;inset:0;background:rgba(6,6,10,0.8);backdrop-filter:blur(4px);opacity:0;transition:opacity 0.25s ease;}
+.pf-modal.is-open .pf-modal-backdrop{opacity:1;}
+.pf-modal-panel{
+  position:relative;z-index:1;
+  width:min(880px,100%);max-height:88vh;
+  background:var(--gray1);border:1px solid var(--border);
+  box-shadow:0 40px 90px rgba(0,0,0,0.6);
+  display:flex;flex-direction:column;overflow:hidden;
+  opacity:0;transform:translateY(16px) scale(0.98);
+  transition:opacity 0.25s cubic-bezier(0.16,1,0.3,1),transform 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+.pf-modal.is-open .pf-modal-panel{opacity:1;transform:translateY(0) scale(1);}
+.pf-modal-img{background:#000;height:64vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pf-modal-img img{width:100%;max-height:64vh;object-fit:contain;display:block;}
+.pf-modal-frame{width:100%;height:100%;border:0;background:var(--white);display:none;}
+.pf-modal-img.is-live img{display:none;}
+.pf-modal-img.is-live .pf-modal-frame{display:block;}
+.pf-modal-info{padding:24px 28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.pf-modal-visit{
+  font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--white);background:var(--accent);
+  padding:10px 18px;text-decoration:none;white-space:nowrap;
+  transition:background 0.2s;
+}
+.pf-modal-visit:hover{background:#3730cc;}
+.pf-modal-visit[hidden]{display:none;}
+.pf-modal-close{
+  position:absolute;top:16px;right:16px;z-index:2;
+  width:36px;height:36px;border:1px solid rgba(255,255,255,0.25);
+  background:rgba(10,10,10,0.55);backdrop-filter:blur(6px);
+  color:var(--white);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;
+}
+.pf-modal-close:hover{background:var(--accent);border-color:var(--accent);}
+.pf-modal-close:focus-visible{outline:2px solid var(--white);outline-offset:2px;}
+.pf-modal-close svg{width:16px;height:16px;}
+@media(prefers-reduced-motion:reduce){
+  .pf-modal-backdrop,.pf-modal-panel{transition:opacity 0.01s linear;transform:none;}
+}
+@media(max-width:768px){
+  .pf-modal{padding:0;}
+  .pf-modal-panel{width:100%;height:100%;max-height:none;}
+  .pf-modal-img{height:56vh;}
+  .pf-modal-img img{max-height:56vh;}
+}
 
 /* CTA */
 .cta-bar{
@@ -215,9 +281,89 @@ footer{
   </div>
 </footer>
 
+<div class="pf-modal" id="pfModal" role="dialog" aria-modal="true" aria-labelledby="pfModalName" hidden>
+  <div class="pf-modal-backdrop" data-pf-close></div>
+  <div class="pf-modal-panel">
+    <button class="pf-modal-close" data-pf-close aria-label="닫기" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+    </button>
+    <div class="pf-modal-img" id="pfModalMedia">
+      <img id="pfModalImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="">
+      <iframe class="pf-modal-frame" id="pfModalFrame" title="" loading="lazy"></iframe>
+    </div>
+    <div class="pf-modal-info">
+      <div>
+        <div class="portfolio-tag" id="pfModalTag"></div>
+        <div class="portfolio-name" id="pfModalName"></div>
+        <div class="portfolio-sub" id="pfModalSub"></div>
+      </div>
+      <a class="pf-modal-visit" id="pfModalVisit" href="#" target="_blank" rel="noopener" hidden>새 창에서 보기 ↗</a>
+    </div>
+  </div>
+</div>
+
 <script>
 const CATEGORY_LABELS = { web: '홈페이지 제작', landing: '랜딩페이지', sns: 'SNS 콘텐츠' };
 const grid = document.getElementById('grid');
+
+// Project modal
+const pfModal = document.getElementById('pfModal');
+const pfModalMedia = document.getElementById('pfModalMedia');
+const pfModalImg = document.getElementById('pfModalImg');
+const pfModalFrame = document.getElementById('pfModalFrame');
+const pfModalTag = document.getElementById('pfModalTag');
+const pfModalName = document.getElementById('pfModalName');
+const pfModalSub = document.getElementById('pfModalSub');
+const pfModalVisit = document.getElementById('pfModalVisit');
+let pfLastTrigger = null;
+let portfolioItems = [];
+
+function openProjectModal(index, trigger) {
+  const p = portfolioItems[index];
+  if (!p) return;
+  pfLastTrigger = trigger || null;
+  if (p.url) {
+    pfModalMedia.classList.add('is-live');
+    pfModalFrame.src = p.url;
+    pfModalFrame.title = p.name + ' 실제 페이지';
+    pfModalVisit.href = p.url;
+    pfModalVisit.hidden = false;
+  } else {
+    pfModalMedia.classList.remove('is-live');
+    pfModalFrame.src = 'about:blank';
+    pfModalImg.src = p.image;
+    pfModalImg.alt = p.name;
+    pfModalVisit.hidden = true;
+  }
+  pfModalTag.textContent = CATEGORY_LABELS[p.category] || p.category;
+  pfModalName.textContent = p.name;
+  pfModalSub.textContent = p.sub;
+  pfModal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => pfModal.classList.add('is-open'));
+  pfModal.querySelector('.pf-modal-close').focus();
+}
+
+function closeProjectModal() {
+  pfModal.classList.remove('is-open');
+  document.body.style.overflow = '';
+  setTimeout(() => { pfModal.hidden = true; pfModalFrame.src = 'about:blank'; }, 250);
+  if (pfLastTrigger) pfLastTrigger.focus();
+}
+
+grid.addEventListener('click', e => {
+  const item = e.target.closest('.portfolio-item');
+  if (item) openProjectModal(Number(item.dataset.index), item);
+});
+grid.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const item = e.target.closest('.portfolio-item');
+  if (item) { e.preventDefault(); openProjectModal(Number(item.dataset.index), item); }
+});
+pfModal.querySelectorAll('[data-pf-close]').forEach(el => el.addEventListener('click', closeProjectModal));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !pfModal.hidden) closeProjectModal();
+});
 
 function filterWork(btn, cat) {
   document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -259,10 +405,11 @@ fetch('data/portfolio.json')
   .then(res => res.json())
   .then(data => {
     const items = data.portfolio || [];
-    grid.innerHTML = items.map(p => `
-    <div class="portfolio-item" data-cat="${p.category}">
+    grid.innerHTML = items.map((p, i) => `
+    <div class="portfolio-item" data-cat="${p.category}" data-index="${i}" tabindex="0" role="button" aria-haspopup="dialog" aria-label="${p.name} 크게 보기">
       <div class="portfolio-img">
         <img src="${p.image}" alt="${p.name}" loading="lazy">
+        <div class="pf-hint"><span>크게 보기</span></div>
       </div>
       <div class="portfolio-info">
         <div class="portfolio-tag">${CATEGORY_LABELS[p.category] || p.category}</div>
@@ -270,6 +417,8 @@ fetch('data/portfolio.json')
         <div class="portfolio-sub">${p.sub}</div>
       </div>
     </div>`).join('');
+
+    portfolioItems = items;
 
     const counts = { all: items.length, web: 0, landing: 0, sns: 0 };
     items.forEach(p => { if (counts[p.category] !== undefined) counts[p.category]++; });
