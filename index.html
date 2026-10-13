@@ -526,8 +526,10 @@ section { padding: 120px 48px; }
   transition: transform 0.25s ease;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 .portfolio-item:hover { transform: translateY(-4px); }
+.portfolio-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .portfolio-img-wrap {
   position: relative;
   aspect-ratio: 4/3;
@@ -592,6 +594,62 @@ section { padding: 120px 48px; }
 .portfolio-item:hover .portfolio-arrow { transform: translate(3px, -3px); background: var(--accent2); }
 .portfolio-arrow-soon { background: var(--gray2); color: var(--gray4); cursor: default; }
 .portfolio-item:hover .portfolio-arrow-soon { transform: none; background: var(--gray2); }
+
+/* PORTFOLIO MODAL */
+.pf-modal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:32px;}
+.pf-modal[hidden]{display:none;}
+.pf-modal-backdrop{position:absolute;inset:0;background:rgba(6,6,10,0.8);backdrop-filter:blur(4px);opacity:0;transition:opacity 0.25s ease;}
+.pf-modal.is-open .pf-modal-backdrop{opacity:1;}
+.pf-modal-panel{
+  position:relative;z-index:1;
+  width:min(880px,100%);max-height:88vh;
+  background:var(--gray1);border:1px solid var(--border);
+  box-shadow:0 40px 90px rgba(0,0,0,0.6);
+  display:flex;flex-direction:column;overflow:hidden;
+  opacity:0;transform:translateY(16px) scale(0.98);
+  transition:opacity 0.25s cubic-bezier(0.16,1,0.3,1),transform 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+.pf-modal.is-open .pf-modal-panel{opacity:1;transform:translateY(0) scale(1);}
+.pf-modal-img{background:#000;height:64vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pf-modal-img img{width:100%;max-height:64vh;object-fit:contain;display:block;}
+.pf-modal-frame{width:100%;height:100%;border:0;background:var(--white);display:none;}
+.pf-modal-img.is-live img{display:none;}
+.pf-modal-img.is-live .pf-modal-frame{display:block;}
+.pf-modal-info{padding:24px 28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.pf-modal-visit{
+  font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--white);background:var(--accent);
+  padding:10px 18px;text-decoration:none;white-space:nowrap;
+  transition:transform 0.2s;
+}
+.pf-modal-visit:hover{transform:translateY(-2px);}
+.pf-modal-visit[hidden]{display:none;}
+.pf-modal-soon{
+  font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--gray4);background:var(--gray2);
+  padding:10px 18px;white-space:nowrap;
+}
+.pf-modal-soon[hidden]{display:none;}
+.pf-modal-close{
+  position:absolute;top:16px;right:16px;z-index:2;
+  width:36px;height:36px;border:1px solid rgba(255,255,255,0.25);
+  background:rgba(10,10,10,0.55);backdrop-filter:blur(6px);
+  color:var(--white);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;
+}
+.pf-modal-close:hover{background:var(--accent);border-color:var(--accent);}
+.pf-modal-close:focus-visible{outline:2px solid var(--white);outline-offset:2px;}
+.pf-modal-close svg{width:16px;height:16px;}
+@media(prefers-reduced-motion:reduce){
+  .pf-modal-backdrop,.pf-modal-panel{transition:opacity 0.01s linear;transform:none;}
+}
+@media(max-width:768px){
+  .pf-modal{padding:0;}
+  .pf-modal-panel{width:100%;height:100%;max-height:none;}
+  .pf-modal-img{height:56vh;}
+  .pf-modal-img img{max-height:56vh;}
+}
 
 /* placeholder images using gradient */
 .p1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
@@ -1643,6 +1701,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </footer>
 
+<div class="pf-modal" id="pfModal" role="dialog" aria-modal="true" aria-labelledby="pfModalName" hidden>
+  <div class="pf-modal-backdrop" data-pf-close></div>
+  <div class="pf-modal-panel">
+    <button class="pf-modal-close" data-pf-close aria-label="닫기" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+    </button>
+    <div class="pf-modal-img" id="pfModalMedia">
+      <img id="pfModalImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="">
+      <iframe class="pf-modal-frame" id="pfModalFrame" title="" loading="lazy"></iframe>
+    </div>
+    <div class="pf-modal-info">
+      <div>
+        <div class="portfolio-sub" id="pfModalTag" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;"></div>
+        <div class="portfolio-name" id="pfModalName" style="margin-bottom:4px;"></div>
+        <div class="portfolio-sub" id="pfModalSub"></div>
+      </div>
+      <a class="pf-modal-visit" id="pfModalVisit" href="#" target="_blank" rel="noopener" hidden>새 창에서 보기 ↗</a>
+      <span class="pf-modal-soon" id="pfModalSoon" hidden>오픈 준비중</span>
+    </div>
+  </div>
+</div>
+
 <script>
 // Mobile menu
 const hamburger = document.getElementById('hamburger');
@@ -1695,15 +1775,76 @@ document.querySelectorAll('a, button, .portfolio-item, .why-row, .service-card')
 // Portfolio: render cards from data/portfolio.json (CMS-editable)
 const CATEGORY_LABELS = { web: '홈페이지 제작', landing: '랜딩페이지', sns: 'SNS 콘텐츠' };
 const portfolioGrid = document.getElementById('portfolioGrid');
+let portfolioItems = [];
+
+// Portfolio project modal (live-site preview instead of new tab)
+const pfModal = document.getElementById('pfModal');
+const pfModalMedia = document.getElementById('pfModalMedia');
+const pfModalImg = document.getElementById('pfModalImg');
+const pfModalFrame = document.getElementById('pfModalFrame');
+const pfModalTag = document.getElementById('pfModalTag');
+const pfModalName = document.getElementById('pfModalName');
+const pfModalSub = document.getElementById('pfModalSub');
+const pfModalVisit = document.getElementById('pfModalVisit');
+const pfModalSoon = document.getElementById('pfModalSoon');
+let pfLastTrigger = null;
+
+function openProjectModal(index, trigger) {
+  const p = portfolioItems[index];
+  if (!p) return;
+  pfLastTrigger = trigger || null;
+  if (p.url) {
+    pfModalMedia.classList.add('is-live');
+    pfModalFrame.src = p.url;
+    pfModalFrame.title = p.name + ' 실제 페이지';
+    pfModalVisit.href = p.url;
+    pfModalVisit.hidden = false;
+  } else {
+    pfModalMedia.classList.remove('is-live');
+    pfModalFrame.src = 'about:blank';
+    pfModalImg.src = p.image;
+    pfModalImg.alt = p.name;
+    pfModalVisit.hidden = true;
+  }
+  pfModalSoon.hidden = p.status !== 'coming-soon';
+  pfModalTag.textContent = CATEGORY_LABELS[p.category] || p.category;
+  pfModalName.textContent = p.name;
+  pfModalSub.textContent = p.sub;
+  pfModal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => pfModal.classList.add('is-open'));
+  pfModal.querySelector('.pf-modal-close').focus();
+}
+
+function closeProjectModal() {
+  pfModal.classList.remove('is-open');
+  document.body.style.overflow = '';
+  setTimeout(() => { pfModal.hidden = true; pfModalFrame.src = 'about:blank'; }, 250);
+  if (pfLastTrigger) pfLastTrigger.focus();
+}
+
+pfModal.querySelectorAll('[data-pf-close]').forEach(el => el.addEventListener('click', closeProjectModal));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !pfModal.hidden) closeProjectModal();
+});
+portfolioGrid.addEventListener('click', e => {
+  const item = e.target.closest('.portfolio-item');
+  if (item) openProjectModal(Number(item.dataset.index), item);
+});
+portfolioGrid.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const item = e.target.closest('.portfolio-item');
+  if (item) { e.preventDefault(); openProjectModal(Number(item.dataset.index), item); }
+});
 
 fetch('data/portfolio.json')
   .then(res => res.json())
   .then(data => {
     const items = data.portfolio || [];
-    portfolioGrid.innerHTML = items.map(p => {
+    portfolioGrid.innerHTML = items.map((p, i) => {
       const soon = p.status === 'coming-soon';
       return `
-    <div class="portfolio-item" data-cat="${p.category}">
+    <div class="portfolio-item" data-cat="${p.category}" data-index="${i}" tabindex="0" role="button" aria-haspopup="dialog" aria-label="${p.name} ${soon ? '준비중' : '자세히 보기'}">
       <div class="portfolio-img-wrap">
         <span class="portfolio-badge">${CATEGORY_LABELS[p.category] || p.category}</span>
         ${soon ? '<span class="portfolio-badge-soon">준비중</span>' : ''}
@@ -1714,12 +1855,12 @@ fetch('data/portfolio.json')
           <div class="portfolio-name">${p.name}</div>
           <div class="portfolio-sub">${p.sub}</div>
         </div>
-        ${soon
-          ? '<span class="portfolio-arrow portfolio-arrow-soon" aria-hidden="true">—</span>'
-          : `<a class="portfolio-arrow" href="${p.url || p.image}" target="_blank" rel="noopener" aria-label="${p.url ? p.name + ' 사이트 방문하기' : p.name + ' 크게 보기'}">→</a>`}
+        <span class="portfolio-arrow${soon ? ' portfolio-arrow-soon' : ''}" aria-hidden="true">${soon ? '—' : '→'}</span>
       </div>
     </div>`;
     }).join('');
+
+    portfolioItems = items;
   })
   .catch(err => console.error('Failed to load portfolio data:', err));
 
