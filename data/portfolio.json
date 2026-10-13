@@ -37,12 +37,14 @@
     },
     {
       "image": "/images/portfolio/project-06.jpg",
+      "url": "https://chois-sin.imweb.me/",
       "category": "web",
       "name": "신승무역",
       "sub": "중국 무역 B2B 홈페이지"
     },
     {
       "image": "/images/portfolio/project-07.jpg",
+      "url": "https://instead2024.imweb.me/",
       "category": "web",
       "name": "인스티드",
       "sub": "플레이스 마케팅 에이전시"
@@ -61,12 +63,14 @@
     },
     {
       "image": "/images/portfolio/project-10.jpg",
+      "url": "https://cirruscounseling.imweb.me/",
       "category": "web",
       "name": "새털구름상담소",
       "sub": "커리어 컨설팅 홈페이지"
     },
     {
       "image": "/images/portfolio/project-11.jpg",
+      "url": "https://copyrider.imweb.me/",
       "category": "web",
       "name": "카피라이더",
       "sub": "사무기기 쇼핑몰"
