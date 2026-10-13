@@ -545,6 +545,18 @@ section { padding: 120px 48px; }
   border-radius: var(--radius-pill);
   padding: 6px 14px;
 }
+.portfolio-badge-soon {
+  position: absolute;
+  top: 14px; right: 14px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--white);
+  background: rgba(31,95,209,0.85);
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+}
 .portfolio-img {
   width: 100%; height: 100%;
   object-fit: cover;
@@ -578,6 +590,8 @@ section { padding: 120px 48px; }
   transition: transform 0.2s ease, background 0.2s ease;
 }
 .portfolio-item:hover .portfolio-arrow { transform: translate(3px, -3px); background: var(--accent2); }
+.portfolio-arrow-soon { background: var(--gray2); color: var(--gray4); cursor: default; }
+.portfolio-item:hover .portfolio-arrow-soon { transform: none; background: var(--gray2); }
 
 /* placeholder images using gradient */
 .p1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
@@ -1686,10 +1700,13 @@ fetch('data/portfolio.json')
   .then(res => res.json())
   .then(data => {
     const items = data.portfolio || [];
-    portfolioGrid.innerHTML = items.map(p => `
+    portfolioGrid.innerHTML = items.map(p => {
+      const soon = p.status === 'coming-soon';
+      return `
     <div class="portfolio-item" data-cat="${p.category}">
       <div class="portfolio-img-wrap">
         <span class="portfolio-badge">${CATEGORY_LABELS[p.category] || p.category}</span>
+        ${soon ? '<span class="portfolio-badge-soon">준비중</span>' : ''}
         <img class="portfolio-img" src="${p.image}" alt="${p.name}" loading="lazy">
       </div>
       <div class="portfolio-info">
@@ -1697,9 +1714,12 @@ fetch('data/portfolio.json')
           <div class="portfolio-name">${p.name}</div>
           <div class="portfolio-sub">${p.sub}</div>
         </div>
-        <a class="portfolio-arrow" href="${p.url || p.image}" target="_blank" rel="noopener" aria-label="${p.url ? p.name + ' 사이트 방문하기' : p.name + ' 크게 보기'}">→</a>
+        ${soon
+          ? '<span class="portfolio-arrow portfolio-arrow-soon" aria-hidden="true">—</span>'
+          : `<a class="portfolio-arrow" href="${p.url || p.image}" target="_blank" rel="noopener" aria-label="${p.url ? p.name + ' 사이트 방문하기' : p.name + ' 크게 보기'}">→</a>`}
       </div>
-    </div>`).join('');
+    </div>`;
+    }).join('');
   })
   .catch(err => console.error('Failed to load portfolio data:', err));
 

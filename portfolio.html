@@ -136,6 +136,18 @@ nav{
   border:1px solid rgba(255,255,255,0.25);
   padding:10px 18px;backdrop-filter:blur(6px);
 }
+.pf-badge-soon{
+  position:absolute;top:14px;right:14px;z-index:1;
+  font-size:11px;font-weight:700;letter-spacing:0.05em;
+  color:var(--white);background:rgba(31,95,209,0.85);
+  backdrop-filter:blur(6px);border-radius:var(--radius-pill);
+  padding:6px 14px;
+}
+.pf-modal-soon{
+  font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--gray4);background:var(--gray1);border:1px solid var(--border);
+  padding:10px 18px;white-space:nowrap;
+}
 
 /* PORTFOLIO MODAL */
 .pf-modal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:32px;}
@@ -291,6 +303,7 @@ footer{
         <div class="portfolio-sub" id="pfModalSub"></div>
       </div>
       <a class="pf-modal-visit" id="pfModalVisit" href="#" target="_blank" rel="noopener" hidden>새 창에서 보기 ↗</a>
+      <span class="pf-modal-soon" id="pfModalSoon" hidden>오픈 준비중</span>
     </div>
   </div>
 </div>
@@ -308,6 +321,7 @@ const pfModalTag = document.getElementById('pfModalTag');
 const pfModalName = document.getElementById('pfModalName');
 const pfModalSub = document.getElementById('pfModalSub');
 const pfModalVisit = document.getElementById('pfModalVisit');
+const pfModalSoon = document.getElementById('pfModalSoon');
 let pfLastTrigger = null;
 let portfolioItems = [];
 
@@ -328,6 +342,7 @@ function openProjectModal(index, trigger) {
     pfModalImg.alt = p.name;
     pfModalVisit.hidden = true;
   }
+  pfModalSoon.hidden = p.status !== 'coming-soon';
   pfModalTag.textContent = CATEGORY_LABELS[p.category] || p.category;
   pfModalName.textContent = p.name;
   pfModalSub.textContent = p.sub;
@@ -398,18 +413,22 @@ fetch('data/portfolio.json')
   .then(res => res.json())
   .then(data => {
     const items = data.portfolio || [];
-    grid.innerHTML = items.map((p, i) => `
-    <div class="portfolio-item" data-cat="${p.category}" data-index="${i}" tabindex="0" role="button" aria-haspopup="dialog" aria-label="${p.name} 크게 보기">
+    grid.innerHTML = items.map((p, i) => {
+      const soon = p.status === 'coming-soon';
+      return `
+    <div class="portfolio-item" data-cat="${p.category}" data-index="${i}" tabindex="0" role="button" aria-haspopup="dialog" aria-label="${p.name} ${soon ? '준비중' : '크게 보기'}">
       <div class="portfolio-img">
+        ${soon ? '<span class="pf-badge-soon">준비중</span>' : ''}
         <img src="${p.image}" alt="${p.name}" loading="lazy">
-        <div class="pf-hint"><span>크게 보기</span></div>
+        <div class="pf-hint"><span>${soon ? '준비중' : '크게 보기'}</span></div>
       </div>
       <div class="portfolio-info">
         <div class="portfolio-tag">${CATEGORY_LABELS[p.category] || p.category}</div>
         <div class="portfolio-name">${p.name}</div>
         <div class="portfolio-sub">${p.sub}</div>
       </div>
-    </div>`).join('');
+    </div>`;
+    }).join('');
 
     portfolioItems = items;
 

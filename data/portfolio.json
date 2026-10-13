@@ -51,12 +51,14 @@
     },
     {
       "image": "/images/portfolio/project-08.jpg",
+      "status": "coming-soon",
       "category": "web",
       "name": "애드드림즈",
       "sub": "마케팅 플랫폼 홈페이지"
     },
     {
       "image": "/images/portfolio/project-09.jpg",
+      "status": "coming-soon",
       "category": "landing",
       "name": "냠냠유니버스",
       "sub": "플레이스 마케팅 랜딩"
@@ -77,6 +79,7 @@
     },
     {
       "image": "/images/portfolio/project-12.jpg",
+      "url": "https://chois-lab.site/",
       "category": "web",
       "name": "초이스랩",
       "sub": "자사 브랜드 홈페이지"
