@@ -1697,7 +1697,7 @@ fetch('data/portfolio.json')
           <div class="portfolio-name">${p.name}</div>
           <div class="portfolio-sub">${p.sub}</div>
         </div>
-        <a class="portfolio-arrow" href="${p.image}" target="_blank" rel="noopener" aria-label="${p.name} 크게 보기">→</a>
+        <a class="portfolio-arrow" href="${p.url || p.image}" target="_blank" rel="noopener" aria-label="${p.url ? p.name + ' 사이트 방문하기' : p.name + ' 크게 보기'}">→</a>
       </div>
     </div>`).join('');
   })
