@@ -33,5 +33,5 @@
 ## Pages
 
 - [홈페이지](https://chois-lab.site/): 서비스 소개, 가격, 프로세스, 고객 후기
-- [포트폴리오](https://chois-lab.site/portfolio.html): 제작 사례 모음
-- [템플릿 패키지](https://chois-lab.site/templates.html): 업종별 템플릿 미리보기 및 가격
+- [포트폴리오](https://chois-lab.site/portfolio/): 제작 사례 모음
+- [템플릿 패키지](https://chois-lab.site/templates/): 업종별 템플릿 미리보기 및 가격

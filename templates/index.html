@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>템플릿 패키지 — 초이스랩</title>
+<meta name="description" content="업종별로 바로 적용 가능한 초이스랩 템플릿 패키지. 빠르고 합리적인 가격으로 홈페이지를 시작하세요.">
+<link rel="canonical" href="https://chois-lab.site/templates/">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://chois-lab.site/templates/">
+<meta property="og:site_name" content="초이스랩">
+<meta property="og:title" content="템플릿 패키지 — 초이스랩">
+<meta property="og:description" content="업종별로 바로 적용 가능한 초이스랩 템플릿 패키지. 빠르고 합리적인 가격으로 홈페이지를 시작하세요.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --black:#0B1220;--white:#F2F4F8;--accent:#1F5FD1;--accent-light:#5B8DEF;
+  --gray1:#111827;--gray2:#1C2333;--gray3:#6b6b6b;--gray4:#9a9a9a;
+  --border:rgba(255,255,255,0.08);
+  --radius-pill:100px;--radius-lg:28px;--radius-md:20px;
+  --font:'Pretendard',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--black);color:var(--white);word-break:keep-all;overflow-wrap:break-word;}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:64px;
+  background:rgba(11,18,32,0.8);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-size:16px;font-weight:800;letter-spacing:-0.02em;}
+.nav-back{font-size:13px;color:var(--gray4);}
+.nav-cta{background:var(--accent);color:var(--white);font-size:13px;padding:10px 20px;border-radius:var(--radius-pill);}
+
+.page-hero{padding:160px 48px 64px;max-width:760px;}
+.page-hero h1{font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-0.03em;margin-bottom:20px;}
+.page-hero p{font-size:16px;color:var(--gray4);line-height:1.7;}
+
+.grid-section{padding:0 48px 120px;}
+.template-grid{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.template-card{
+  background:var(--gray1);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.template-card-img{aspect-ratio:4/3;overflow:hidden;position:relative;}
+.template-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;}
+.template-card:hover .template-card-img img{transform:scale(1.05);}
+.template-tag{
+  position:absolute;top:16px;left:16px;
+  font-size:11px;letter-spacing:0.05em;font-weight:700;
+  background:rgba(10,10,10,0.6);backdrop-filter:blur(6px);
+  padding:6px 14px;border-radius:var(--radius-pill);
+}
+.template-card-body{padding:28px;flex:1;display:flex;flex-direction:column;}
+.template-card-body h2{font-size:19px;font-weight:700;margin-bottom:8px;}
+.template-card-body p{font-size:14px;color:var(--gray4);margin-bottom:24px;flex:1;}
+.template-card-footer{display:flex;align-items:center;justify-content:space-between;}
+.template-price{font-size:15px;font-weight:700;color:var(--accent-light);}
+.template-link{
+  font-size:13px;font-weight:600;padding:10px 18px;border-radius:var(--radius-pill);
+  border:1px solid var(--border);transition:background 0.2s,border-color 0.2s;
+}
+.template-link:hover{background:var(--accent);border-color:var(--accent);}
+
+.note-section{padding:0 48px 120px;max-width:720px;}
+.note-section h2{font-size:22px;font-weight:700;margin-bottom:16px;}
+.note-section p{font-size:14px;color:var(--gray4);line-height:1.8;margin-bottom:12px;}
+
+.cta-bar{padding:80px 48px;text-align:center;border-top:1px solid var(--border);background:var(--gray1);}
+.cta-bar h2{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-0.02em;margin-bottom:16px;}
+.cta-bar p{font-size:15px;color:var(--gray4);margin-bottom:32px;}
+.btn-primary{background:var(--accent);color:var(--white);font-size:13px;padding:16px 36px;border-radius:var(--radius-pill);display:inline-block;}
+
+footer{background:var(--gray1);padding:48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-copy{font-size:11px;letter-spacing:0.05em;color:var(--gray4);}
+
+@media(max-width:1024px){
+  .template-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:768px){
+  nav{padding:0 20px;height:56px;}
+  .page-hero{padding:100px 20px 48px;}
+  .grid-section,.note-section{padding-left:20px;padding-right:20px;}
+  .template-grid{grid-template-columns:1fr;}
+  .cta-bar{padding:60px 20px;}
+  footer{padding:32px 20px;flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">CHOIS LAB</a>
+  <a href="/" class="nav-back">← 홈으로</a>
+  <a href="http://pf.kakao.com/_xaGxaAn" target="_blank" class="nav-cta">무료 상담하기</a>
+</nav>
+
+<div class="page-hero">
+  <h1>빠르고 합리적인<br>템플릿 패키지</h1>
+  <p>업종별로 바로 적용 가능한 완성형 디자인입니다. 기획 단계를 생략하고 콘텐츠만 채워 넣는 방식이라, 맞춤 제작보다 빠르고 저렴하게 시작할 수 있어요.</p>
+</div>
+
+<div class="grid-section">
+  <div class="template-grid">
+    <div class="template-card">
+      <div class="template-card-img">
+        <span class="template-tag">전문직 · 상담소</span>
+        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80" alt="전문직·상담소 템플릿 미리보기">
+      </div>
+      <div class="template-card-body">
+        <h2>마음소리 심리상담센터</h2>
+        <p>신뢰감을 주는 차분한 톤. 상담소, 법률사무소, 컨설팅 업종에 적합합니다.</p>
+        <div class="template-card-footer">
+          <span class="template-price">15만원~</span>
+          <a href="/templates/consulting/" target="_blank" class="template-link">미리보기 ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="template-card">
+      <div class="template-card-img">
+        <span class="template-tag">음식점 · 카페</span>
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80" alt="음식점·카페 템플릿 미리보기">
+      </div>
+      <div class="template-card-body">
+        <h2>온기식탁</h2>
+        <p>따뜻하고 식욕을 자극하는 톤. 식당, 카페, 베이커리 업종에 적합합니다.</p>
+        <div class="template-card-footer">
+          <span class="template-price">15만원~</span>
+          <a href="/templates/restaurant/" target="_blank" class="template-link">미리보기 ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="template-card">
+      <div class="template-card-img">
+        <span class="template-tag">숙박</span>
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80" alt="숙박 템플릿 미리보기">
+      </div>
+      <div class="template-card-body">
+        <h2>소담스테이</h2>
+        <p>여유롭고 감성적인 톤. 독채·펜션·게스트하우스 업종에 적합합니다.</p>
+        <div class="template-card-footer">
+          <span class="template-price">15만원~</span>
+          <a href="/templates/stay/" target="_blank" class="template-link">미리보기 ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="note-section">
+  <h2>맞춤 제작과 뭐가 다른가요?</h2>
+  <p>템플릿 패키지는 레이아웃과 디자인이 이미 정해져 있어, 로고·문구·사진·연락처 등 콘텐츠만 교체합니다. 기획 과정이 없는 대신 납기가 짧고 비용이 낮습니다.</p>
+  <p>구조 자체를 바꾸거나 새로운 섹션을 추가하고 싶다면 Standard 이상의 맞춤 제작 플랜을 추천드립니다. 어떤 쪽이 맞을지 모르겠다면 편하게 상담 요청해주세요.</p>
+</div>
+
+<div class="cta-bar">
+  <h2>마음에 드는 템플릿이 있나요?</h2>
+  <p>업종, 로고, 원하는 문구만 보내주시면 3일 내로 완성해드립니다.</p>
+  <a href="http://pf.kakao.com/_xaGxaAn" target="_blank" class="btn-primary">템플릿으로 시작하기</a>
+</div>
+
+<footer>
+  <div class="footer-copy">© 2026 Chois Lab · Digital Contents Studio</div>
+  <div class="footer-copy"><a href="/" style="color:var(--gray4);">홈으로 돌아가기</a></div>
+</footer>
+
+</body>
+</html>

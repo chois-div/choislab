@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소담스테이 — 템플릿 미리보기 | 초이스랩</title>
+<meta name="description" content="숙박 업종을 위한 초이스랩 템플릿 패키지 미리보기입니다.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --accent:#2F5D63;--accent-tint:#E4EFEF;
+  --black:#1E2423;--white:#FFFFFF;
+  --gray1:#F0F3F2;--gray2:#E3E9E7;--gray3:#848F8C;--gray4:#53605D;
+  --border:rgba(30,36,35,0.1);
+  --font:'Pretendard',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);color:var(--black);background:var(--white);word-break:keep-all;overflow-wrap:break-word;line-height:1.6;}
+a{color:inherit;}
+img{max-width:100%;display:block;}
+
+.badge-float{
+  position:fixed;bottom:20px;right:20px;z-index:200;
+  background:var(--black);color:var(--white);
+  font-size:12px;letter-spacing:0.02em;
+  padding:10px 16px;border-radius:100px;
+  text-decoration:none;display:flex;align-items:center;gap:8px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+.badge-float span{color:var(--accent-tint);}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:76px;
+  background:rgba(255,255,255,0.85);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-size:18px;font-weight:700;letter-spacing:-0.01em;}
+.nav-links{display:flex;gap:32px;list-style:none;font-size:14px;color:var(--gray4);}
+.nav-cta{
+  background:var(--accent);color:var(--white);
+  font-size:13px;padding:10px 20px;border-radius:100px;
+  text-decoration:none;
+}
+
+.hero{
+  min-height:100vh;display:flex;align-items:flex-end;
+  padding:140px 40px 80px;position:relative;
+  background:linear-gradient(180deg, rgba(30,36,35,0.1) 0%, rgba(30,36,35,0.65) 100%),
+             url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80') center/cover;
+  color:var(--white);
+}
+.hero-inner{max-width:640px;}
+.hero-eyebrow{font-size:13px;letter-spacing:0.08em;color:var(--accent-tint);margin-bottom:18px;}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-0.02em;margin-bottom:20px;}
+.hero p{font-size:16px;color:rgba(255,255,255,0.85);margin-bottom:32px;max-width:480px;}
+.btn-primary{
+  display:inline-block;background:var(--white);color:var(--black);
+  font-size:14px;font-weight:600;padding:16px 32px;border-radius:100px;
+  text-decoration:none;transition:transform 0.2s ease;
+}
+.btn-primary:hover{transform:translateY(-2px);}
+
+section{padding:100px 40px;}
+.section-inner{max-width:1080px;margin:0 auto;}
+.eyebrow{font-size:13px;letter-spacing:0.08em;color:var(--accent);font-weight:600;margin-bottom:16px;}
+.section-title{font-size:clamp(26px,3.5vw,38px);font-weight:700;letter-spacing:-0.02em;margin-bottom:24px;}
+
+.about{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.about img{border-radius:20px;aspect-ratio:4/5;object-fit:cover;}
+.about p{color:var(--gray4);font-size:15px;margin-bottom:16px;}
+
+.rooms-section{background:var(--gray1);}
+.room-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;}
+.room-card{background:var(--white);border-radius:16px;overflow:hidden;border:1px solid var(--border);}
+.room-card img{aspect-ratio:4/3;object-fit:cover;}
+.room-card-body{padding:24px;}
+.room-card h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+.room-card p{font-size:14px;color:var(--gray4);margin-bottom:12px;}
+.room-card .price{font-size:15px;font-weight:700;color:var(--accent);}
+
+.quote-strip{background:var(--accent);color:var(--white);text-align:center;}
+.quote-strip p{font-size:clamp(20px,3vw,28px);font-weight:600;max-width:760px;margin:0 auto;letter-spacing:-0.01em;}
+.quote-strip span{display:block;margin-top:20px;font-size:14px;color:var(--accent-tint);font-weight:400;}
+
+.info-section{display:grid;grid-template-columns:1fr 1fr;gap:64px;}
+.info-block h3{font-size:16px;font-weight:700;margin-bottom:12px;}
+.info-block p{font-size:14px;color:var(--gray4);margin-bottom:6px;}
+
+footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-note{font-size:12px;color:var(--gray4);}
+.footer-note a{color:var(--accent);text-decoration:none;font-weight:600;}
+
+@media(max-width:860px){
+  .about{grid-template-columns:1fr;}
+  .room-grid{grid-template-columns:1fr;}
+  .info-section{grid-template-columns:1fr;}
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  section{padding:72px 20px;}
+  .hero{padding:120px 20px 56px;}
+}
+</style>
+</head>
+<body>
+
+<a class="badge-float" href="/templates/">← <span>초이스랩 템플릿</span></a>
+
+<nav>
+  <div class="nav-logo">소담스테이</div>
+  <ul class="nav-links">
+    <li>소개</li>
+    <li>객실 안내</li>
+    <li>예약 문의</li>
+  </ul>
+  <a href="#info" class="nav-cta">예약하기</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">숙박 템플릿</div>
+    <h1>아무것도 하지 않아도<br>괜찮은 하루</h1>
+    <p>소담스테이는 하루 네 팀만 받는 독채형 풀빌라입니다. 전용 수영장과 선베드가 딸린 공간에서, 온전히 쉬는 것에만 집중할 수 있도록 설계했습니다.</p>
+    <a href="#rooms" class="btn-primary">객실 둘러보기</a>
+  </div>
+</section>
+
+<section class="about">
+  <div class="section-inner about" style="padding:0;">
+    <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900&q=80" alt="소담스테이 외부 전경">
+    <div>
+      <div class="eyebrow">ABOUT</div>
+      <h2 class="section-title">하루 네 팀,<br>그 이상은 받지 않습니다</h2>
+      <p>소담스테이는 예약이 겹치지 않도록 하루 최대 네 동만 운영합니다. 옆 동 소음 걱정 없이, 온전한 프라이버시를 보장합니다.</p>
+      <p>체크인부터 체크아웃까지 호스트가 상주하지 않는 무인 운영으로, 눈치 보지 않고 편하게 머무실 수 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="rooms-section" id="rooms">
+  <div class="section-inner">
+    <div class="eyebrow">ROOMS</div>
+    <h2 class="section-title">객실 안내</h2>
+    <div class="room-grid">
+      <div class="room-card">
+        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600&q=80" alt="프라이빗 독채">
+        <div class="room-card-body">
+          <h3>프라이빗 독채 (2인)</h3>
+          <p>따뜻한 우드톤 인테리어와 테라스가 있는 가장 아늑한 객실입니다.</p>
+          <div class="price">1박 180,000원 ~</div>
+        </div>
+      </div>
+      <div class="room-card">
+        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80" alt="오션뷰 풀빌라">
+        <div class="room-card-body">
+          <h3>오션뷰 풀빌라 (4인)</h3>
+          <p>노을이 그대로 담기는 전용 수영장. 가족·커플 여행객에게 추천합니다.</p>
+          <div class="price">1박 320,000원 ~</div>
+        </div>
+      </div>
+      <div class="room-card">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="풀사이드 라운지 룸">
+        <div class="room-card-body">
+          <h3>풀사이드 라운지 룸 (2인)</h3>
+          <p>공용 수영장 바로 앞, 선베드에서 걸어서 30초 거리의 객실입니다.</p>
+          <div class="price">1박 150,000원 ~</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote-strip">
+  <div class="section-inner">
+    <p>"정말 아무 일정 없이, 수영장만 보다 왔어요. 재충전이 필요할 때 다시 올 곳."</p>
+    <span>투숙객 후기 중</span>
+  </div>
+</section>
+
+<section class="info-section" id="info">
+  <div class="section-inner info-section" style="padding:0;">
+    <div class="info-block">
+      <h3>체크인 · 체크아웃</h3>
+      <p>체크인 15:00 / 체크아웃 11:00</p>
+      <p>무인 체크인 (도어락 비밀번호 사전 안내)</p>
+    </div>
+    <div class="info-block">
+      <h3>위치 · 예약 문의</h3>
+      <p>제주 서귀포시 예시로 456</p>
+      <p>예약 문의 카카오톡 채널 @소담스테이</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-note">© 2026 소담스테이 (가상 브랜드)</div>
+  <div class="footer-note">이 페이지는 <a href="/templates/">초이스랩 템플릿 패키지</a> 미리보기입니다.</div>
+</footer>
+
+</body>
+</html>
