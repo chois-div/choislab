@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마음소리 심리상담센터 — 템플릿 미리보기 | 초이스랩</title>
+<meta name="description" content="전문직·상담소 업종을 위한 초이스랩 템플릿 패키지 미리보기입니다.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --accent:#3C6E59;--accent-tint:#EAF1EC;
+  --black:#1A1D1B;--white:#FDFCFA;
+  --gray1:#F6F4F0;--gray2:#EDEAE4;--gray3:#8A8780;--gray4:#5C5A54;
+  --border:rgba(26,29,27,0.1);
+  --font:'Pretendard',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);color:var(--black);background:var(--white);word-break:keep-all;overflow-wrap:break-word;line-height:1.6;}
+a{color:inherit;}
+img{max-width:100%;display:block;}
+
+.badge-float{
+  position:fixed;bottom:20px;right:20px;z-index:200;
+  background:var(--black);color:var(--white);
+  font-size:12px;letter-spacing:0.02em;
+  padding:10px 16px;border-radius:100px;
+  text-decoration:none;display:flex;align-items:center;gap:8px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+.badge-float span{color:var(--accent-tint);}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:76px;
+  background:rgba(253,252,250,0.85);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-size:18px;font-weight:700;letter-spacing:-0.01em;}
+.nav-links{display:flex;gap:32px;list-style:none;font-size:14px;color:var(--gray4);}
+.nav-cta{
+  background:var(--accent);color:var(--white);
+  font-size:13px;padding:10px 20px;border-radius:100px;
+  text-decoration:none;
+}
+
+.hero{
+  min-height:100vh;display:flex;align-items:flex-end;
+  padding:140px 40px 80px;position:relative;
+  background:linear-gradient(180deg, rgba(26,29,27,0.15) 0%, rgba(26,29,27,0.65) 100%),
+             url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1600&q=80') center/cover;
+  color:var(--white);
+}
+.hero-inner{max-width:640px;}
+.hero-eyebrow{font-size:13px;letter-spacing:0.08em;color:var(--accent-tint);margin-bottom:18px;}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-0.02em;margin-bottom:20px;}
+.hero p{font-size:16px;color:rgba(255,255,255,0.85);margin-bottom:32px;max-width:480px;}
+.btn-primary{
+  display:inline-block;background:var(--white);color:var(--black);
+  font-size:14px;font-weight:600;padding:16px 32px;border-radius:100px;
+  text-decoration:none;transition:transform 0.2s ease;
+}
+.btn-primary:hover{transform:translateY(-2px);}
+
+section{padding:100px 40px;}
+.section-inner{max-width:1080px;margin:0 auto;}
+.eyebrow{font-size:13px;letter-spacing:0.08em;color:var(--accent);font-weight:600;margin-bottom:16px;}
+.section-title{font-size:clamp(26px,3.5vw,38px);font-weight:700;letter-spacing:-0.02em;margin-bottom:24px;}
+
+.about{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.about img{border-radius:20px;aspect-ratio:4/5;object-fit:cover;}
+.about p{color:var(--gray4);font-size:15px;margin-bottom:16px;}
+.about-stats{display:flex;gap:40px;margin-top:32px;}
+.about-stat b{font-size:28px;display:block;color:var(--accent);}
+.about-stat span{font-size:13px;color:var(--gray4);}
+
+.programs{background:var(--gray1);}
+.program-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;}
+.program-card{
+  background:var(--white);border-radius:16px;padding:36px 28px;
+  border:1px solid var(--border);
+}
+.program-card h3{font-size:19px;font-weight:700;margin-bottom:10px;}
+.program-card p{font-size:14px;color:var(--gray4);}
+
+.quote-strip{
+  background:var(--accent);color:var(--white);text-align:center;
+}
+.quote-strip p{font-size:clamp(20px,3vw,28px);font-weight:600;max-width:760px;margin:0 auto;letter-spacing:-0.01em;}
+.quote-strip span{display:block;margin-top:20px;font-size:14px;color:var(--accent-tint);font-weight:400;}
+
+.cta-section{text-align:center;}
+.cta-section .section-title{margin-bottom:16px;}
+.cta-section p{color:var(--gray4);margin-bottom:36px;}
+.btn-dark{
+  display:inline-block;background:var(--black);color:var(--white);
+  font-size:14px;font-weight:600;padding:16px 36px;border-radius:100px;text-decoration:none;
+}
+
+footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-note{font-size:12px;color:var(--gray4);}
+.footer-note a{color:var(--accent);text-decoration:none;font-weight:600;}
+
+@media(max-width:860px){
+  .about{grid-template-columns:1fr;}
+  .program-grid{grid-template-columns:1fr;}
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  section{padding:72px 20px;}
+  .hero{padding:120px 20px 56px;}
+}
+</style>
+</head>
+<body>
+
+<a class="badge-float" href="../templates.html">← <span>초이스랩 템플릿</span></a>
+
+<nav>
+  <div class="nav-logo">마음소리 심리상담센터</div>
+  <ul class="nav-links">
+    <li>소개</li>
+    <li>상담 프로그램</li>
+    <li>예약 안내</li>
+  </ul>
+  <a href="#cta" class="nav-cta">상담 예약</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">전문직 · 상담소 템플릿</div>
+    <h1>혼자 견디지 않아도<br>괜찮습니다</h1>
+    <p>10년 경력의 임상심리 전문가가 당신의 이야기를 끝까지 들어드립니다. 첫 상담은 편안하게, 그 다음부터는 함께 계획을 세워요.</p>
+    <a href="#cta" class="btn-primary">첫 상담 신청하기</a>
+  </div>
+</section>
+
+<section class="about">
+  <div class="section-inner about" style="padding:0;">
+    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80" alt="상담실 내부 휴게 공간">
+    <div>
+      <div class="eyebrow">ABOUT</div>
+      <h2 class="section-title">말하지 못했던 마음을<br>안전하게 꺼내놓는 곳</h2>
+      <p>마음소리 심리상담센터는 개인상담, 부부상담, 청소년상담을 전문으로 합니다. 진단과 조언보다, 당신의 속도에 맞춘 대화를 우선합니다.</p>
+      <p>모든 상담은 비밀이 철저히 보장되며, 상담 기록은 본인 동의 없이 외부에 공유되지 않습니다.</p>
+      <div class="about-stats">
+        <div class="about-stat"><b>11년</b><span>임상 경력</span></div>
+        <div class="about-stat"><b>2,400+</b><span>누적 상담 회기</span></div>
+        <div class="about-stat"><b>4.9</b><span>내담자 만족도</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="programs">
+  <div class="section-inner">
+    <div class="eyebrow">PROGRAM</div>
+    <h2 class="section-title">상담 프로그램</h2>
+    <div class="program-grid">
+      <div class="program-card">
+        <h3>개인 심리상담</h3>
+        <p>불안, 우울, 번아웃, 대인관계 고민을 1:1로 깊이 있게 다룹니다. 회당 50분.</p>
+      </div>
+      <div class="program-card">
+        <h3>부부·커플 상담</h3>
+        <p>반복되는 갈등의 패턴을 함께 짚어보고, 대화하는 방법부터 다시 설계합니다.</p>
+      </div>
+      <div class="program-card">
+        <h3>청소년 상담</h3>
+        <p>학업 스트레스, 또래 관계, 진로 고민까지. 보호자 상담도 함께 진행합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote-strip">
+  <div class="section-inner">
+    <p>"괜찮은 척하지 않아도 되는 50분이 있다는 것, 그 자체로 위로가 됩니다."</p>
+    <span>내담자 후기 중</span>
+  </div>
+</section>
+
+<section class="cta-section" id="cta">
+  <div class="section-inner">
+    <div class="eyebrow">RESERVATION</div>
+    <h2 class="section-title">첫 상담, 부담 없이 시작하세요</h2>
+    <p>전화 또는 온라인으로 간단히 예약하실 수 있습니다. 상담 가능 시간은 평일 10:00 ~ 20:00입니다.</p>
+    <a href="#" class="btn-dark">상담 예약하기</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-note">© 2026 마음소리 심리상담센터 (가상 브랜드)</div>
+  <div class="footer-note">이 페이지는 <a href="../templates.html">초이스랩 템플릿 패키지</a> 미리보기입니다.</div>
+</footer>
+
+</body>
+</html>

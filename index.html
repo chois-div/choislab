@@ -729,6 +729,21 @@ section { padding: 120px 48px; }
 
 /* PRICING */
 .pricing-section { background: var(--black); }
+.pricing-template-note {
+  max-width: 900px; margin: 32px auto 0;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  padding: 20px 28px;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--gray1);
+}
+.pricing-template-note p { font-size: 14px; color: var(--gray4); }
+.pricing-template-note p b { color: var(--white); }
+.pricing-template-note a {
+  font-size: 13px; font-weight: 600; color: var(--white);
+  background: var(--accent); padding: 10px 20px; border-radius: var(--radius-pill);
+  text-decoration: none; white-space: nowrap;
+}
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1468,6 +1483,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </ul>
       <a href="#contact" class="price-cta">상담 받기</a>
     </div>
+  </div>
+  <div class="pricing-template-note">
+    <p>더 빠르고 저렴하게 시작하고 싶다면? <b>템플릿 패키지 15만원~</b> · 3일 납기</p>
+    <a href="templates.html">템플릿 보기 →</a>
   </div>
 </section>
 

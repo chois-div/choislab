@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>온기식탁 — 템플릿 미리보기 | 초이스랩</title>
+<meta name="description" content="음식점·카페 업종을 위한 초이스랩 템플릿 패키지 미리보기입니다.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --accent:#A8431B;--accent-tint:#FBEFE3;
+  --black:#231C16;--white:#FFFFFF;
+  --gray1:#F2EDE7;--gray2:#EEE4D6;--gray3:#9A8F7E;--gray4:#5E564A;
+  --border:rgba(35,28,22,0.1);
+  --font:'Pretendard',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);color:var(--black);background:var(--white);word-break:keep-all;overflow-wrap:break-word;line-height:1.6;}
+a{color:inherit;}
+img{max-width:100%;display:block;}
+
+.badge-float{
+  position:fixed;bottom:20px;right:20px;z-index:200;
+  background:var(--black);color:var(--white);
+  font-size:12px;letter-spacing:0.02em;
+  padding:10px 16px;border-radius:100px;
+  text-decoration:none;display:flex;align-items:center;gap:8px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+.badge-float span{color:var(--accent-tint);}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:76px;
+  background:rgba(255,252,248,0.85);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-size:18px;font-weight:700;letter-spacing:-0.01em;}
+.nav-links{display:flex;gap:32px;list-style:none;font-size:14px;color:var(--gray4);}
+.nav-cta{
+  background:var(--accent);color:var(--white);
+  font-size:13px;padding:10px 20px;border-radius:100px;
+  text-decoration:none;
+}
+
+.hero{
+  min-height:100vh;display:flex;align-items:flex-end;
+  padding:140px 40px 80px;position:relative;
+  background:linear-gradient(180deg, rgba(35,28,22,0.1) 0%, rgba(35,28,22,0.7) 100%),
+             url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80') center/cover;
+  color:var(--white);
+}
+.hero-inner{max-width:640px;}
+.hero-eyebrow{font-size:13px;letter-spacing:0.08em;color:var(--accent-tint);margin-bottom:18px;}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-0.02em;margin-bottom:20px;}
+.hero p{font-size:16px;color:rgba(255,255,255,0.85);margin-bottom:32px;max-width:480px;}
+.btn-primary{
+  display:inline-block;background:var(--white);color:var(--black);
+  font-size:14px;font-weight:600;padding:16px 32px;border-radius:100px;
+  text-decoration:none;transition:transform 0.2s ease;
+}
+.btn-primary:hover{transform:translateY(-2px);}
+
+section{padding:100px 40px;}
+.section-inner{max-width:1080px;margin:0 auto;}
+.eyebrow{font-size:13px;letter-spacing:0.08em;color:var(--accent);font-weight:600;margin-bottom:16px;}
+.section-title{font-size:clamp(26px,3.5vw,38px);font-weight:700;letter-spacing:-0.02em;margin-bottom:24px;}
+
+.about{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.about img{border-radius:20px;aspect-ratio:4/5;object-fit:cover;}
+.about p{color:var(--gray4);font-size:15px;margin-bottom:16px;}
+
+.menu-section{background:var(--gray1);}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;}
+.menu-card{
+  background:var(--white);border-radius:16px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.menu-card img{aspect-ratio:4/3;object-fit:cover;}
+.menu-card-body{padding:24px;}
+.menu-card h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+.menu-card p{font-size:14px;color:var(--gray4);margin-bottom:12px;}
+.menu-card .price{font-size:15px;font-weight:700;color:var(--accent);}
+
+.quote-strip{background:var(--accent);color:var(--white);text-align:center;}
+.quote-strip p{font-size:clamp(20px,3vw,28px);font-weight:600;max-width:760px;margin:0 auto;letter-spacing:-0.01em;}
+.quote-strip span{display:block;margin-top:20px;font-size:14px;color:var(--accent-tint);font-weight:400;}
+
+.info-section{display:grid;grid-template-columns:1fr 1fr;gap:64px;}
+.info-block h3{font-size:16px;font-weight:700;margin-bottom:12px;}
+.info-block p{font-size:14px;color:var(--gray4);margin-bottom:6px;}
+
+footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-note{font-size:12px;color:var(--gray4);}
+.footer-note a{color:var(--accent);text-decoration:none;font-weight:600;}
+
+@media(max-width:860px){
+  .about{grid-template-columns:1fr;}
+  .menu-grid{grid-template-columns:1fr;}
+  .info-section{grid-template-columns:1fr;}
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  section{padding:72px 20px;}
+  .hero{padding:120px 20px 56px;}
+}
+</style>
+</head>
+<body>
+
+<a class="badge-float" href="../templates.html">← <span>초이스랩 템플릿</span></a>
+
+<nav>
+  <div class="nav-logo">온기식탁</div>
+  <ul class="nav-links">
+    <li>소개</li>
+    <li>메뉴</li>
+    <li>오시는 길</li>
+  </ul>
+  <a href="#info" class="nav-cta">예약 문의</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">음식점 · 카페 템플릿</div>
+    <h1>집밥처럼 따뜻한<br>한 끼를 차립니다</h1>
+    <p>제철 재료로 매일 아침 끓이는 국물, 직접 담근 장으로 만드는 밑반찬. 온기식탁은 정성을 숨기지 않습니다.</p>
+    <a href="#menu" class="btn-primary">메뉴 보러가기</a>
+  </div>
+</section>
+
+<section class="about">
+  <div class="section-inner about" style="padding:0;">
+    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80" alt="온기식탁 매장 내부">
+    <div>
+      <div class="eyebrow">ABOUT</div>
+      <h2 class="section-title">17년째 한 자리,<br>한 가지 원칙</h2>
+      <p>온기식탁은 2009년부터 같은 자리에서 손님을 맞아온 한식 식당입니다. 조미료 대신 시간으로 맛을 냅니다.</p>
+      <p>모든 메뉴는 당일 조리, 당일 소진을 원칙으로 하며, 주요 식재료의 원산지는 매장 내 게시판에 투명하게 공개하고 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="menu-section" id="menu">
+  <div class="section-inner">
+    <div class="eyebrow">MENU</div>
+    <h2 class="section-title">대표 메뉴</h2>
+    <div class="menu-grid">
+      <div class="menu-card">
+        <img src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80" alt="매콤 얼큰 찌개">
+        <div class="menu-card-body">
+          <h3>매콤 얼큰 찌개</h3>
+          <p>직접 우린 육수에 제철 재료를 더해 얼큰하게 끓여냅니다. 공깃밥·밑반찬 포함.</p>
+          <div class="price">11,000원</div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" alt="제철 나물 비빔밥">
+        <div class="menu-card-body">
+          <h3>제철 나물 비빔밥</h3>
+          <p>계절마다 바뀌는 나물 7가지와 고추장, 참기름을 곁들입니다.</p>
+          <div class="price">10,000원</div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80" alt="가을 단호박죽">
+        <div class="menu-card-body">
+          <h3>가을 단호박죽</h3>
+          <p>제철 단호박을 곱게 갈아 끓인 든든한 한 그릇. 부담 없이 즐기실 수 있어요.</p>
+          <div class="price">9,000원</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote-strip">
+  <div class="section-inner">
+    <p>"어머니 손맛이 그리울 때 찾는 곳입니다. 늘 똑같이 맛있어요."</p>
+    <span>단골 손님 후기 중</span>
+  </div>
+</section>
+
+<section class="info-section" id="info">
+  <div class="section-inner info-section" style="padding:0;">
+    <div class="info-block">
+      <h3>영업 시간</h3>
+      <p>매일 11:00 – 21:00 (브레이크타임 15:00–17:00)</p>
+      <p>매주 월요일 정기 휴무</p>
+    </div>
+    <div class="info-block">
+      <h3>오시는 길 · 예약</h3>
+      <p>서울 마포구 예시로 123, 1층</p>
+      <p>단체 예약 문의 02-1234-5678</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-note">© 2026 온기식탁 (가상 브랜드)</div>
+  <div class="footer-note">이 페이지는 <a href="../templates.html">초이스랩 템플릿 패키지</a> 미리보기입니다.</div>
+</footer>
+
+</body>
+</html>
