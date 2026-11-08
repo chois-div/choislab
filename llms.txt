@@ -35,3 +35,4 @@
 - [홈페이지](https://chois-lab.site/): 서비스 소개, 가격, 프로세스, 고객 후기
 - [포트폴리오](https://chois-lab.site/portfolio/): 제작 사례 모음
 - [템플릿 패키지](https://chois-lab.site/templates/): 업종별 템플릿 미리보기 및 가격
+- [무료 SEO 진단](https://chois-lab.site/seo/): URL을 입력하면 SEO(검색엔진)·AEO(AI 답변엔진)·GEO(생성형 엔진) 관점에서 사이트를 분석해주는 무료 진단 도구
