@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import {
   findContractByToken,
   isValidSignatureData,
-  updateContract,
+  updateContractByToken,
 } from "@/lib/contracts";
 import { sendResponseNotification } from "@/lib/email";
 
@@ -66,18 +66,17 @@ export async function POST(
     if (message.length > 1_000) {
       return NextResponse.json({ error: "메시지는 1,000자 이하여야 합니다." }, { status: 400 });
     }
-    const updated = await updateContract(existing.id, (contract) => ({
-      ...(contract.status === "sent"
-        ? {
-            ...contract,
-            status: "declined" as const,
-            responseMessage: message || undefined,
-            signedAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            events: [{ at: new Date().toISOString(), label: "서명 거절 회신" }, ...contract.events],
-          }
-        : contract),
-    }));
+    const updated = await updateContractByToken(token, (contract) => {
+      const now = new Date().toISOString();
+      return {
+        ...contract,
+        status: "declined",
+        responseMessage: message || undefined,
+        signedAt: now,
+        updatedAt: now,
+        events: [{ at: now, label: "서명 거절 회신" }, ...contract.events],
+      };
+    });
     if (!updated || updated.status !== "declined") {
       return NextResponse.json({ error: "이미 회신된 계약입니다." }, { status: 409 });
     }
@@ -92,11 +91,12 @@ export async function POST(
   }
 
   const signerName = typeof data.signerName === "string" ? data.signerName.trim() : "";
+  const signature = data.signature;
   if (
     data.action !== "sign" ||
     !signerName ||
     signerName.length > 100 ||
-    !isValidSignatureData(data.signature)
+    !isValidSignatureData(signature)
   ) {
     return NextResponse.json(
       { error: "이름과 서명을 확인해 주세요. 서명 파일은 PNG 또는 JPG여야 합니다." },
@@ -104,18 +104,18 @@ export async function POST(
     );
   }
 
-  const updated = await updateContract(existing.id, (contract) => {
-    if (contract.status !== "sent") return contract;
+  const updated = await updateContractByToken(token, (contract) => {
+    const now = new Date().toISOString();
     return {
       ...contract,
       status: "signed",
       signerName,
-      recipientSignature: data.signature as string,
+      recipientSignature: signature,
       responseMessage:
         typeof data.message === "string" ? data.message.trim().slice(0, 1_000) : undefined,
-      signedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      events: [{ at: new Date().toISOString(), label: "서명 회신 완료" }, ...contract.events],
+      signedAt: now,
+      updatedAt: now,
+      events: [{ at: now, label: "서명 회신 완료" }, ...contract.events],
     };
   });
   if (!updated || updated.status !== "signed") {

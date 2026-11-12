@@ -1881,6 +1881,109 @@ a {
   font-size: 10px;
 }
 
+.auth-page {
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto 1fr;
+  padding: 25px;
+  background: var(--paper);
+}
+
+.auth-header {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+}
+
+.auth-main {
+  display: grid;
+  place-items: center;
+  padding: 36px 0;
+}
+
+.auth-panel {
+  width: min(100%, 430px);
+  padding: 34px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.auth-panel h1 {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: -0.025em;
+}
+
+.auth-panel > p {
+  margin: 10px 0 0;
+  color: #52606a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.auth-form {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.auth-form .field-label input {
+  min-height: 42px;
+}
+
+.auth-submit {
+  justify-content: center;
+  min-height: 42px;
+}
+
+.auth-message {
+  margin-top: 18px !important;
+  color: var(--green) !important;
+}
+
+.auth-message-error {
+  color: var(--red) !important;
+}
+
+.auth-panel .auth-note {
+  margin-top: 25px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: #5e6970;
+  font-size: 11px;
+}
+
+.workspace-email {
+  max-width: 240px;
+  overflow: hidden;
+  color: #4a565e;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-button {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 680px) {
+  .auth-page {
+    padding: 17px;
+  }
+
+  .auth-main {
+    padding: 28px 0;
+  }
+
+  .auth-panel {
+    padding: 26px 21px;
+  }
+
+  .workspace-email {
+    display: none;
+  }
+}
+
 @media (min-width: 1600px) {
   .page-content {
     padding-top: 52px;
