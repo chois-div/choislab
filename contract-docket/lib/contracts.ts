@@ -1,6 +1,8 @@
+import "server-only";
 import { createHash, randomBytes, timingSafeEqual, randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
-import path from "node:path";
+import type { ContractRow, Json } from "@/lib/supabase/types";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type ContractStatus = "draft" | "sending" | "sent" | "signed" | "declined";
 
@@ -45,104 +47,206 @@ export interface ContractInput {
   senderSignature?: string;
 }
 
-const dataDirectory = path.join(process.cwd(), ".local-data");
-const recordsPath = path.join(dataDirectory, "contracts.json");
-const uploadsPath = path.join(dataDirectory, "uploads");
+const contractColumns =
+  "id,owner_id,data,status,token_hash,expires_at,version,created_at,updated_at";
 
-let writeQueue: Promise<void> = Promise.resolve();
-
-async function ensureDataDirectory() {
-  await mkdir(uploadsPath, { recursive: true });
-}
-
-async function readAll(): Promise<ContractRecord[]> {
-  await ensureDataDirectory();
-  try {
-    const contents = await readFile(recordsPath, "utf8");
-    const parsed: unknown = JSON.parse(contents);
-    if (!Array.isArray(parsed)) {
-      throw new Error("Contract data must be an array.");
-    }
-    return parsed as ContractRecord[];
-  } catch (error) {
-    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
-      return [];
-    }
-    throw error;
-  }
-}
-
-async function writeAll(records: ContractRecord[]) {
-  await ensureDataDirectory();
-  const temporaryPath = `${recordsPath}.${randomUUID()}.tmp`;
-  await writeFile(temporaryPath, JSON.stringify(records, null, 2), { mode: 0o600 });
-  await rename(temporaryPath, recordsPath);
-}
-
-function withWriteLock<T>(operation: () => Promise<T>): Promise<T> {
-  const result = writeQueue.then(operation, operation);
-  writeQueue = result.then(
-    () => undefined,
-    () => undefined,
+function isContractRecord(value: unknown): value is ContractRecord {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const record = value as Record<string, unknown>;
+  const statuses: ContractStatus[] = ["draft", "sending", "sent", "signed", "declined"];
+  return (
+    typeof record.id === "string" &&
+    typeof record.title === "string" &&
+    typeof record.senderName === "string" &&
+    typeof record.senderEmail === "string" &&
+    typeof record.recipientName === "string" &&
+    typeof record.recipientEmail === "string" &&
+    typeof record.body === "string" &&
+    typeof record.status === "string" &&
+    statuses.includes(record.status as ContractStatus) &&
+    typeof record.createdAt === "string" &&
+    typeof record.updatedAt === "string" &&
+    Array.isArray(record.events) &&
+    record.events.every(
+      (event) =>
+        event &&
+        typeof event === "object" &&
+        typeof event.at === "string" &&
+        typeof event.label === "string",
+    )
   );
-  return result;
 }
 
-export async function listContracts(): Promise<ContractRecord[]> {
-  return (await readAll()).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+function contractFromRow(row: ContractRow): ContractRecord {
+  if (!isContractRecord(row.data) || row.data.id !== row.id || row.data.status !== row.status) {
+    throw new Error("CONTRACT_RECORD_INVALID");
+  }
+  return row.data;
 }
 
-export async function getContract(id: string): Promise<ContractRecord | undefined> {
-  return (await readAll()).find((contract) => contract.id === id);
+function contractToJson(contract: ContractRecord): Json {
+  return JSON.parse(JSON.stringify(contract)) as Json;
 }
 
-export async function createContract(input: ContractInput): Promise<ContractRecord> {
-  return withWriteLock(async () => {
-    const now = new Date().toISOString();
-    const contract: ContractRecord = {
-      ...input,
-      id: randomUUID(),
-      status: "draft",
-      createdAt: now,
-      updatedAt: now,
-      events: [{ at: now, label: "초안 생성" }],
-    };
-    const records = await readAll();
-    records.push(contract);
-    await writeAll(records);
-    return contract;
+function rowValues(contract: ContractRecord) {
+  return {
+    data: contractToJson(contract),
+    status: contract.status,
+    token_hash: contract.tokenHash ?? null,
+    expires_at: contract.expiresAt ?? null,
+    updated_at: contract.updatedAt,
+  };
+}
+
+export async function listContracts(userId: string): Promise<ContractRecord[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("contracts")
+    .select(contractColumns)
+    .eq("owner_id", userId)
+    .order("updated_at", { ascending: false });
+  if (error) throw error;
+  return data.map((row) => contractFromRow(row as ContractRow));
+}
+
+export async function getContract(
+  userId: string,
+  id: string,
+): Promise<ContractRecord | undefined> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("contracts")
+    .select(contractColumns)
+    .eq("owner_id", userId)
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? contractFromRow(data as ContractRow) : undefined;
+}
+
+export async function createContract(
+  userId: string,
+  input: ContractInput,
+  id = randomUUID(),
+): Promise<ContractRecord> {
+  const now = new Date().toISOString();
+  const contract: ContractRecord = {
+    ...input,
+    id,
+    status: "draft",
+    createdAt: now,
+    updatedAt: now,
+    events: [{ at: now, label: "초안 생성" }],
+  };
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase.from("contracts").insert({
+    id,
+    owner_id: userId,
+    ...rowValues(contract),
   });
+  if (error) throw error;
+  return contract;
 }
 
 export async function updateContract(
+  userId: string,
   id: string,
   update: (contract: ContractRecord) => ContractRecord,
 ): Promise<ContractRecord | undefined> {
-  return withWriteLock(async () => {
-    const records = await readAll();
-    const index = records.findIndex((contract) => contract.id === id);
-    if (index === -1) return undefined;
-    const next = update(records[index]);
-    records[index] = next;
-    await writeAll(records);
-    return next;
-  });
+  const supabase = createSupabaseAdminClient();
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const { data: row, error: readError } = await supabase
+      .from("contracts")
+      .select(contractColumns)
+      .eq("owner_id", userId)
+      .eq("id", id)
+      .maybeSingle();
+    if (readError) throw readError;
+    if (!row) return undefined;
+
+    const current = contractFromRow(row as ContractRow);
+    const next = update(current);
+    if (next === current) return current;
+    if (next.id !== current.id) {
+      throw new Error("CONTRACT_ID_CHANGED");
+    }
+
+    const { data: updated, error: updateError } = await supabase
+      .from("contracts")
+      .update({ ...rowValues(next), version: row.version + 1 })
+      .eq("owner_id", userId)
+      .eq("id", id)
+      .eq("version", row.version)
+      .select(contractColumns)
+      .maybeSingle();
+    if (updateError) throw updateError;
+    if (updated) return contractFromRow(updated as ContractRow);
+  }
+
+  throw new Error("CONTRACT_UPDATE_CONFLICT");
 }
 
 export async function findContractByToken(
   token: string,
 ): Promise<ContractRecord | undefined> {
   if (!/^[a-f0-9]{64}$/i.test(token)) return undefined;
-  const suppliedHash = createHash("sha256").update(token).digest();
-  const records = await readAll();
-  return records.find((contract) => {
-    if (!contract.tokenHash) return false;
-    const storedHash = Buffer.from(contract.tokenHash, "hex");
-    return (
-      storedHash.length === suppliedHash.length &&
-      timingSafeEqual(storedHash, suppliedHash)
-    );
-  });
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("contracts")
+    .select(contractColumns)
+    .eq("token_hash", tokenHash)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return undefined;
+
+  const suppliedHash = Buffer.from(tokenHash, "hex");
+  const storedHash = Buffer.from(data.token_hash ?? "", "hex");
+  if (
+    storedHash.length !== suppliedHash.length ||
+    !timingSafeEqual(storedHash, suppliedHash)
+  ) {
+    return undefined;
+  }
+  return contractFromRow(data as ContractRow);
+}
+
+export async function updateContractByToken(
+  token: string,
+  update: (contract: ContractRecord) => ContractRecord,
+): Promise<ContractRecord | undefined> {
+  if (!/^[a-f0-9]{64}$/i.test(token)) return undefined;
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const supabase = createSupabaseAdminClient();
+  const { data: row, error: readError } = await supabase
+    .from("contracts")
+    .select(contractColumns)
+    .eq("token_hash", tokenHash)
+    .eq("status", "sent")
+    .gt("expires_at", new Date().toISOString())
+    .maybeSingle();
+  if (readError) throw readError;
+  if (!row) return undefined;
+
+  const current = contractFromRow(row as ContractRow);
+  const next = update(current);
+  if (next.id !== current.id) {
+    throw new Error("CONTRACT_ID_CHANGED");
+  }
+  const { data: updated, error: updateError } = await supabase
+    .from("contracts")
+    .update({ ...rowValues(next), version: row.version + 1 })
+    .eq("id", row.id)
+    .eq("owner_id", row.owner_id)
+    .eq("status", "sent")
+    .eq("token_hash", tokenHash)
+    .gt("expires_at", new Date().toISOString())
+    .eq("version", row.version)
+    .select(contractColumns)
+    .maybeSingle();
+  if (updateError) throw updateError;
+  return updated ? contractFromRow(updated as ContractRow) : undefined;
 }
 
 export function createSigningToken() {
@@ -151,10 +255,6 @@ export function createSigningToken() {
     token,
     tokenHash: createHash("sha256").update(token).digest("hex"),
   };
-}
-
-export function getUploadsPath() {
-  return uploadsPath;
 }
 
 export function isValidSignatureData(value: unknown): value is string {

@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ContractRecord, ContractStatus } from "@/lib/contracts";
+import { CONTRACT_FILES_BUCKET } from "@/lib/supabase/constants";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Icon } from "@/components/icons";
 import { SignaturePad } from "@/components/signature-pad";
 
@@ -44,7 +46,23 @@ function statusClass(status: ContractStatus) {
   return `status status-${status}`;
 }
 
-export function ContractsWorkspace() {
+async function cleanupUpload(objectPath?: string) {
+  if (!objectPath) return;
+  try {
+    const response = await fetch("/api/contracts/uploads", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: objectPath }),
+    });
+    if (!response.ok) {
+      console.error("Could not clean up an unused contract upload.", response.status);
+    }
+  } catch (error) {
+    console.error("Could not clean up an unused contract upload.", error);
+  }
+}
+
+export function ContractsWorkspace({ userEmail }: { userEmail: string }) {
   const [contracts, setContracts] = useState<ContractRecord[]>([]);
   const [selectedId, setSelectedId] = useState<string>();
   const [filter, setFilter] = useState<Filter>("all");
@@ -53,6 +71,7 @@ export function ContractsWorkspace() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<ContractRecord>();
   const [notice, setNotice] = useState<{ kind: "success" | "error"; text: string }>();
+  const [signingOut, setSigningOut] = useState(false);
 
   const selected = contracts.find((contract) => contract.id === selectedId);
   const visibleContracts = useMemo(() => {
@@ -72,6 +91,10 @@ export function ContractsWorkspace() {
     setLoading(true);
     try {
       const response = await fetch("/api/contracts", { cache: "no-store" });
+      if (response.status === 401) {
+        window.location.assign("/login");
+        return;
+      }
       if (!response.ok) throw new Error("CONTRACT_LIST_FAILED");
       const records = (await response.json()) as ContractRecord[];
       setContracts(records);
@@ -126,6 +149,18 @@ export function ContractsWorkspace() {
     }
   }
 
+  async function signOut() {
+    setSigningOut(true);
+    try {
+      const response = await fetch("/api/auth/sign-out", { method: "POST" });
+      if (!response.ok) throw new Error("SIGN_OUT_FAILED");
+      window.location.assign("/login");
+    } catch {
+      setNotice({ kind: "error", text: "로그아웃하지 못했습니다. 다시 시도해 주세요." });
+      setSigningOut(false);
+    }
+  }
+
   function openNewContract() {
     setEditing(undefined);
     setDialogOpen(true);
@@ -172,9 +207,11 @@ export function ContractsWorkspace() {
         <header className="topbar">
           <div className="breadcrumb"><span>워크스페이스</span><Icon name="chevron" size={14} /><strong>계약 관리</strong></div>
           <div className="topbar-actions">
-            <span className="local-indicator"><i /> 로컬 작업 공간</span>
-            <button aria-label="도움말" className="icon-button" onClick={() => setNotice({ kind: "success", text: "SMTP 설정은 프로젝트의 .env.local 파일에서 관리할 수 있습니다." })} type="button"><Icon name="help" /></button>
-            <span className="avatar avatar-small">계</span>
+            <span className="local-indicator"><i /> 보호된 워크스페이스</span>
+            <span className="workspace-email">{userEmail}</span>
+            <button className="text-button logout-button" disabled={signingOut} onClick={() => void signOut()} type="button">
+              {signingOut ? "로그아웃 중…" : "로그아웃"}
+            </button>
           </div>
         </header>
 
@@ -474,13 +511,61 @@ function ContractEditor({
     const form = event.currentTarget;
     const formData = new FormData(form);
     formData.set("senderSignature", signature ?? "");
+    let uploadedPath: string | undefined;
+    let saveRequestStarted = false;
     formData.set(
       "removeFile",
       sourceMode === "write" && Boolean(contract?.storedFilename) ? "true" : "false",
     );
-    if (sourceMode === "write") formData.set("file", new File([], ""));
-    if (contract) formData.set("id", contract.id);
+    const selectedFile = formData.get("file");
+    formData.delete("file");
     try {
+      if (sourceMode === "write") {
+        formData.delete("storedFilename");
+        formData.delete("originalFilename");
+      } else if (selectedFile instanceof File && selectedFile.size > 0) {
+        const uploadResponse = await fetch("/api/contracts/uploads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            filename: selectedFile.name,
+            size: selectedFile.size,
+            contentType: selectedFile.type,
+          }),
+        });
+        const upload = (await uploadResponse.json()) as {
+          error?: string;
+          path?: string;
+          token?: string;
+          originalFilename?: string;
+        };
+        if (!uploadResponse.ok || !upload.path || !upload.token || !upload.originalFilename) {
+          throw new Error(upload.error ?? "PDF 업로드를 준비하지 못했습니다.");
+        }
+        uploadedPath = upload.path;
+        const { error: storageError } = await createSupabaseBrowserClient()
+          .storage
+          .from(CONTRACT_FILES_BUCKET)
+          .uploadToSignedUrl(upload.path, upload.token, selectedFile, {
+            contentType: "application/pdf",
+            upsert: false,
+          });
+        if (storageError) {
+          console.error("Could not upload contract PDF.", storageError);
+          throw new Error("PDF 파일을 안전하게 저장하지 못했습니다. 다시 시도해 주세요.");
+        }
+        formData.set("storedFilename", upload.path);
+        formData.set("originalFilename", upload.originalFilename);
+      } else if (contract?.storedFilename) {
+        formData.set("storedFilename", contract.storedFilename);
+        formData.set("originalFilename", contract.originalFilename ?? "");
+      } else {
+        formData.delete("storedFilename");
+        formData.delete("originalFilename");
+      }
+      if (contract) formData.set("id", contract.id);
+
+      saveRequestStarted = true;
       const response = await fetch("/api/contracts", {
         method: contract ? "PATCH" : "POST",
         body: formData,
@@ -488,11 +573,19 @@ function ContractEditor({
       const result = (await response.json()) as ContractRecord & { error?: string };
       if (!response.ok) {
         setError(result.error ?? "계약을 저장하지 못했습니다.");
+        await cleanupUpload(uploadedPath);
+        uploadedPath = undefined;
         return;
       }
+      uploadedPath = undefined;
       onSaved(result);
-    } catch {
-      setError("서버에 연결하지 못했습니다. 연결 상태를 확인해 주세요.");
+    } catch (cause) {
+      setError(
+        cause instanceof Error && cause.message !== "Failed to fetch"
+          ? cause.message
+          : "서버에 연결하지 못했습니다. 연결 상태를 확인해 주세요.",
+      );
+      if (!saveRequestStarted) await cleanupUpload(uploadedPath);
     } finally {
       setSaving(false);
     }
