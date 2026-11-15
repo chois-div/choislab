@@ -47,7 +47,7 @@ ops-api (Render, 무료 티어, 신규)
 ## 화면 구성
 
 ### 1. 비밀번호 게이트
-`/quote/index.html`과 동일한 방식을 그대로 재사용한다: 입력값을 SHA-256으로 변환해 기존 해시 상수와 비교, 통과한 변환값(KEY)은 메모리에만 보관하고 어디에도 저장하지 않는다. 새 비밀번호를 만들지 않는다 — 기존 `/quote/` 비밀번호 그대로 재사용한다.
+`/quote/index.html`과 동일한 방식을 그대로 재사용한다. 비밀번호의 정답은 로컬에 저장돼 있지 않다 — 입력값을 SHA-256으로 변환한 값(KEY)을 기존 Google Apps Script 엔드포인트의 `action=ping`에 `key` 파라미터로 보내면, Apps Script가 서버에 저장된 진짜 해시와 비교해 `{ok:true, rows:N}` 또는 `{ok:false, error:'인증 실패'}`를 돌려준다. 이 응답으로 통과 여부를 판단한다. KEY는 통과 후 메모리 변수에만 보관하고 어디에도 저장하지 않는다. 새 비밀번호를 만들지 않고, 비밀번호의 진짜 값은 여전히 Apps Script 쪽에만 있다 (단일 진실 공급원 유지).
 
 ### 2. 대시보드 (비밀번호 통과 후)
 
@@ -63,12 +63,12 @@ ops-api (Render, 무료 티어, 신규)
 ## 데이터 흐름
 
 1. 페이지 로드 → 비밀번호 입력창
-2. 입력값 SHA-256 변환 → 저장된 해시와 비교
-3. 일치 → 대시보드 노출, KEY를 메모리 변수에 보관
+2. 입력값 SHA-256 변환(KEY) → `<Apps Script 엔드포인트>?action=ping&key=<KEY>` 호출
+3. 응답이 `{ok:true}`면 통과 → 대시보드 노출, KEY를 메모리 변수에 보관. `{ok:false}`면 "비밀번호가 맞지 않습니다" 인라인 에러
 4. 다음 두 요청을 병렬로 실행:
    - `GET /data/portfolio.json` (same-origin, 인증 없음)
    - `GET <Apps Script 엔드포인트>?action=list&key=<KEY>`
-5. `GET <ops-api 주소>/api/inquiries` 호출 시 3단계에서 만든 KEY(비밀번호의 SHA-256 해시)를 `X-Ops-Key` 헤더로 함께 전달. `ops-api`는 같은 해시값을 환경변수로 가지고 있다가 단순 비교만 수행 (새 비밀번호나 별도 토큰 발급 없음 — "하나의 비밀번호로 통일" 요구사항 그대로 유지)
+5. `GET <ops-api 주소>/api/inquiries` 호출 시 3단계에서 만든 KEY를 `X-Ops-Key` 헤더로 함께 전달. `ops-api`는 그 KEY를 그대로 들고 같은 Apps Script의 `action=ping`을 서버사이드로 한 번 호출해 `{ok:true}`인지 확인한 뒤에만 아임웹 조회를 진행한다 (비밀번호의 진짜 값은 Apps Script에만 있으므로, ops-api도 별도로 비밀번호를 저장하지 않고 같은 곳에 물어봐서 검증 — "하나의 비밀번호로 통일" 요구사항 그대로 유지)
    - `ops-api`는 내부적으로 설정된 사이트 목록을 순회하며:
      a. 각 사이트의 Key/Secret으로 아임웹 `v2/auth` 호출 → access_token 발급
      b. 발급된 토큰으로 "입력폼 제출 목록 조회" 호출
