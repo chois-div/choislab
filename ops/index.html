@@ -32,14 +32,19 @@ a { color: var(--blue); }
 .tag { font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: rgba(91,79,255,0.2); color: var(--blue); }
 .login-card h1 { font-size: 22px; font-weight: 800; }
 .login-card p.sub { color: var(--text2); font-size: 13px; margin-top: 4px; }
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field label { font-size: 13px; font-weight: 600; color: var(--text2); }
+.field { display: flex; flex-direction: column; gap: 6px; border: 0; min-width: 0; }
+.field label, .field .lab { font-size: 13px; font-weight: 600; color: var(--text2); }
 .input { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 12px 14px; font-size: 14px; width: 100%; }
+textarea.input { min-height: 96px; resize: vertical; line-height: 1.55; }
 .btn { background: var(--primary); color: #fff; border: 0; border-radius: 8px; padding: 12px 18px; font-size: 14px; font-weight: 700; }
 .btn:hover { filter: brightness(1.1); }
 .btn:disabled { opacity: 0.55; cursor: progress; }
 .btn.secondary { background: var(--raised); color: var(--text); }
 .btn.small { padding: 8px 12px; font-size: 13px; }
+.btn.danger { background: rgba(242,92,92,0.16); color: #FF9A9A; }
+.linkbtn { background: none; border: 0; color: var(--blue); font-weight: 600; font-size: 13px; padding: 2px 4px; }
+.linkbtn:hover { text-decoration: underline; }
+.linkbtn.warn { color: var(--danger); }
 .msg-error { background: rgba(242,92,92,0.12); color: #FF9A9A; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
 
 /* ---- shell ---- */
@@ -59,30 +64,37 @@ a { color: var(--blue); }
 .sidebar .me button { align-self: flex-start; background: none; border: 0; color: var(--muted); font-size: 12px; font-weight: 600; padding: 0; }
 .sidebar .me button:hover { color: var(--text); }
 .main { padding: 32px 40px 48px; min-width: 0; }
-.page-head { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; }
-.page-head h2 { font-size: 24px; font-weight: 800; }
+.page-head { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.page-head .titles { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.page-head h2 { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .page-head p { color: var(--text2); font-size: 13px; }
+.crumb { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
+.crumb a { color: var(--muted); text-decoration: none; }
+.crumb a:hover { color: var(--text); }
 
 /* ---- badges / chips ---- */
 .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
 .badge.info { background: rgba(61,130,247,0.16); color: var(--blue); }
 .badge.warn { background: rgba(245,181,68,0.16); color: var(--warn); }
 .badge.ok { background: rgba(52,211,153,0.16); color: var(--ok); }
+.badge.bad { background: rgba(242,92,92,0.16); color: var(--danger); }
+.badge.purple { background: rgba(91,79,255,0.22); color: #B7B1FF; }
 .badge.neutral { background: var(--raised); color: var(--text2); }
-.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
 .tab { background: var(--surface); border: 1px solid var(--border); color: var(--text2); border-radius: 16px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
 .tab.active { background: rgba(91,79,255,0.16); border-color: transparent; color: var(--blue); }
 
 /* ---- dashboard ---- */
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
-.kpi { padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.kpi { padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; text-align: left; color: var(--text); font: inherit; }
+button.kpi:hover { border-color: #34405a; }
 .kpi .l { font-size: 13px; font-weight: 600; color: var(--text2); }
-.kpi .v { font-size: 28px; font-weight: 800; }
+.kpi .v { font-size: 26px; font-weight: 800; }
 .kpi .h { font-size: 12px; color: var(--muted); }
-.panel-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; font-weight: 800; font-size: 15px; }
-.panel-head button { background: none; border: 0; color: var(--blue); font-size: 13px; font-weight: 600; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; font-weight: 800; font-size: 15px; gap: 8px; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 
-/* ---- inbox ---- */
+/* ---- inbox / lists ---- */
 .inbox { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 16px; align-items: start; }
 .list { overflow: hidden; }
 .row { display: flex; flex-direction: column; gap: 6px; padding: 14px 18px; border: 0; border-bottom: 1px solid var(--border); background: none; color: var(--text); text-align: left; width: 100%; }
@@ -97,14 +109,16 @@ a { color: var(--blue); }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
 .empty { padding: 40px 20px; text-align: center; color: var(--text2); }
 .detail { overflow: hidden; }
-.detail-head { display: flex; align-items: center; gap: 10px; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); }
+.detail-head { display: flex; align-items: center; gap: 10px; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .detail-head h3 { font-size: 20px; font-weight: 800; }
 .detail-head .at { margin-left: auto; font-size: 12px; color: var(--muted); }
 .back { display: none; background: none; border: 0; color: var(--blue); font-weight: 600; padding: 0 0 12px; }
 .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 20px 24px 8px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding: 4px 20px 18px; }
 .kv { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .kv .k { font-size: 12px; color: var(--muted); }
 .kv .vv { font-size: 14px; font-weight: 600; word-break: break-all; }
+.vv.danger { color: var(--danger); } .vv.ok { color: var(--ok); } .vv.warn { color: var(--warn); }
 .section { padding: 12px 24px; display: flex; flex-direction: column; gap: 8px; }
 .section .t { font-size: 12px; color: var(--muted); }
 .ref { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); font-size: 13px; }
@@ -120,9 +134,66 @@ a { color: var(--blue); }
 .seg button:last-child { border-right: 0; }
 .seg button.on { background: var(--raised); color: var(--text); }
 .convert { margin-left: auto; }
-.note { padding: 0 24px 4px; color: var(--muted); font-size: 12px; }
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--raised); border: 1px solid var(--border); padding: 10px 16px; border-radius: 10px; font-size: 13px; z-index: 10; }
-.soon-page { padding: 48px 24px; text-align: center; color: var(--text2); }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--raised); border: 1px solid var(--border); padding: 10px 16px; border-radius: 10px; font-size: 13px; z-index: 40; }
+
+/* ---- projects board ---- */
+.board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 8px; align-items: start; }
+.col { background: rgba(17,24,39,0.5); border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 10px; min-height: 120px; }
+.col .ch { display: flex; align-items: center; gap: 8px; padding: 0 6px 2px; font-weight: 800; }
+.col .ch .n { color: var(--muted); font-weight: 600; font-size: 13px; }
+.pcard { display: flex; flex-direction: column; gap: 8px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; text-align: left; color: var(--text); width: 100%; }
+.pcard:hover { border-color: #34405a; }
+.pcard .nm { font-weight: 800; font-size: 14px; }
+.pcard .cu { font-size: 12px; color: var(--text2); }
+.pcard .meta { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+.pcard .meta .due { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); }
+.due.hot { color: var(--warn) !important; }
+.flags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ---- project detail ---- */
+.stepper { display: flex; align-items: center; gap: 10px; padding: 16px 20px; overflow-x: auto; margin-bottom: 16px; }
+.stepper .st { display: flex; align-items: center; gap: 8px; background: none; border: 0; color: var(--muted); font-weight: 600; font-size: 14px; white-space: nowrap; padding: 2px 0; }
+.stepper .st .c { width: 22px; height: 22px; border-radius: 50%; background: var(--raised); flex-shrink: 0; }
+.stepper .st.done .c { background: var(--primary); }
+.stepper .st.done { color: var(--text); }
+.stepper .st.cur .c { background: var(--bg); border: 3px solid var(--blue); }
+.stepper .st.cur { color: var(--text); font-weight: 800; }
+.stepper .ln { flex: 1; min-width: 20px; height: 2px; background: var(--border); }
+.stepper .ln.done { background: var(--primary); }
+.cols2 { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 8px 12px; background: rgba(28,35,51,0.5); }
+.tbl td { padding: 12px; border-top: 1px solid var(--border); vertical-align: middle; }
+.tbl td.act { text-align: right; white-space: nowrap; }
+.tbl-wrap { overflow-x: auto; }
+.mini { padding: 4px 20px 18px; display: flex; flex-direction: column; gap: 10px; }
+.mini .line { display: flex; gap: 12px; font-size: 13px; }
+.mini .line .k { color: var(--muted); width: 72px; flex-shrink: 0; }
+.mini .line .vv { font-weight: 600; flex: 1; min-width: 0; word-break: break-all; }
+.memo { padding: 4px 20px 18px; white-space: pre-wrap; word-break: break-word; font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* ---- slide-over panel ---- */
+.overlay { position: fixed; inset: 0; background: rgba(11,18,32,0.7); z-index: 30; display: flex; justify-content: flex-end; }
+.panel { width: 520px; max-width: 100%; height: 100%; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+.panel-top { display: flex; align-items: center; padding: 20px 28px 16px; border-bottom: 1px solid var(--border); }
+.panel-top h3 { font-size: 18px; font-weight: 800; flex: 1; }
+.panel-top button { background: none; border: 0; color: var(--muted); font-size: 18px; padding: 4px 8px; }
+.panel-body { flex: 1; overflow-y: auto; padding: 20px 28px; display: flex; flex-direction: column; gap: 14px; }
+.panel-body .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.panel-body .sectionlab { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: var(--blue); padding-top: 6px; }
+.panel-body .sectionlab::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip span { display: inline-block; padding: 7px 14px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg); color: var(--text2); font-size: 13px; font-weight: 600; cursor: pointer; }
+.chip input:checked + span { background: var(--primary); border-color: var(--primary); color: #fff; }
+.chip input:focus-visible + span { outline: 2px solid #fff; outline-offset: 2px; }
+.toggle { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+.toggle input { width: 18px; height: 18px; accent-color: var(--primary); }
+.panel-foot { display: flex; align-items: center; gap: 10px; padding: 16px 28px 20px; border-top: 1px solid var(--border); }
+.panel-foot .sp { flex: 1; }
+.form-error { color: #FF9A9A; font-size: 13px; min-height: 18px; }
 
 @media (max-width: 960px) {
   .shell { grid-template-columns: 1fr; }
@@ -134,9 +205,12 @@ a { color: var(--blue); }
   .main { padding: 20px 16px 40px; }
   .inbox { grid-template-columns: 1fr; }
   .inbox.has-selected .list { display: none; }
-  .inbox:not(.has-selected) .detail { display: none; }
+  .inbox:not(.has-selected) .detail-col { display: none; }
   .back { display: block; }
   .grid3 { grid-template-columns: 1fr 1fr; }
+  .grid4 { grid-template-columns: 1fr 1fr; }
+  .cols2, .two { grid-template-columns: 1fr; }
+  .panel { width: 100%; }
 }
 </style>
 </head>
@@ -158,17 +232,31 @@ a { color: var(--blue); }
     hold: { label: '보류', cls: 'neutral' }
   };
   var ORDER = ['new', 'seen', 'replied', 'hold'];
+  var STAGES = [
+    { id: 'inquiry', label: '문의', cls: 'neutral' },
+    { id: 'quote', label: '견적', cls: 'warn' },
+    { id: 'contract', label: '계약', cls: 'neutral' },
+    { id: 'production', label: '제작', cls: 'info' },
+    { id: 'review', label: '검수', cls: 'purple' },
+    { id: 'done', label: '완료', cls: 'ok' },
+    { id: 'hold', label: '보류', cls: 'neutral' }
+  ];
+  var CONTRACTED = { contract: 1, production: 1, review: 1, done: 1 };
+  var PLATFORMS = { imweb: '아임웹', framer: '프레이머', other: '기타' };
+  var PAY_KIND = { deposit: '선금', interim: '중도금', balance: '잔금' };
+  var INV_KIND = { tax_invoice: '세금계산서', withholding_3_3: '3.3% 원천징수' };
   var NAV = [
     { id: 'dashboard', label: '대시보드', icon: 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
     { id: 'inbox', label: '문의함', icon: 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z', badge: true },
-    { id: 'projects', label: '프로젝트', icon: 'M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z', soon: true },
-    { id: 'customers', label: '고객', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75', soon: true },
+    { id: 'projects', label: '프로젝트', icon: 'M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z' },
+    { id: 'customers', label: '고객', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
     { id: 'quotes', label: '견적서', icon: 'M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM14 2v6h6', href: '/quote/' },
     { id: 'leads', label: '의뢰 현황', icon: 'M3 3v18h18M7 14l4-4 4 4 5-5', soon: true }
   ];
 
-  var state = { session: null, inquiries: [], loaded: false, error: '', filter: 'all' };
+  var state = { session: null, inquiries: [], projects: [], customers: [], loaded: false, error: '', filter: 'all', pfilter: 'all' };
   var app = document.getElementById('app');
+  var closePanel = null;
 
   /* ---------- helpers ---------- */
   function append(n, c) {
@@ -201,9 +289,8 @@ a { color: var(--blue); }
   function pad(n) { return n < 10 ? '0' + n : String(n); }
   function when(iso) {
     var d = new Date(iso), now = new Date();
-    var sameDay = d.toDateString() === now.toDateString();
     var y = new Date(now); y.setDate(now.getDate() - 1);
-    if (sameDay) return '오늘 ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    if (d.toDateString() === now.toDateString()) return '오늘 ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
     if (d.toDateString() === y.toDateString()) return '어제';
     return pad(d.getMonth() + 1) + '/' + pad(d.getDate());
   }
@@ -211,13 +298,24 @@ a { color: var(--blue); }
     var d = new Date(iso);
     return d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
   }
+  function dateOnly(s) { return s ? s.replace(/-/g, '.') : ''; }
+  function todayStr() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function dayDiff(s) {
+    if (!s) return null;
+    var p = s.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2]), n = new Date();
+    n = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+    return Math.round((d - n) / 86400000);
+  }
+  function dday(s) { var n = dayDiff(s); return n === null ? '' : n === 0 ? 'D-day' : n > 0 ? 'D-' + n : 'D+' + (-n); }
+  function won(n) { return '₩' + (Number(n) || 0).toLocaleString('ko-KR'); }
   function sizeText(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(n / 1024)) + 'KB'; }
   function isHttp(u) { return /^https?:[/][/]/i.test(u); }
   function toast(msg) {
     var t = el('div', { class: 'toast', role: 'status', text: msg });
     document.body.appendChild(t);
-    setTimeout(function () { t.remove(); }, 2600);
+    setTimeout(function () { t.remove(); }, 2800);
   }
+  function stageOf(id) { return STAGES.filter(function (s) { return s.id === id; })[0] || STAGES[0]; }
 
   /* ---------- session / api ---------- */
   function loadSession() {
@@ -240,7 +338,10 @@ a { color: var(--blue); }
       return r.json().then(function (j) { saveSession(fromAuth(j)); return true; });
     }).catch(function () { return false; });
   }
-  function signOut() { saveSession(null); state.inquiries = []; state.loaded = false; render(); }
+  function signOut() {
+    if (closePanel) closePanel();
+    saveSession(null); state.inquiries = []; state.projects = []; state.customers = []; state.loaded = false; render();
+  }
   function api(path, opts, retried) {
     opts = opts || {};
     var ready = (state.session.expires_at - 60 < Date.now() / 1000) ? refresh() : Promise.resolve(true);
@@ -253,14 +354,33 @@ a { color: var(--blue); }
       return r;
     });
   }
+  function rest(method, path, body, prefer) {
+    var headers = {};
+    if (body !== undefined) headers['Content-Type'] = 'application/json';
+    if (prefer) headers.Prefer = prefer;
+    return api('/rest/v1/' + path, { method: method, headers: headers, body: body === undefined ? undefined : JSON.stringify(body) }).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) { var e = new Error('HTTP ' + r.status); e.status = r.status; e.body = t; throw e; });
+      return r.status === 204 ? null : r.text().then(function (t) { return t ? JSON.parse(t) : null; });
+    });
+  }
 
   /* ---------- data ---------- */
-  function loadInquiries() {
+  function loadAll() {
     state.error = '';
-    return api('/rest/v1/inquiries?select=*,inquiry_files(id,file_name,size_bytes,storage_path)&order=created_at.desc&limit=300')
-      .then(function (r) { if (!r.ok) throw new Error('문의를 불러오지 못했습니다. (' + r.status + ')'); return r.json(); })
-      .then(function (rows) { state.inquiries = rows; state.loaded = true; })
-      .catch(function (e) { state.error = e.message; state.loaded = true; });
+    var q = {
+      inquiries: 'inquiries?select=*,inquiry_files(id,file_name,size_bytes,storage_path)&order=created_at.desc&limit=300',
+      projects: 'projects?select=*,customers(id,name),payments(id,kind,amount,due_date,paid_at),invoices(id,kind,amount,issued,issued_at,memo)&order=due_date.asc.nullslast,created_at.desc&limit=500',
+      customers: 'customers?select=*,projects(id,name,stage,contract_amount)&order=created_at.desc&limit=500'
+    };
+    return Promise.all(Object.keys(q).map(function (k) {
+      return rest('GET', q[k]).then(function (rows) { state[k] = rows || []; }).catch(function (e) { state.error = '데이터를 불러오지 못했습니다. (' + (e.message || '') + ')'; });
+    })).then(function () { state.loaded = true; });
+  }
+  function reload() { return loadAll().then(render); }
+  function fail(e, fallback) {
+    var msg = fallback || '저장하지 못했어요. 다시 시도해 주세요.';
+    if (e && e.status === 409) msg = '연결된 데이터가 있어 삭제할 수 없어요. (프로젝트가 있는 고객 등)';
+    toast(msg);
   }
   function setStatus(id, status) {
     var item = state.inquiries.filter(function (q) { return q.id === id; })[0];
@@ -268,8 +388,7 @@ a { color: var(--blue); }
     var prev = item.status;
     item.status = status;
     render();
-    return api('/rest/v1/inquiries?id=eq.' + encodeURIComponent(id), { method: 'PATCH', headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify({ status: status }) })
-      .then(function (r) { if (!r.ok) throw new Error(String(r.status)); })
+    return rest('PATCH', 'inquiries?id=eq.' + encodeURIComponent(id), { status: status }, 'return=minimal')
       .catch(function () { item.status = prev; render(); toast('상태를 바꾸지 못했어요. 다시 시도해 주세요.'); });
   }
   function download(file) {
@@ -286,11 +405,25 @@ a { color: var(--blue); }
       })
       .catch(function () { toast('파일을 내려받지 못했어요. 다시 시도해 주세요.'); });
   }
+  function convertInquiry(q, btn) {
+    btn.disabled = true; btn.textContent = '전환 중…';
+    rest('POST', 'rpc/convert_inquiry_to_project', { p_inquiry_id: q.id }).then(function (projectId) {
+      return loadAll().then(function () { go('#/projects/' + projectId); toast('프로젝트로 전환했어요.'); });
+    }).catch(function (e) { fail(e, '전환하지 못했어요. 다시 시도해 주세요.'); btn.disabled = false; btn.textContent = '프로젝트로 전환 →'; });
+  }
+
+  /* ---------- derived ---------- */
+  function paidSum(p) { return (p.payments || []).reduce(function (s, x) { return s + (x.paid_at ? x.amount : 0); }, 0); }
+  function unpaid(p) { return CONTRACTED[p.stage] ? Math.max(0, (p.contract_amount || 0) - paidSum(p)) : 0; }
+  function isHot(p) { var n = dayDiff(p.due_date); return n !== null && n <= 7 && p.stage !== 'done' && p.stage !== 'hold'; }
+  function planSoon(p) { var n = dayDiff(p.plan_expires_at); return n !== null && n <= 30 && p.stage !== 'hold'; }
   function counts() {
     var c = { all: state.inquiries.length, new: 0, seen: 0, replied: 0, hold: 0 };
     state.inquiries.forEach(function (q) { if (c[q.status] !== undefined) c[q.status]++; });
     return c;
   }
+  function projectById(id) { return state.projects.filter(function (p) { return p.id === id; })[0] || null; }
+  function customerById(id) { return state.customers.filter(function (c) { return c.id === id; })[0] || null; }
 
   /* ---------- routing ---------- */
   function route() {
@@ -299,6 +432,194 @@ a { color: var(--blue); }
   }
   function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
   window.addEventListener('hashchange', function () { if (state.session) render(); });
+
+  /* ---------- slide-over panel ---------- */
+  function openPanel(cfg) {
+    if (closePanel) closePanel();
+    var opener = document.activeElement;
+    var getters = {};
+    var errBox = el('div', { class: 'form-error', role: 'alert' });
+    var body = el('form', { class: 'panel-body', novalidate: true, id: 'panelForm' });
+    var uid = 0;
+    function build(f) {
+      var id = 'pf_' + (++uid), g, node;
+      if (f.type === 'section') return el('div', { class: 'sectionlab', text: f.label });
+      var v = cfg.values && cfg.values[f.key] !== undefined && cfg.values[f.key] !== null ? cfg.values[f.key] : (f.def !== undefined ? f.def : '');
+      if (f.type === 'select') {
+        node = el('select', { class: 'input', id: id }, (f.options || []).map(function (o) { return el('option', { value: o.value, text: o.label, selected: String(o.value) === String(v) }); }));
+        g = function () { return node.value; };
+      } else if (f.type === 'textarea') {
+        node = el('textarea', { class: 'input', id: id, maxlength: f.max || 5000 }); node.value = v; g = function () { return node.value; };
+      } else if (f.type === 'chips') {
+        var name = 'chip_' + f.key;
+        node = el('div', { class: 'chips', role: 'radiogroup' }, (f.options || []).map(function (o) {
+          return el('label', { class: 'chip' }, el('input', { type: 'radio', name: name, value: o.value, checked: String(o.value) === String(v) }), el('span', { text: o.label }));
+        }));
+        getters[f.key] = function () { var c = node.querySelector('input:checked'); return c ? c.value : ''; };
+        return el('div', { class: 'field' }, el('span', { class: 'lab', text: f.label }), node);
+      } else if (f.type === 'toggle') {
+        node = el('input', { type: 'checkbox', id: id }); node.checked = !!v; g = function () { return node.checked; };
+        getters[f.key] = g;
+        return el('label', { class: 'toggle', for: id }, node, f.label);
+      } else {
+        node = el('input', { class: 'input', id: id, type: f.type === 'date' ? 'date' : 'text', maxlength: f.max || 200, inputmode: f.type === 'number' ? 'numeric' : null, placeholder: f.placeholder || null });
+        node.value = v; g = function () { return node.value; };
+      }
+      getters[f.key] = g;
+      return el('div', { class: 'field' }, el('label', { for: id, text: f.label + (f.required ? ' *' : '') }), node);
+    }
+    var fieldNodes = [];
+    var pending = [];
+    cfg.fields.forEach(function (f) {
+      if (f.row) { pending.push(f); if (pending.length === 2) { fieldNodes.push(el('div', { class: 'row2' }, pending.map(build))); pending = []; } }
+      else { if (pending.length) { fieldNodes.push(el('div', { class: 'row2' }, pending.map(build))); pending = []; } fieldNodes.push(build(f)); }
+    });
+    if (pending.length) fieldNodes.push(el('div', { class: 'row2' }, pending.map(build)));
+    append(body, fieldNodes);
+    append(body, errBox);
+
+    var saveBtn = el('button', { class: 'btn', type: 'submit', form: 'panelForm', text: cfg.saveLabel || '저장' });
+    var delBtn = null;
+    if (cfg.onDelete) {
+      var armed = false;
+      delBtn = el('button', { class: 'linkbtn warn', type: 'button', text: cfg.deleteLabel || '삭제', onclick: function () {
+        if (!armed) { armed = true; delBtn.textContent = '한 번 더 누르면 삭제됩니다'; setTimeout(function () { armed = false; delBtn.textContent = cfg.deleteLabel || '삭제'; }, 4000); return; }
+        delBtn.disabled = true;
+        cfg.onDelete().then(function () { close(); }).catch(function (e) { delBtn.disabled = false; errBox.textContent = ''; fail(e, '삭제하지 못했어요.'); });
+      } });
+    }
+    var panel = el('div', { class: 'panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': cfg.title },
+      el('div', { class: 'panel-top' }, el('h3', { text: cfg.title }), el('button', { type: 'button', 'aria-label': '닫기', onclick: function () { close(); }, text: '✕' })),
+      body,
+      el('div', { class: 'panel-foot' }, delBtn, el('span', { class: 'sp' }), el('button', { class: 'btn secondary', type: 'button', onclick: function () { close(); }, text: '취소' }), saveBtn));
+    var overlay = el('div', { class: 'overlay', onmousedown: function (e) { if (e.target === overlay) close(); } }, panel);
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    function close() { document.removeEventListener('keydown', onKey); overlay.remove(); closePanel = null; if (opener && opener.focus && document.body.contains(opener)) opener.focus(); }
+    closePanel = close;
+    document.addEventListener('keydown', onKey);
+    body.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var values = {};
+      Object.keys(getters).forEach(function (k) { values[k] = getters[k](); });
+      for (var i = 0; i < cfg.fields.length; i++) {
+        var f = cfg.fields[i];
+        if (f.required && !String(values[f.key] === undefined ? '' : values[f.key]).trim()) { errBox.textContent = f.label + '을(를) 입력해 주세요.'; return; }
+        if (f.type === 'number' && String(values[f.key]).trim() && !/^[0-9,]+$/.test(String(values[f.key]).trim())) { errBox.textContent = f.label + '은(는) 숫자만 입력해 주세요.'; return; }
+      }
+      errBox.textContent = ''; saveBtn.disabled = true; saveBtn.textContent = '저장 중…';
+      cfg.onSave(values).then(function () { close(); }).catch(function (err) {
+        saveBtn.disabled = false; saveBtn.textContent = cfg.saveLabel || '저장';
+        errBox.textContent = (err && err.status === 409) ? '이미 연결된 데이터가 있어요.' : '저장하지 못했어요. 입력 내용을 확인하고 다시 시도해 주세요.';
+      });
+    });
+    document.body.appendChild(overlay);
+    var first = body.querySelector('input:not([type=radio]):not([type=checkbox]), select, textarea');
+    if (first) first.focus();
+  }
+  function nul(v) { v = (v === undefined || v === null) ? '' : String(v).trim(); return v === '' ? null : v; }
+  function num(v) { v = nul(v); return v === null ? 0 : parseInt(v.replace(/,/g, ''), 10); }
+
+  /* ---------- forms ---------- */
+  function customerOptions() { return state.customers.map(function (c) { return { value: c.id, label: c.name }; }); }
+  function projectPanel(p, presetCustomer) {
+    var isNew = !p;
+    var v = p ? {
+      name: p.name, customer_id: p.customer_id, stage: p.stage, start_date: p.start_date, due_date: p.due_date, contract_amount: p.contract_amount ? String(p.contract_amount) : '', quote_doc_no: p.quote_doc_no, memo: p.memo,
+      platform: p.platform || '', plan_name: p.plan_name, plan_paid_by: p.plan_paid_by || '', plan_paid_at: p.plan_paid_at, plan_expires_at: p.plan_expires_at, plan_auto_renew: p.plan_auto_renew
+    } : { stage: 'inquiry', platform: '', plan_paid_by: '', customer_id: presetCustomer || '' };
+    if (!state.customers.length) { toast('먼저 고객을 추가해 주세요.'); return; }
+    openPanel({
+      title: isNew ? '새 프로젝트' : '프로젝트 수정', values: v,
+      fields: [
+        { key: 'name', label: '프로젝트명', required: true, max: 150 },
+        { key: 'customer_id', label: '고객', type: 'select', required: true, row: true, options: [{ value: '', label: '선택해 주세요' }].concat(customerOptions()) },
+        { key: 'stage', label: '단계', type: 'select', row: true, options: STAGES.map(function (s) { return { value: s.id, label: s.label }; }) },
+        { key: 'start_date', label: '착수일', type: 'date', row: true },
+        { key: 'due_date', label: '마감일', type: 'date', row: true },
+        { key: 'contract_amount', label: '계약금액(원)', type: 'number', placeholder: '8000000' },
+        { key: 'quote_doc_no', label: '연결 견적번호', max: 50 },
+        { type: 'section', label: '호스팅 플랜' },
+        { key: 'platform', label: '플랫폼', type: 'chips', options: [{ value: '', label: '미지정' }, { value: 'imweb', label: '아임웹' }, { value: 'framer', label: '프레이머' }, { value: 'other', label: '기타' }] },
+        { key: 'plan_name', label: '플랜 이름', row: true, max: 100 },
+        { key: 'plan_paid_by', label: '결제 주체', type: 'chips', row: true, options: [{ value: '', label: '미지정' }, { value: 'self', label: '본인' }, { value: 'client', label: '고객' }] },
+        { key: 'plan_paid_at', label: '플랜 결제일', type: 'date', row: true },
+        { key: 'plan_expires_at', label: '플랜 만료일', type: 'date', row: true },
+        { key: 'plan_auto_renew', label: '자동 갱신', type: 'toggle' },
+        { key: 'memo', label: '메모', type: 'textarea' }
+      ],
+      onSave: function (x) {
+        var body = { name: x.name.trim(), customer_id: x.customer_id, stage: x.stage, start_date: nul(x.start_date), due_date: nul(x.due_date), contract_amount: num(x.contract_amount), quote_doc_no: nul(x.quote_doc_no), memo: nul(x.memo),
+          platform: nul(x.platform), plan_name: nul(x.plan_name), plan_paid_by: nul(x.plan_paid_by), plan_paid_at: nul(x.plan_paid_at), plan_expires_at: nul(x.plan_expires_at), plan_auto_renew: !!x.plan_auto_renew };
+        var done = isNew ? rest('POST', 'projects?select=id', body, 'return=representation') : rest('PATCH', 'projects?id=eq.' + encodeURIComponent(p.id), body, 'return=minimal');
+        return done.then(function (res) { return loadAll().then(function () { if (isNew && res && res[0]) go('#/projects/' + res[0].id); else render(); }); });
+      },
+      onDelete: isNew ? null : function () { return rest('DELETE', 'projects?id=eq.' + encodeURIComponent(p.id)).then(function () { return loadAll().then(function () { go('#/projects'); }); }); },
+      deleteLabel: '프로젝트 삭제'
+    });
+  }
+  function customerPanel(c) {
+    var isNew = !c;
+    openPanel({
+      title: isNew ? '새 고객' : '고객 수정',
+      values: c ? { name: c.name, contact_name: c.contact_name, phone: c.phone, email: c.email, source: c.source, memo: c.memo } : {},
+      fields: [
+        { key: 'name', label: '고객명(업체명)', required: true, max: 100 },
+        { key: 'contact_name', label: '담당자', row: true, max: 100 },
+        { key: 'phone', label: '연락처', row: true, max: 50 },
+        { key: 'email', label: '이메일', max: 200 },
+        { key: 'source', label: '유입 경로', max: 50, placeholder: '아임웹 의뢰, 지인, 홈페이지 문의 등' },
+        { key: 'memo', label: '메모', type: 'textarea' }
+      ],
+      onSave: function (x) {
+        var body = { name: x.name.trim(), contact_name: nul(x.contact_name), phone: nul(x.phone), email: nul(x.email), source: nul(x.source), memo: nul(x.memo) };
+        var done = isNew ? rest('POST', 'customers?select=id', body, 'return=representation') : rest('PATCH', 'customers?id=eq.' + encodeURIComponent(c.id), body, 'return=minimal');
+        return done.then(function (res) { return loadAll().then(function () { if (isNew && res && res[0]) go('#/customers/' + res[0].id); else render(); }); });
+      },
+      onDelete: isNew ? null : function () { return rest('DELETE', 'customers?id=eq.' + encodeURIComponent(c.id)).then(function () { return loadAll().then(function () { go('#/customers'); }); }); },
+      deleteLabel: '고객 삭제'
+    });
+  }
+  function paymentPanel(p, pay) {
+    var isNew = !pay;
+    openPanel({
+      title: isNew ? '입금 추가' : '입금 수정',
+      values: pay ? { kind: pay.kind, amount: String(pay.amount), due_date: pay.due_date, paid_at: pay.paid_at } : { kind: 'deposit' },
+      fields: [
+        { key: 'kind', label: '구분', type: 'select', options: Object.keys(PAY_KIND).map(function (k) { return { value: k, label: PAY_KIND[k] }; }) },
+        { key: 'amount', label: '금액(원)', type: 'number', required: true },
+        { key: 'due_date', label: '입금 예정일', type: 'date', row: true },
+        { key: 'paid_at', label: '실제 입금일', type: 'date', row: true }
+      ],
+      onSave: function (x) {
+        var body = { project_id: p.id, kind: x.kind, amount: num(x.amount), due_date: nul(x.due_date), paid_at: nul(x.paid_at) };
+        if (!(body.amount > 0)) return Promise.reject(new Error('amount'));
+        var done = isNew ? rest('POST', 'payments', body, 'return=minimal') : rest('PATCH', 'payments?id=eq.' + encodeURIComponent(pay.id), body, 'return=minimal');
+        return done.then(reload);
+      },
+      onDelete: isNew ? null : function () { return rest('DELETE', 'payments?id=eq.' + encodeURIComponent(pay.id)).then(reload); }
+    });
+  }
+  function invoicePanel(p, inv) {
+    var isNew = !inv;
+    openPanel({
+      title: isNew ? '세금 항목 추가' : '세금 항목 수정',
+      values: inv ? { kind: inv.kind, amount: String(inv.amount), issued: inv.issued, issued_at: inv.issued_at, memo: inv.memo } : { kind: 'tax_invoice' },
+      fields: [
+        { key: 'kind', label: '구분', type: 'select', options: Object.keys(INV_KIND).map(function (k) { return { value: k, label: INV_KIND[k] }; }) },
+        { key: 'amount', label: '금액(원)', type: 'number', required: true },
+        { key: 'issued', label: '발행 완료', type: 'toggle' },
+        { key: 'issued_at', label: '발행일', type: 'date' },
+        { key: 'memo', label: '메모 (예: 선금분)', max: 500 }
+      ],
+      onSave: function (x) {
+        var body = { project_id: p.id, kind: x.kind, amount: num(x.amount), issued: !!x.issued, issued_at: nul(x.issued_at), memo: nul(x.memo) };
+        if (!(body.amount > 0)) return Promise.reject(new Error('amount'));
+        var done = isNew ? rest('POST', 'invoices', body, 'return=minimal') : rest('PATCH', 'invoices?id=eq.' + encodeURIComponent(inv.id), body, 'return=minimal');
+        return done.then(reload);
+      },
+      onDelete: isNew ? null : function () { return rest('DELETE', 'invoices?id=eq.' + encodeURIComponent(inv.id)).then(reload); }
+    });
+  }
 
   /* ---------- views ---------- */
   function renderLogin(errorMsg) {
@@ -345,24 +666,44 @@ a { color: var(--blue); }
   }
 
   function badge(status) { var s = STATUS[status] || STATUS.new; return el('span', { class: 'badge ' + s.cls, text: s.label }); }
+  function stageBadge(id) { var s = stageOf(id); return el('span', { class: 'badge ' + s.cls, text: s.label }); }
+  function pageHead(title, sub, actions, extra) {
+    return el('div', { class: 'page-head' }, el('div', { class: 'titles' }, extra, el('h2', null, title), sub ? el('p', { text: sub }) : null), actions);
+  }
 
   function dashboardView() {
     var c = counts();
-    var weekAgo = Date.now() - 7 * 86400000;
-    var week = state.inquiries.filter(function (q) { return new Date(q.created_at).getTime() > weekAgo; }).length;
-    var kpi = function (l, v, h, color) { return el('div', { class: 'card kpi' }, el('span', { class: 'l', text: l }), el('span', { class: 'v', text: String(v), style: color ? 'color:' + color : null }), el('span', { class: 'h', text: h })); };
+    var active = state.projects.filter(function (p) { return p.stage !== 'done' && p.stage !== 'hold'; });
+    var hotCount = state.projects.filter(isHot).length;
+    var unpaidSum = state.projects.reduce(function (s, p) { return s + unpaid(p); }, 0);
+    var unpaidProjects = state.projects.filter(function (p) { return unpaid(p) > 0; }).length;
+    var invPending = 0;
+    state.projects.forEach(function (p) { (p.invoices || []).forEach(function (i) { if (!i.issued) invPending++; }); });
+    var planCount = state.projects.filter(planSoon).length;
+    var kpi = function (l, v, h, color, target) {
+      return el('button', { class: 'card kpi', type: 'button', onclick: function () { go(target); } }, el('span', { class: 'l', text: l }), el('span', { class: 'v', text: String(v), style: color ? 'color:' + color : null }), el('span', { class: 'h', text: h }));
+    };
     var recent = state.inquiries.slice(0, 5);
-    var list = el('div', { class: 'card list' },
-      el('div', { class: 'panel-head' }, el('span', { text: '최근 문의' }), el('button', { type: 'button', onclick: function () { go('#/inbox'); }, text: '문의함 →' })),
+    var inqList = el('div', { class: 'card list' },
+      el('div', { class: 'panel-head' }, el('span', { text: '최근 문의' }), el('button', { class: 'linkbtn', type: 'button', onclick: function () { go('#/inbox'); }, text: '문의함 →' })),
       recent.length ? recent.map(function (q) { return rowEl(q, false, function () { go('#/inbox/' + q.id); }); }) : el('div', { class: 'empty', text: '아직 접수된 문의가 없어요.' }));
+    var soon = active.slice().sort(function (a, b) { return (a.due_date || '9999') < (b.due_date || '9999') ? -1 : 1; }).slice(0, 5);
+    var projList = el('div', { class: 'card list' },
+      el('div', { class: 'panel-head' }, el('span', { text: '진행 중 프로젝트' }), el('button', { class: 'linkbtn', type: 'button', onclick: function () { go('#/projects'); }, text: '전체 보기 →' })),
+      soon.length ? soon.map(function (p) {
+        return el('button', { class: 'row', type: 'button', onclick: function () { go('#/projects/' + p.id); } },
+          el('div', { class: 'top' }, el('span', { class: 'name', text: p.name }), stageBadge(p.stage), el('span', { class: 'when' + (isHot(p) ? ' due hot' : ''), text: p.due_date ? dateOnly(p.due_date) + ' · ' + dday(p.due_date) : '마감 미정' })),
+          el('div', { class: 'type', text: (p.customers ? p.customers.name : '') + (unpaid(p) > 0 ? ' · 미수금 ' + won(unpaid(p)) : '') }));
+      }) : el('div', { class: 'empty', text: '진행 중인 프로젝트가 없어요.' }));
     return [
-      el('div', { class: 'page-head' }, el('h2', { text: '대시보드' }), el('p', { text: '문의 현황 요약입니다. 프로젝트·입금 요약은 해당 기능이 준비되면 이곳에 추가됩니다.' })),
+      pageHead('대시보드', '문의·프로젝트·입금 현황 요약입니다.'),
       el('div', { class: 'kpis' },
-        kpi('신규 문의', c.new, '확인하지 않은 문의', 'var(--blue)'),
-        kpi('이번 주 접수', week, '최근 7일', null),
-        kpi('답변 대기', c.seen, '확인했지만 답변 전', 'var(--warn)'),
-        kpi('전체 문의', c.all, '보류 ' + c.hold + '건 포함', null)),
-      list
+        kpi('신규 문의', c.new, '확인하지 않은 문의', 'var(--blue)', '#/inbox'),
+        kpi('이번 주 마감', hotCount, '7일 이내·지난 마감 포함', hotCount ? 'var(--warn)' : null, '#/projects'),
+        kpi('미수금 합계', won(unpaidSum), unpaidProjects + '개 프로젝트', unpaidSum ? 'var(--danger)' : null, '#/projects'),
+        kpi('세금 항목 미발행', invPending, '발행 완료 전 항목', null, '#/projects'),
+        kpi('플랜 만료 임박', planCount, '30일 이내·만료 포함', planCount ? 'var(--warn)' : null, '#/projects')),
+      el('div', { class: 'two' }, projList, inqList)
     ];
   }
 
@@ -374,8 +715,8 @@ a { color: var(--blue); }
       el('div', { class: 'snip', text: q.message }));
   }
 
-  function kv(k, v, link) {
-    var value = el('span', { class: 'vv' });
+  function kv(k, v, link, cls) {
+    var value = el('span', { class: 'vv' + (cls ? ' ' + cls : '') });
     if (link && v && isHttp(v)) value.appendChild(el('a', { href: v, target: '_blank', rel: 'noopener noreferrer', text: v }));
     else value.textContent = v || '-';
     return el('div', { class: 'kv' }, el('span', { class: 'k', text: k }), value);
@@ -392,6 +733,9 @@ a { color: var(--blue); }
     var seg = el('div', { class: 'seg', role: 'group', 'aria-label': '상태 변경' }, ORDER.map(function (s) {
       return el('button', { type: 'button', class: q.status === s ? 'on' : '', 'aria-pressed': q.status === s ? 'true' : 'false', onclick: function () { setStatus(q.id, s); }, text: STATUS[s].label });
     }));
+    var conv;
+    if (q.project_id) conv = el('a', { class: 'btn secondary convert', href: '#/projects/' + q.project_id, style: 'text-decoration:none', text: '프로젝트 보기 →' });
+    else { conv = el('button', { class: 'btn convert', type: 'button', text: '프로젝트로 전환 →' }); conv.addEventListener('click', function () { convertInquiry(q, conv); }); }
     return el('div', { class: 'card detail' },
       el('div', { class: 'detail-head' }, el('h3', { text: q.name }), badge(q.status), el('span', { class: 'at', text: '접수 ' + full(q.created_at) })),
       el('div', { class: 'grid3' },
@@ -400,8 +744,7 @@ a { color: var(--blue); }
         kv('개인정보 수집 동의', full(q.consent_at)), kv('유입', '홈페이지 문의 폼')),
       refBlock,
       el('div', { class: 'section' }, el('span', { class: 't', text: '문의 내용' }), el('div', { class: 'bubble', text: q.message })),
-      el('div', { class: 'actions' }, el('span', { class: 'lbl', text: '상태' }), seg,
-        el('button', { class: 'btn secondary convert', type: 'button', disabled: true, title: '프로젝트·고객 기능이 준비되면 사용할 수 있어요', text: '프로젝트로 전환 (준비 중)' })));
+      el('div', { class: 'actions' }, el('span', { class: 'lbl', text: '상태' }), seg, conv));
   }
 
   function inboxView() {
@@ -414,18 +757,143 @@ a { color: var(--blue); }
     var selected = state.inquiries.filter(function (q) { return q.id === r.id; })[0] || null;
     if (selected && selected.status === 'new') setStatus(selected.id, 'seen');
     var list = el('div', { class: 'card list' }, rows.length ? rows.map(function (q) { return rowEl(q, selected && selected.id === q.id, function () { go('#/inbox/' + q.id); }); }) : el('div', { class: 'empty', text: state.filter === 'all' ? '아직 접수된 문의가 없어요.' : '해당 상태의 문의가 없어요.' }));
-    var detail = selected ? el('div', null, el('button', { class: 'back', type: 'button', onclick: function () { go('#/inbox'); }, text: '← 목록으로' }), detailEl(selected))
-      : el('div', { class: 'card empty detail', text: '왼쪽에서 문의를 선택해 주세요.' });
+    var detail = selected ? el('div', { class: 'detail-col' }, el('button', { class: 'back', type: 'button', onclick: function () { go('#/inbox'); }, text: '← 목록으로' }), detailEl(selected))
+      : el('div', { class: 'card empty detail detail-col', text: '왼쪽에서 문의를 선택해 주세요.' });
     return [
-      el('div', { class: 'page-head' }, el('h2', { text: '문의함' }), el('p', { text: '홈페이지 문의 폼으로 접수된 문의입니다. 문의를 열면 자동으로 "확인" 상태가 됩니다.' })),
+      pageHead('문의함', '홈페이지 문의 폼으로 접수된 문의입니다. 문의를 열면 자동으로 "확인" 상태가 됩니다.'),
       state.error ? el('div', { class: 'msg-error', role: 'alert', text: state.error }) : null,
       tabs,
       el('div', { class: 'inbox' + (selected ? ' has-selected' : '') }, list, detail)
     ];
   }
 
+  /* ----- projects ----- */
+  function projectCard(p) {
+    var flags = [];
+    if (unpaid(p) > 0) flags.push(el('span', { class: 'badge bad', text: '미수금 ' + won(unpaid(p)) }));
+    if (planSoon(p)) flags.push(el('span', { class: 'badge warn', text: '플랜 만료 ' + dday(p.plan_expires_at) }));
+    return el('button', { class: 'pcard', type: 'button', onclick: function () { go('#/projects/' + p.id); } },
+      el('span', { class: 'nm', text: p.name }),
+      el('span', { class: 'cu', text: p.customers ? p.customers.name : '' }),
+      el('span', { class: 'meta' }, el('span', { text: p.contract_amount ? won(p.contract_amount) : '금액 미정' }), el('span', { class: 'due' + (isHot(p) ? ' hot' : ''), text: p.due_date ? dateOnly(p.due_date).slice(5) + ' · ' + dday(p.due_date) : '마감 미정' })),
+      flags.length ? el('span', { class: 'flags' }, flags) : null);
+  }
+  function projectsView() {
+    var filters = [['all', '전체'], ['hot', '마감 임박'], ['unpaid', '미수금 있음'], ['invoice', '세금 미발행'], ['plan', '플랜 만료 임박'], ['hold', '보류']];
+    var pass = function (p) {
+      var f = state.pfilter;
+      if (f === 'hot') return isHot(p);
+      if (f === 'unpaid') return unpaid(p) > 0;
+      if (f === 'invoice') return (p.invoices || []).some(function (i) { return !i.issued; });
+      if (f === 'plan') return planSoon(p);
+      if (f === 'hold') return p.stage === 'hold';
+      return p.stage !== 'hold';
+    };
+    var tabs = el('div', { class: 'tabs' }, filters.map(function (t) {
+      return el('button', { class: 'tab' + (state.pfilter === t[0] ? ' active' : ''), type: 'button', onclick: function () { state.pfilter = t[0]; render(); }, text: t[1] });
+    }));
+    var shown = state.projects.filter(pass);
+    var cols = (state.pfilter === 'hold' ? [STAGES[6]] : STAGES.slice(0, 6)).map(function (s) {
+      var items = shown.filter(function (p) { return p.stage === s.id; });
+      return el('div', { class: 'col' }, el('div', { class: 'ch' }, el('span', { text: s.label }), el('span', { class: 'n', text: String(items.length) })), items.map(projectCard));
+    });
+    var active = state.projects.filter(function (p) { return p.stage !== 'done' && p.stage !== 'hold'; }).length;
+    return [
+      pageHead('프로젝트', '진행 중 ' + active + '건 · 완료 ' + state.projects.filter(function (p) { return p.stage === 'done'; }).length + '건',
+        el('button', { class: 'btn', type: 'button', onclick: function () { projectPanel(null); }, text: '+ 새 프로젝트' })),
+      state.error ? el('div', { class: 'msg-error', role: 'alert', text: state.error }) : null,
+      tabs,
+      state.projects.length ? el('div', { class: 'board' }, cols) : el('div', { class: 'card empty', text: '아직 프로젝트가 없어요. 문의함에서 "프로젝트로 전환"하거나 "+ 새 프로젝트"로 추가해 보세요.' })
+    ];
+  }
+
+  function cardWith(title, headRight, body) {
+    return el('div', { class: 'card' }, el('div', { class: 'panel-head' }, el('span', { text: title }), headRight), body);
+  }
+  function projectDetailView(id) {
+    var p = projectById(id);
+    if (!p) return [pageHead('프로젝트를 찾을 수 없어요', '삭제되었거나 주소가 잘못되었을 수 있어요.', el('button', { class: 'btn secondary', type: 'button', onclick: function () { go('#/projects'); }, text: '목록으로' }))];
+    var cust = customerById(p.customer_id);
+    var stageIdx = STAGES.slice(0, 6).map(function (s) { return s.id; }).indexOf(p.stage);
+    var steps = [];
+    STAGES.slice(0, 6).forEach(function (s, i) {
+      var cls = 'st' + (stageIdx > i ? ' done' : '') + (stageIdx === i ? ' cur' : '');
+      steps.push(el('button', { class: cls, type: 'button', 'aria-current': stageIdx === i ? 'step' : null, onclick: function () { changeStage(p, s.id); } }, el('span', { class: 'c' }), s.label));
+      if (i < 5) steps.push(el('span', { class: 'ln' + (stageIdx > i ? ' done' : '') }));
+    });
+    steps.push(el('button', { class: 'st' + (p.stage === 'hold' ? ' cur' : ''), type: 'button', style: 'margin-left:12px', onclick: function () { changeStage(p, 'hold'); } }, el('span', { class: 'c' }), '보류'));
+    var paid = paidSum(p), un = unpaid(p), dn = dayDiff(p.due_date);
+    var overview = cardWith('개요', null, el('div', null,
+      el('div', { class: 'grid4' }, kv('고객', cust ? cust.name : '-'), kv('착수일', dateOnly(p.start_date)), kv('마감일', p.due_date ? dateOnly(p.due_date) + ' (' + dday(p.due_date) + ')' : '', false, dn !== null && dn <= 7 && p.stage !== 'done' ? 'warn' : ''), kv('계약금액', p.contract_amount ? won(p.contract_amount) : '')),
+      el('div', { class: 'grid4' }, kv('입금 합계', won(paid), false, 'ok'), kv('미수금', won(un), false, un ? 'danger' : ''), kv('연결 견적', p.quote_doc_no), kv('진행률', p.stage === 'done' ? '100%' : ['10%', '25%', '45%', '70%', '90%', '100%'][Math.max(0, stageIdx)]))));
+    var today = todayStr();
+    var payRows = (p.payments || []).slice().sort(function (a, b) { return (a.due_date || '9999') < (b.due_date || '9999') ? -1 : 1; }).map(function (x) {
+      var st = x.paid_at ? el('span', { class: 'badge ok', text: '입금 완료' }) : (x.due_date && x.due_date < today ? el('span', { class: 'badge bad', text: '연체' }) : el('span', { class: 'badge warn', text: '입금 대기' }));
+      return el('tr', null, el('td', { text: PAY_KIND[x.kind] }), el('td', { text: won(x.amount) }), el('td', { text: dateOnly(x.due_date) || '-' }), el('td', { text: dateOnly(x.paid_at) || '-' }), el('td', null, st),
+        el('td', { class: 'act' }, x.paid_at ? null : el('button', { class: 'linkbtn', type: 'button', onclick: function () { rest('PATCH', 'payments?id=eq.' + x.id, { paid_at: todayStr() }, 'return=minimal').then(reload).catch(fail); }, text: '오늘 입금' }), el('button', { class: 'linkbtn', type: 'button', onclick: function () { paymentPanel(p, x); }, text: '편집' })));
+    });
+    var payments = cardWith('입금 내역', el('button', { class: 'linkbtn', type: 'button', onclick: function () { paymentPanel(p, null); }, text: '+ 입금 추가' }),
+      payRows.length ? el('div', { class: 'tbl-wrap' }, el('table', { class: 'tbl' }, el('thead', null, el('tr', null, ['구분', '금액', '입금 예정일', '입금일', '상태', ''].map(function (h) { return el('th', { text: h }); }))), el('tbody', null, payRows))) : el('div', { class: 'empty', text: '입금 내역이 없어요. "+ 입금 추가"로 선금·중도금·잔금을 등록하세요.' }));
+    var invRows = (p.invoices || []).map(function (x) {
+      return el('tr', null, el('td', { text: INV_KIND[x.kind] }), el('td', { text: x.memo || '-' }), el('td', { text: won(x.amount) }), el('td', { text: dateOnly(x.issued_at) || '-' }), el('td', null, el('span', { class: 'badge ' + (x.issued ? 'ok' : 'neutral'), text: x.issued ? '발행 완료' : '미발행' })),
+        el('td', { class: 'act' }, x.issued ? null : el('button', { class: 'linkbtn', type: 'button', onclick: function () { rest('PATCH', 'invoices?id=eq.' + x.id, { issued: true, issued_at: todayStr() }, 'return=minimal').then(reload).catch(fail); }, text: '오늘 발행' }), el('button', { class: 'linkbtn', type: 'button', onclick: function () { invoicePanel(p, x); }, text: '편집' })));
+    });
+    var invoices = cardWith('세금 처리', el('button', { class: 'linkbtn', type: 'button', onclick: function () { invoicePanel(p, null); }, text: '+ 세금 항목 추가' }),
+      invRows.length ? el('div', { class: 'tbl-wrap' }, el('table', { class: 'tbl' }, el('thead', null, el('tr', null, ['구분', '메모', '금액', '발행일', '상태', ''].map(function (h) { return el('th', { text: h }); }))), el('tbody', null, invRows))) : el('div', { class: 'empty', text: '세금 항목이 없어요.' }));
+    var line = function (k, v, cls) { return el('div', { class: 'line' }, el('span', { class: 'k', text: k }), el('span', { class: 'vv' + (cls ? ' ' + cls : ''), text: v || '-' })); };
+    var planDn = dayDiff(p.plan_expires_at);
+    var plan = cardWith('호스팅 플랜', el('button', { class: 'linkbtn', type: 'button', onclick: function () { projectPanel(p); }, text: '편집' }),
+      el('div', { class: 'mini' }, line('플랫폼', PLATFORMS[p.platform]), line('플랜', p.plan_name), line('결제 주체', p.plan_paid_by === 'self' ? '본인' : p.plan_paid_by === 'client' ? '고객' : ''),
+        line('결제일', dateOnly(p.plan_paid_at)), line('만료일', p.plan_expires_at ? dateOnly(p.plan_expires_at) + ' · ' + dday(p.plan_expires_at) : '', planDn !== null && planDn <= 30 ? 'warn' : ''), line('자동 갱신', p.plan_auto_renew ? '켜짐' : '꺼짐', p.plan_auto_renew ? 'ok' : '')));
+    var custCard = cardWith('고객', cust ? el('button', { class: 'linkbtn', type: 'button', onclick: function () { go('#/customers/' + cust.id); }, text: '상세 →' }) : null,
+      cust ? el('div', { class: 'mini' }, el('strong', { text: cust.name }), line('담당자', cust.contact_name), line('연락처', cust.phone), line('이메일', cust.email), line('유입', cust.source)) : el('div', { class: 'empty', text: '-' }));
+    var memo = cardWith('메모', null, el('div', { class: 'memo', text: p.memo || '메모가 없어요.' }));
+    var head = pageHead(p.name, null, el('div', { style: 'display:flex;gap:8px' }, el('button', { class: 'btn secondary', type: 'button', onclick: function () { projectPanel(p); }, text: '수정' })),
+      el('div', { class: 'crumb' }, el('a', { href: '#/projects', text: '프로젝트' }), ' / ' + p.name));
+    var title = head.querySelector('h2');
+    title.appendChild(stageBadge(p.stage));
+    if (isHot(p)) title.appendChild(el('span', { class: 'badge warn', text: '마감 ' + dday(p.due_date) }));
+    if (un > 0) title.appendChild(el('span', { class: 'badge bad', text: '미수금' }));
+    return [head, el('div', { class: 'card stepper', role: 'group', 'aria-label': '단계' }, steps),
+      el('div', { class: 'cols2' }, el('div', { class: 'stack' }, overview, payments, invoices), el('div', { class: 'stack' }, custCard, plan, memo))];
+  }
+  function changeStage(p, stage) {
+    if (p.stage === stage) return;
+    var prev = p.stage; p.stage = stage; render();
+    rest('PATCH', 'projects?id=eq.' + encodeURIComponent(p.id), { stage: stage }, 'return=minimal').catch(function () { p.stage = prev; render(); toast('단계를 바꾸지 못했어요.'); });
+  }
+
+  /* ----- customers ----- */
+  function customersView() {
+    var r = route();
+    var selected = customerById(r.id);
+    var list = el('div', { class: 'card list' }, state.customers.length ? state.customers.map(function (c) {
+      var n = (c.projects || []).length;
+      return el('button', { class: 'row' + (selected && selected.id === c.id ? ' selected' : ''), type: 'button', onclick: function () { go('#/customers/' + c.id); } },
+        el('div', { class: 'top' }, el('span', { class: 'name', text: c.name }), el('span', { class: 'when', text: '프로젝트 ' + n })),
+        el('div', { class: 'type', text: [c.contact_name, c.phone || c.email].filter(Boolean).join(' · ') || '연락처 없음' }));
+    }) : el('div', { class: 'empty', text: '아직 고객이 없어요. "+ 새 고객"으로 추가하세요.' }));
+    var detail;
+    if (selected) {
+      var ps = selected.projects || [];
+      var line = function (k, v) { return el('div', { class: 'line' }, el('span', { class: 'k', text: k }), el('span', { class: 'vv', text: v || '-' })); };
+      detail = el('div', { class: 'detail-col' }, el('button', { class: 'back', type: 'button', onclick: function () { go('#/customers'); }, text: '← 목록으로' }),
+        el('div', { class: 'card detail' },
+          el('div', { class: 'detail-head' }, el('h3', { text: selected.name }), el('span', { class: 'at' }, el('button', { class: 'linkbtn', type: 'button', onclick: function () { customerPanel(selected); }, text: '수정' }))),
+          el('div', { class: 'mini', style: 'padding-top:16px' }, line('담당자', selected.contact_name), line('연락처', selected.phone), line('이메일', selected.email), line('유입 경로', selected.source), line('등록', full(selected.created_at))),
+          el('div', { class: 'panel-head' }, el('span', { text: '프로젝트 (' + ps.length + ')' }), el('button', { class: 'linkbtn', type: 'button', onclick: function () { projectPanel(null, selected.id); }, text: '+ 프로젝트 추가' })),
+          ps.length ? ps.map(function (p) { return el('button', { class: 'row', type: 'button', onclick: function () { go('#/projects/' + p.id); } }, el('div', { class: 'top' }, el('span', { class: 'name', text: p.name }), stageBadge(p.stage), el('span', { class: 'when', text: p.contract_amount ? won(p.contract_amount) : '' }))); }) : el('div', { class: 'empty', text: '연결된 프로젝트가 없어요.' }),
+          selected.memo ? el('div', null, el('div', { class: 'panel-head' }, el('span', { text: '메모' })), el('div', { class: 'memo', text: selected.memo })) : null));
+    } else detail = el('div', { class: 'card empty detail detail-col', text: '왼쪽에서 고객을 선택해 주세요.' });
+    return [
+      pageHead('고객', '고객과 프로젝트 이력을 관리합니다.', el('button', { class: 'btn', type: 'button', onclick: function () { customerPanel(null); }, text: '+ 새 고객' })),
+      state.error ? el('div', { class: 'msg-error', role: 'alert', text: state.error }) : null,
+      el('div', { class: 'inbox' + (selected ? ' has-selected' : '') }, list, detail)
+    ];
+  }
+
   function soonView(label) {
-    return [el('div', { class: 'page-head' }, el('h2', { text: label })), el('div', { class: 'card soon-page', text: '준비 중인 기능입니다.' })];
+    return [pageHead(label), el('div', { class: 'card empty', text: '준비 중인 기능입니다.' })];
   }
 
   function render() {
@@ -433,9 +901,11 @@ a { color: var(--blue); }
     var r = route();
     var page = r.page;
     var body;
-    if (!state.loaded) body = [el('div', { class: 'page-head' }, el('h2', { text: '불러오는 중…' }))];
+    if (!state.loaded) body = [pageHead('불러오는 중…')];
     else if (page === 'inbox') body = inboxView();
     else if (page === 'dashboard') body = dashboardView();
+    else if (page === 'projects') body = r.id ? projectDetailView(r.id) : projectsView();
+    else if (page === 'customers') body = customersView();
     else { var n = NAV.filter(function (x) { return x.id === page; })[0]; body = soonView(n ? n.label : '준비 중'); }
     app.replaceChildren(el('div', { class: 'shell' }, sidebar(page), el('main', { class: 'main' }, body)));
   }
@@ -443,7 +913,7 @@ a { color: var(--blue); }
   function start() {
     state.loaded = false;
     render();
-    loadInquiries().then(render);
+    loadAll().then(render);
   }
 
   state.session = loadSession();
