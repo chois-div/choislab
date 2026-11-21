@@ -41,8 +41,8 @@
 2단계 안에서 아래 두 기능을 먼저 만든다. A는 문의 폼·문의함만 있으면 되고, B는 견적서가 Supabase로 이전된 뒤에 가능하다.
 
 ### A. 새 문의 이메일 알림
-- 트리거: `inquiries`에 행이 추가되면 Supabase Database Webhook → Edge Function → 이메일 발송 서비스(무료 플랜, 예: Resend)로 보낸다.
-- 수신: 본인 이메일 1개. Edge Function 시크릿에 저장하고 화면 설정은 두지 않는다.
+- 트리거: 접수 Edge Function(`submit-inquiry`)이 문의를 저장한 직후 이메일 발송 서비스(무료 플랜, 예: Resend)로 보낸다. 별도 Database Webhook은 두지 않는다.
+- 수신: choislab.studio@gmail.com 1개. Edge Function 시크릿에 저장하고 화면 설정은 두지 않는다.
 - 내용: 이름, 문의 유형, 예산대, 문의 내용 앞 100자, 문의함 링크. 연락처와 첨부 파일은 개인정보 최소화를 위해 메일에 넣지 않는다.
 - 실패 처리: 알림 실패는 문의 저장에 영향을 주지 않는다. 문의는 항상 저장되고 대시보드 "신규 문의"에 표시된다. 실패는 Edge Function 로그로 확인한다.
 - 남용 방지: Turnstile을 통과한 제출만 저장되고, 시간당 알림 20통을 넘으면 초과분의 알림만 생략한다(문의는 저장).
@@ -70,7 +70,8 @@ choislab (GitHub Pages, 정적, 빌드 도구 없음)
 Supabase (무료 플랜)
 ├── Auth        본인 계정 1개, 외부 가입 비활성화
 ├── 테이블      customers, projects, payments, invoices, quotes, inquiries
-└── RLS         본인 계정만 읽기·쓰기. inquiries만 비로그인 INSERT 허용
+├── RLS         본인 계정만 읽기·쓰기. 비로그인(anon)에는 정책 없음
+└── Edge Function  submit-inquiry: 홈페이지 문의 접수 전용 (Turnstile 검증, 저장, 업로드 URL 발급, 알림 메일)
 
 ops-api (Render, 1단계에서 생성)
 └── 아임웹 문의 카드 전용. 요청 검증을 Apps Script ping에서 Supabase 토큰 검증으로 교체
@@ -98,7 +99,7 @@ inquiry_files  id, inquiry_id, 저장 경로, 원본 파일명, 크기, 형식
 - 문의 상태: 신규, 확인, 답변 완료, 보류.
 - 미수금 = 계약금액 − 실제 입금 합계 (조회 시 계산, 저장하지 않음).
 - `quotes.data`에는 기존 `/quote/`가 저장하던 상세 필드를 그대로 보관한다.
-- `inquiries` 정책: 비로그인 INSERT만 허용(SELECT, UPDATE, DELETE 불가). 글자 수 제한과 필수값은 DB 제약으로 건다.
+- `inquiries`, `inquiry_files` 정책: 로그인한 본인 계정만 읽기·수정. 비로그인(anon)에는 어떤 정책도 두지 않는다(접수는 Edge Function이 서비스 키로 처리). 글자 수 제한과 필수값은 DB 제약으로도 건다.
 
 ## 화면
 
@@ -119,8 +120,8 @@ inquiry_files  id, inquiry_id, 저장 경로, 원본 파일명, 크기, 형식
 - 제작에 필요한 선택 항목: 예산대, 플랫폼 선호(아임웹/프레이머/잘 모르겠어요), 희망 오픈일, 기존 사이트 URL(리뉴얼인 경우), 참고 URL(최대 3개), 기획안·참고 자료 첨부.
 - 첨부 파일: 최대 3개, 개당 10MB, 형식은 PDF·이미지(PNG/JPG)·PPT·문서(DOC/HWP)·엑셀로 제한한다. 비공개 Storage 버킷에 저장하고, 비로그인 방문자는 업로드만 가능하며 열람은 로그인한 본인만 가능하다(서명 URL). 형식·용량 제한은 버킷 설정으로 서버에서도 강제한다.
 - URL 입력은 `http(s)://`만 허용하고, 문의함에서 링크를 열 때는 새 탭(noopener)으로 연다.
-- 저장: Supabase `inquiries`, `inquiry_files`에 공개 키로 직접 INSERT.
-- 스팸 방지: 숨김 입력칸(허니팟), 글자 수 제한에 더해, 파일 업로드가 있으므로 Cloudflare Turnstile(무료)을 처음부터 적용한다.
+- 접수 경로: 방문자 브라우저는 DB·Storage에 직접 접근하지 않고, Edge Function `submit-inquiry` 하나만 호출한다. 함수가 입력을 검증하고, Turnstile 토큰을 서버에서 확인한 뒤, 서비스 키로 `inquiries`와 `inquiry_files`에 저장하고, 첨부 파일용 서명된 업로드 URL(최대 3개)을 돌려준다. 브라우저는 그 URL로 파일을 올린다.
+- 스팸 방지: 숨김 입력칸(허니팟), 글자 수 제한, Cloudflare Turnstile(무료)을 함수에서 검증한다. 직접 INSERT를 허용하면 Turnstile 검증을 우회할 수 있으므로 비로그인 접근은 전부 막는다.
 - 기존 `mailto:` 링크는 유지한다.
 
 ## 견적서 이전
@@ -140,7 +141,7 @@ inquiry_files  id, inquiry_id, 저장 경로, 원본 파일명, 크기, 형식
 ## 테스트 방법 (브라우저 확인, 별도 자동화 프레임워크 없음)
 
 - 미로그인 상태에서 `/ops/`·`/quote/`에 데이터가 보이지 않는지
-- 공개 키로 `quotes`, `customers`, `projects` 등을 직접 SELECT할 때 거부되는지, `inquiries`는 INSERT만 되고 SELECT는 거부되는지
+- 공개 키로 `quotes`, `customers`, `projects`, `inquiries` 등을 직접 SELECT·INSERT할 때 모두 거부되는지, Turnstile 토큰 없이 `submit-inquiry`를 호출하면 거부되는지
 - 임포트 후 견적 건수와 금액이 시트와 일치하는지
 - 미수금과 마감 임박 계산이 맞는지
 - 한 영역 조회 실패 시 나머지가 동작하는지
