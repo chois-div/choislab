@@ -7,12 +7,14 @@ const EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg', 'ppt', 'pptx', 'doc', 'docx', '
 const MAX_FILES = 3;
 const MAX_BYTES = 10 * 1024 * 1024;
 const MAX_MAILS_PER_HOUR = 20;
+const URL_RE = /^https?:[/][/]/i;
+const DATE_RE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
 
 const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
 const corsHeaders = (origin: string | null) => ({
   'Access-Control-Allow-Origin': origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
-  'Access-Control-Allow-Headers': 'content-type',
+  'Access-Control-Allow-Headers': 'content-type, authorization, apikey, x-client-info',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   Vary: 'Origin',
 });
@@ -21,11 +23,11 @@ const reply = (body: unknown, status: number, origin: string | null) =>
   new Response(JSON.stringify(body), { status, headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' } });
 
 const str = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
-const isUrl = (v: string) => /^https?:\/\//i.test(v) && v.length <= 300;
+const isUrl = (v: string) => URL_RE.test(v) && v.length <= 300;
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 async function verifyTurnstile(token: string, ip: string | null) {
-  const body = new URLSearchParams({ secret: Deno.env.get('TURNSTILE_SECRET_KEY')!, response: token });
+  const body = new URLSearchParams({ secret: Deno.env.get('TURNSTILE_SECRET_KEY') ?? '', response: token });
   if (ip) body.set('remoteip', ip);
   const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
   const data = await res.json();
@@ -36,24 +38,24 @@ async function sendNotification(row: { name: string; inquiry_type: string; budge
   const apiKey = Deno.env.get('RESEND_API_KEY');
   const to = Deno.env.get('NOTIFY_EMAIL');
   if (!apiKey || !to) return;
-  const since = new Date(Date.now() - 3600_000).toISOString();
+  const since = new Date(Date.now() - 3600000).toISOString();
   const { count } = await admin.from('inquiries').select('id', { count: 'exact', head: true }).gte('created_at', since);
   if ((count ?? 0) > MAX_MAILS_PER_HOUR) return;
   const preview = row.message.length > 100 ? row.message.slice(0, 100) + '…' : row.message;
   const html =
-    `<div style="font-family:sans-serif;max-width:560px">` +
-    `<h2>새 문의가 도착했습니다</h2>` +
-    `<p><b>이름</b> ${esc(row.name)}<br><b>문의 유형</b> ${esc(row.inquiry_type)}<br><b>예산대</b> ${esc(row.budget || '-')}</p>` +
-    `<p style="white-space:pre-wrap">${esc(preview)}</p>` +
-    `<p><a href="https://chois-lab.site/ops/">문의함에서 보기</a></p>` +
-    `<p style="color:#888;font-size:12px">연락처와 첨부 파일은 보안을 위해 메일에 포함하지 않습니다.</p></div>`;
+    '<div style="font-family:sans-serif;max-width:560px">' +
+    '<h2>새 문의가 도착했습니다</h2>' +
+    '<p><b>이름</b> ' + esc(row.name) + '<br><b>문의 유형</b> ' + esc(row.inquiry_type) + '<br><b>예산대</b> ' + esc(row.budget || '-') + '</p>' +
+    '<p style="white-space:pre-wrap">' + esc(preview) + '</p>' +
+    '<p><a href="https://chois-lab.site/ops/">문의함에서 보기</a></p>' +
+    '<p style="color:#888;font-size:12px">연락처와 첨부 파일은 보안을 위해 메일에 포함하지 않습니다.</p></div>';
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: Deno.env.get('RESEND_FROM') ?? 'onboarding@resend.dev',
       to,
-      subject: `[초이스랩] 새 문의 · ${row.name} (${row.inquiry_type})`,
+      subject: '[초이스랩] 새 문의 · ' + row.name + ' (' + row.inquiry_type + ')',
       html,
     }),
   });
@@ -77,7 +79,7 @@ Deno.serve(async (req) => {
   const message = str(p.message, 5000);
   const budget = str(p.budget, 30) || null;
   const platformPref = str(p.platformPref, 10) || null;
-  const desiredLaunch = /^\d{4}-\d{2}-\d{2}$/.test(str(p.desiredLaunch, 10)) ? str(p.desiredLaunch, 10) : null;
+  const desiredLaunch = DATE_RE.test(str(p.desiredLaunch, 10)) ? str(p.desiredLaunch, 10) : null;
   const existingUrl = str(p.existingUrl, 300) || null;
   const referenceUrls = (Array.isArray(p.referenceUrls) ? p.referenceUrls : []).map((u) => str(u, 300)).filter(Boolean);
   const files = Array.isArray(p.files) ? p.files : [];
@@ -117,7 +119,7 @@ Deno.serve(async (req) => {
 
   const uploads: { path: string; token: string }[] = [];
   for (const f of checkedFiles) {
-    const path = `${inquiry.id}/${crypto.randomUUID()}.${f.ext}`;
+    const path = inquiry.id + '/' + crypto.randomUUID() + '.' + f.ext;
     const signed = await admin.storage.from('inquiry-files').createSignedUploadUrl(path);
     if (signed.error || !signed.data) { console.error('signed url failed', signed.error); continue; }
     const rec = await admin.from('inquiry_files').insert({
