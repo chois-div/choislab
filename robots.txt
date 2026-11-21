@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /quote/
 Disallow: /admin/
+Disallow: /ops/
 
 Sitemap: https://chois-lab.site/sitemap.xml

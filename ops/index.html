@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>초이스랩 어드민</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root {
+  --bg: #0B1220; --surface: #111827; --raised: #1C2333; --border: #263044;
+  --text: #F2F4F8; --text2: #9AA4B2; --muted: #8A94A5;
+  --primary: #5B4FFF; --blue: #3D82F7; --ok: #34D399; --warn: #F5B544; --danger: #F25C5C;
+  --font: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+a { color: var(--blue); }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+[hidden] { display: none !important; }
+
+/* ---- login ---- */
+.login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+.login-card { width: 100%; max-width: 400px; padding: 36px 32px 32px; display: flex; flex-direction: column; gap: 20px; }
+.logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 20px; letter-spacing: -0.01em; }
+.tag { font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: rgba(91,79,255,0.2); color: var(--blue); }
+.login-card h1 { font-size: 22px; font-weight: 800; }
+.login-card p.sub { color: var(--text2); font-size: 13px; margin-top: 4px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: 600; color: var(--text2); }
+.input { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 12px 14px; font-size: 14px; width: 100%; }
+.btn { background: var(--primary); color: #fff; border: 0; border-radius: 8px; padding: 12px 18px; font-size: 14px; font-weight: 700; }
+.btn:hover { filter: brightness(1.1); }
+.btn:disabled { opacity: 0.55; cursor: progress; }
+.btn.secondary { background: var(--raised); color: var(--text); }
+.btn.small { padding: 8px 12px; font-size: 13px; }
+.msg-error { background: rgba(242,92,92,0.12); color: #FF9A9A; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+
+/* ---- shell ---- */
+.shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100vh; }
+.sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 24px 16px 20px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
+.sidebar .logo { padding: 0 8px 20px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: var(--text2); text-decoration: none; font-weight: 600; font-size: 14px; border: 0; background: none; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(255,255,255,0.04); }
+.nav-item.active { background: rgba(91,79,255,0.16); color: var(--text); }
+.nav-item.disabled { color: var(--muted); cursor: default; }
+.nav-item .grow { flex: 1; }
+.nav-item svg { flex-shrink: 0; }
+.pill { font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 10px; background: var(--primary); color: #fff; }
+.pill.soon { background: var(--raised); color: var(--muted); font-weight: 600; font-size: 10px; }
+.sidebar .spacer { flex: 1; }
+.sidebar .me { border-top: 1px solid var(--border); padding: 14px 12px 0; display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--text2); word-break: break-all; }
+.sidebar .me button { align-self: flex-start; background: none; border: 0; color: var(--muted); font-size: 12px; font-weight: 600; padding: 0; }
+.sidebar .me button:hover { color: var(--text); }
+.main { padding: 32px 40px 48px; min-width: 0; }
+.page-head { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; }
+.page-head h2 { font-size: 24px; font-weight: 800; }
+.page-head p { color: var(--text2); font-size: 13px; }
+
+/* ---- badges / chips ---- */
+.badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+.badge.info { background: rgba(61,130,247,0.16); color: var(--blue); }
+.badge.warn { background: rgba(245,181,68,0.16); color: var(--warn); }
+.badge.ok { background: rgba(52,211,153,0.16); color: var(--ok); }
+.badge.neutral { background: var(--raised); color: var(--text2); }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tab { background: var(--surface); border: 1px solid var(--border); color: var(--text2); border-radius: 16px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
+.tab.active { background: rgba(91,79,255,0.16); border-color: transparent; color: var(--blue); }
+
+/* ---- dashboard ---- */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.kpi { padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.kpi .l { font-size: 13px; font-weight: 600; color: var(--text2); }
+.kpi .v { font-size: 28px; font-weight: 800; }
+.kpi .h { font-size: 12px; color: var(--muted); }
+.panel-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; font-weight: 800; font-size: 15px; }
+.panel-head button { background: none; border: 0; color: var(--blue); font-size: 13px; font-weight: 600; }
+
+/* ---- inbox ---- */
+.inbox { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 16px; align-items: start; }
+.list { overflow: hidden; }
+.row { display: flex; flex-direction: column; gap: 6px; padding: 14px 18px; border: 0; border-bottom: 1px solid var(--border); background: none; color: var(--text); text-align: left; width: 100%; }
+.row:last-child { border-bottom: 0; }
+.row:hover { background: rgba(255,255,255,0.03); }
+.row.selected { background: rgba(91,79,255,0.1); }
+.row .top { display: flex; align-items: center; gap: 8px; }
+.row .name { font-weight: 800; }
+.row .when { margin-left: auto; font-size: 12px; color: var(--muted); }
+.row .type { font-size: 12px; color: var(--text2); }
+.row .snip { font-size: 13px; color: var(--muted); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+.empty { padding: 40px 20px; text-align: center; color: var(--text2); }
+.detail { overflow: hidden; }
+.detail-head { display: flex; align-items: center; gap: 10px; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); }
+.detail-head h3 { font-size: 20px; font-weight: 800; }
+.detail-head .at { margin-left: auto; font-size: 12px; color: var(--muted); }
+.back { display: none; background: none; border: 0; color: var(--blue); font-weight: 600; padding: 0 0 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 20px 24px 8px; }
+.kv { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kv .k { font-size: 12px; color: var(--muted); }
+.kv .vv { font-size: 14px; font-weight: 600; word-break: break-all; }
+.section { padding: 12px 24px; display: flex; flex-direction: column; gap: 8px; }
+.section .t { font-size: 12px; color: var(--muted); }
+.ref { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); font-size: 13px; }
+.ref .type { font-size: 11px; font-weight: 800; color: var(--blue); }
+.ref .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.ref .meta { color: var(--muted); font-size: 12px; }
+.ref button { background: none; border: 0; color: var(--blue); font-weight: 600; font-size: 12px; }
+.bubble { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 14px 16px; white-space: pre-wrap; word-break: break-word; line-height: 1.65; }
+.actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 16px 24px 20px; border-top: 1px solid var(--border); margin-top: 8px; }
+.actions .lbl { font-size: 12px; color: var(--muted); margin-right: 4px; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { background: var(--bg); border: 0; color: var(--text2); padding: 8px 12px; font-size: 13px; font-weight: 600; border-right: 1px solid var(--border); }
+.seg button:last-child { border-right: 0; }
+.seg button.on { background: var(--raised); color: var(--text); }
+.convert { margin-left: auto; }
+.note { padding: 0 24px 4px; color: var(--muted); font-size: 12px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--raised); border: 1px solid var(--border); padding: 10px 16px; border-radius: 10px; font-size: 13px; z-index: 10; }
+.soon-page { padding: 48px 24px; text-align: center; color: var(--text2); }
+
+@media (max-width: 960px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 12px 16px; border-right: 0; border-bottom: 1px solid var(--border); }
+  .sidebar .logo { padding: 0 12px 0 0; }
+  .sidebar .spacer { display: none; }
+  .sidebar .me { border-top: 0; padding: 0 0 0 auto; flex-direction: row; gap: 10px; align-items: center; margin-left: auto; }
+  .nav-item { width: auto; padding: 8px 10px; }
+  .main { padding: 20px 16px 40px; }
+  .inbox { grid-template-columns: 1fr; }
+  .inbox.has-selected .list { display: none; }
+  .inbox:not(.has-selected) .detail { display: none; }
+  .back { display: block; }
+  .grid3 { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<noscript><p style="padding:24px">이 페이지는 JavaScript가 필요합니다.</p></noscript>
+<div id="app"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var SB = 'https://rtgzdjyabhclaougplrl.supabase.co';
+  var KEY = 'sb_publishable_HnLXbQVrIew3RvZ9UVt0Cg_5bCwSRw2';
+  var STORE = 'choislab_ops_session';
+  var STATUS = {
+    new: { label: '신규', cls: 'info' },
+    seen: { label: '확인', cls: 'warn' },
+    replied: { label: '답변 완료', cls: 'ok' },
+    hold: { label: '보류', cls: 'neutral' }
+  };
+  var ORDER = ['new', 'seen', 'replied', 'hold'];
+  var NAV = [
+    { id: 'dashboard', label: '대시보드', icon: 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
+    { id: 'inbox', label: '문의함', icon: 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z', badge: true },
+    { id: 'projects', label: '프로젝트', icon: 'M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z', soon: true },
+    { id: 'customers', label: '고객', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75', soon: true },
+    { id: 'quotes', label: '견적서', icon: 'M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM14 2v6h6', href: '/quote/' },
+    { id: 'leads', label: '의뢰 현황', icon: 'M3 3v18h18M7 14l4-4 4 4 5-5', soon: true }
+  ];
+
+  var state = { session: null, inquiries: [], loaded: false, error: '', filter: 'all' };
+  var app = document.getElementById('app');
+
+  /* ---------- helpers ---------- */
+  function append(n, c) {
+    if (c === null || c === undefined || c === false) return;
+    if (Array.isArray(c)) { c.forEach(function (x) { append(n, x); }); return; }
+    n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  }
+  function el(tag, attrs) {
+    var n = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      var v = attrs[k];
+      if (v === null || v === undefined || v === false) return;
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k.slice(0, 2) === 'on') n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? '' : v);
+    });
+    for (var i = 2; i < arguments.length; i++) append(n, arguments[i]);
+    return n;
+  }
+  function icon(d) {
+    var ns = 'http://www.w3.org/2000/svg';
+    var s = document.createElementNS(ns, 'svg');
+    s.setAttribute('width', '18'); s.setAttribute('height', '18'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('fill', 'none'); s.setAttribute('aria-hidden', 'true');
+    var p = document.createElementNS(ns, 'path');
+    p.setAttribute('d', d); p.setAttribute('stroke', 'currentColor'); p.setAttribute('stroke-width', '2'); p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-linejoin', 'round');
+    s.appendChild(p);
+    return s;
+  }
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+  function when(iso) {
+    var d = new Date(iso), now = new Date();
+    var sameDay = d.toDateString() === now.toDateString();
+    var y = new Date(now); y.setDate(now.getDate() - 1);
+    if (sameDay) return '오늘 ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    if (d.toDateString() === y.toDateString()) return '어제';
+    return pad(d.getMonth() + 1) + '/' + pad(d.getDate());
+  }
+  function full(iso) {
+    var d = new Date(iso);
+    return d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  function sizeText(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(n / 1024)) + 'KB'; }
+  function isHttp(u) { return /^https?:[/][/]/i.test(u); }
+  function toast(msg) {
+    var t = el('div', { class: 'toast', role: 'status', text: msg });
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 2600);
+  }
+
+  /* ---------- session / api ---------- */
+  function loadSession() {
+    try { var s = JSON.parse(localStorage.getItem(STORE)); return s && s.access_token ? s : null; } catch (e) { return null; }
+  }
+  function saveSession(s) {
+    state.session = s;
+    if (s) localStorage.setItem(STORE, JSON.stringify(s)); else localStorage.removeItem(STORE);
+  }
+  function fromAuth(j) {
+    return { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: j.expires_at || (Math.floor(Date.now() / 1000) + (j.expires_in || 3600)), email: (j.user && j.user.email) || (state.session && state.session.email) || '' };
+  }
+  function authFetch(grant, body) {
+    return fetch(SB + '/auth/v1/token?grant_type=' + grant, { method: 'POST', headers: { apikey: KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  }
+  function refresh() {
+    if (!state.session || !state.session.refresh_token) return Promise.resolve(false);
+    return authFetch('refresh_token', { refresh_token: state.session.refresh_token }).then(function (r) {
+      if (!r.ok) return false;
+      return r.json().then(function (j) { saveSession(fromAuth(j)); return true; });
+    }).catch(function () { return false; });
+  }
+  function signOut() { saveSession(null); state.inquiries = []; state.loaded = false; render(); }
+  function api(path, opts, retried) {
+    opts = opts || {};
+    var ready = (state.session.expires_at - 60 < Date.now() / 1000) ? refresh() : Promise.resolve(true);
+    return ready.then(function (ok) {
+      if (!ok) { signOut(); throw new Error('세션이 만료되었습니다.'); }
+      var headers = Object.assign({ apikey: KEY, Authorization: 'Bearer ' + state.session.access_token }, opts.headers || {});
+      return fetch(SB + path, { method: opts.method || 'GET', headers: headers, body: opts.body });
+    }).then(function (r) {
+      if (r.status === 401 && !retried) return refresh().then(function (ok) { if (!ok) { signOut(); throw new Error('세션이 만료되었습니다.'); } return api(path, opts, true); });
+      return r;
+    });
+  }
+
+  /* ---------- data ---------- */
+  function loadInquiries() {
+    state.error = '';
+    return api('/rest/v1/inquiries?select=*,inquiry_files(id,file_name,size_bytes,storage_path)&order=created_at.desc&limit=300')
+      .then(function (r) { if (!r.ok) throw new Error('문의를 불러오지 못했습니다. (' + r.status + ')'); return r.json(); })
+      .then(function (rows) { state.inquiries = rows; state.loaded = true; })
+      .catch(function (e) { state.error = e.message; state.loaded = true; });
+  }
+  function setStatus(id, status) {
+    var item = state.inquiries.filter(function (q) { return q.id === id; })[0];
+    if (!item || item.status === status) return Promise.resolve();
+    var prev = item.status;
+    item.status = status;
+    render();
+    return api('/rest/v1/inquiries?id=eq.' + encodeURIComponent(id), { method: 'PATCH', headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify({ status: status }) })
+      .then(function (r) { if (!r.ok) throw new Error(String(r.status)); })
+      .catch(function () { item.status = prev; render(); toast('상태를 바꾸지 못했어요. 다시 시도해 주세요.'); });
+  }
+  function download(file) {
+    var path = file.storage_path.split('/').map(encodeURIComponent).join('/');
+    return api('/storage/v1/object/sign/inquiry-files/' + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ expiresIn: 60 }) })
+      .then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then(function (j) { return fetch(SB + '/storage/v1' + j.signedURL); })
+      .then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.blob(); })
+      .then(function (blob) {
+        var url = URL.createObjectURL(blob);
+        var a = el('a', { href: url, download: file.file_name });
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+      })
+      .catch(function () { toast('파일을 내려받지 못했어요. 다시 시도해 주세요.'); });
+  }
+  function counts() {
+    var c = { all: state.inquiries.length, new: 0, seen: 0, replied: 0, hold: 0 };
+    state.inquiries.forEach(function (q) { if (c[q.status] !== undefined) c[q.status]++; });
+    return c;
+  }
+
+  /* ---------- routing ---------- */
+  function route() {
+    var h = (location.hash || '#/dashboard').replace(/^#\//, '').split('/');
+    return { page: h[0] || 'dashboard', id: h[1] || '' };
+  }
+  function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
+  window.addEventListener('hashchange', function () { if (state.session) render(); });
+
+  /* ---------- views ---------- */
+  function renderLogin(errorMsg) {
+    var emailI = el('input', { class: 'input', id: 'email', type: 'email', autocomplete: 'username', required: true, placeholder: 'name@example.com' });
+    var passI = el('input', { class: 'input', id: 'pass', type: 'password', autocomplete: 'current-password', required: true, placeholder: '비밀번호' });
+    var err = el('div', { class: 'msg-error', role: 'alert', hidden: !errorMsg, text: errorMsg || '' });
+    var btn = el('button', { class: 'btn', type: 'submit', text: '로그인' });
+    var form = el('form', { class: 'login-card card', novalidate: true },
+      el('div', { class: 'logo' }, 'CHOISLAB', el('span', { class: 'tag', text: 'ADMIN' })),
+      el('div', null, el('h1', { text: '로그인' }), el('p', { class: 'sub', text: '허가된 계정으로만 접근할 수 있습니다.' })),
+      el('div', { class: 'field' }, el('label', { for: 'email', text: '이메일' }), emailI),
+      el('div', { class: 'field' }, el('label', { for: 'pass', text: '비밀번호' }), passI),
+      btn, err);
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!emailI.value.trim() || !passI.value) { err.hidden = false; err.textContent = '이메일과 비밀번호를 입력해 주세요.'; return; }
+      btn.disabled = true; btn.textContent = '확인 중…'; err.hidden = true;
+      authFetch('password', { email: emailI.value.trim(), password: passI.value }).then(function (r) {
+        if (r.ok) return r.json().then(function (j) { saveSession(fromAuth(j)); passI.value = ''; start(); });
+        err.hidden = false;
+        err.textContent = r.status === 429 ? '시도가 너무 많아요. 잠시 후 다시 해주세요.' : '이메일 또는 비밀번호가 맞지 않습니다.';
+        btn.disabled = false; btn.textContent = '로그인';
+      }).catch(function () { err.hidden = false; err.textContent = '네트워크 연결을 확인해 주세요.'; btn.disabled = false; btn.textContent = '로그인'; });
+    });
+    app.replaceChildren(el('div', { class: 'login-wrap' }, form));
+    emailI.focus();
+  }
+
+  function sidebar(active) {
+    var c = counts();
+    var items = NAV.map(function (n) {
+      var inner = [icon(n.icon), el('span', { class: 'grow', text: n.label })];
+      if (n.badge && c.new > 0) inner.push(el('span', { class: 'pill', text: String(c.new) }));
+      if (n.soon) inner.push(el('span', { class: 'pill soon', text: '준비 중' }));
+      if (n.href) return el('a', { class: 'nav-item', href: n.href }, inner);
+      if (n.soon) return el('span', { class: 'nav-item disabled', 'aria-disabled': 'true' }, inner);
+      return el('a', { class: 'nav-item' + (active === n.id ? ' active' : ''), href: '#/' + n.id, 'aria-current': active === n.id ? 'page' : null }, inner);
+    });
+    return el('nav', { class: 'sidebar', 'aria-label': '메뉴' },
+      el('div', { class: 'logo' }, 'CHOISLAB', el('span', { class: 'tag', text: 'ADMIN' })),
+      items,
+      el('div', { class: 'spacer' }),
+      el('div', { class: 'me' }, el('span', { text: state.session.email }), el('button', { type: 'button', onclick: signOut, text: '로그아웃' })));
+  }
+
+  function badge(status) { var s = STATUS[status] || STATUS.new; return el('span', { class: 'badge ' + s.cls, text: s.label }); }
+
+  function dashboardView() {
+    var c = counts();
+    var weekAgo = Date.now() - 7 * 86400000;
+    var week = state.inquiries.filter(function (q) { return new Date(q.created_at).getTime() > weekAgo; }).length;
+    var kpi = function (l, v, h, color) { return el('div', { class: 'card kpi' }, el('span', { class: 'l', text: l }), el('span', { class: 'v', text: String(v), style: color ? 'color:' + color : null }), el('span', { class: 'h', text: h })); };
+    var recent = state.inquiries.slice(0, 5);
+    var list = el('div', { class: 'card list' },
+      el('div', { class: 'panel-head' }, el('span', { text: '최근 문의' }), el('button', { type: 'button', onclick: function () { go('#/inbox'); }, text: '문의함 →' })),
+      recent.length ? recent.map(function (q) { return rowEl(q, false, function () { go('#/inbox/' + q.id); }); }) : el('div', { class: 'empty', text: '아직 접수된 문의가 없어요.' }));
+    return [
+      el('div', { class: 'page-head' }, el('h2', { text: '대시보드' }), el('p', { text: '문의 현황 요약입니다. 프로젝트·입금 요약은 해당 기능이 준비되면 이곳에 추가됩니다.' })),
+      el('div', { class: 'kpis' },
+        kpi('신규 문의', c.new, '확인하지 않은 문의', 'var(--blue)'),
+        kpi('이번 주 접수', week, '최근 7일', null),
+        kpi('답변 대기', c.seen, '확인했지만 답변 전', 'var(--warn)'),
+        kpi('전체 문의', c.all, '보류 ' + c.hold + '건 포함', null)),
+      list
+    ];
+  }
+
+  function rowEl(q, selected, onclick) {
+    var type = q.inquiry_type + (q.budget ? ' · ' + q.budget : '');
+    return el('button', { class: 'row' + (selected ? ' selected' : ''), type: 'button', onclick: onclick },
+      el('div', { class: 'top' }, q.status === 'new' ? el('span', { class: 'dot', 'aria-label': '신규' }) : null, el('span', { class: 'name', text: q.name }), badge(q.status), el('span', { class: 'when', text: when(q.created_at) })),
+      el('div', { class: 'type', text: type }),
+      el('div', { class: 'snip', text: q.message }));
+  }
+
+  function kv(k, v, link) {
+    var value = el('span', { class: 'vv' });
+    if (link && v && isHttp(v)) value.appendChild(el('a', { href: v, target: '_blank', rel: 'noopener noreferrer', text: v }));
+    else value.textContent = v || '-';
+    return el('div', { class: 'kv' }, el('span', { class: 'k', text: k }), value);
+  }
+
+  function detailEl(q) {
+    var refs = (q.reference_urls || []).filter(isHttp);
+    var files = q.inquiry_files || [];
+    var refBlock = (refs.length || files.length) ? el('div', { class: 'section' },
+      el('span', { class: 't', text: '참고 자료' }),
+      refs.map(function (u) { return el('div', { class: 'ref' }, el('span', { class: 'type', text: 'URL' }), el('a', { class: 'nm', href: u, target: '_blank', rel: 'noopener noreferrer', text: u })); }),
+      files.map(function (f) { return el('div', { class: 'ref' }, el('span', { class: 'type', text: 'FILE' }), el('span', { class: 'nm', text: f.file_name }), el('span', { class: 'meta', text: sizeText(f.size_bytes) }), el('button', { type: 'button', onclick: function () { download(f); }, text: '다운로드' })); })
+    ) : null;
+    var seg = el('div', { class: 'seg', role: 'group', 'aria-label': '상태 변경' }, ORDER.map(function (s) {
+      return el('button', { type: 'button', class: q.status === s ? 'on' : '', 'aria-pressed': q.status === s ? 'true' : 'false', onclick: function () { setStatus(q.id, s); }, text: STATUS[s].label });
+    }));
+    return el('div', { class: 'card detail' },
+      el('div', { class: 'detail-head' }, el('h3', { text: q.name }), badge(q.status), el('span', { class: 'at', text: '접수 ' + full(q.created_at) })),
+      el('div', { class: 'grid3' },
+        kv('연락처', q.contact), kv('문의 유형', q.inquiry_type), kv('예산대', q.budget),
+        kv('플랫폼 선호', q.platform_pref === '미정' ? '잘 모르겠어요' : q.platform_pref), kv('희망 오픈일', q.desired_launch), kv('기존 사이트', q.existing_url, true),
+        kv('개인정보 수집 동의', full(q.consent_at)), kv('유입', '홈페이지 문의 폼')),
+      refBlock,
+      el('div', { class: 'section' }, el('span', { class: 't', text: '문의 내용' }), el('div', { class: 'bubble', text: q.message })),
+      el('div', { class: 'actions' }, el('span', { class: 'lbl', text: '상태' }), seg,
+        el('button', { class: 'btn secondary convert', type: 'button', disabled: true, title: '프로젝트·고객 기능이 준비되면 사용할 수 있어요', text: '프로젝트로 전환 (준비 중)' })));
+  }
+
+  function inboxView() {
+    var r = route();
+    var c = counts();
+    var tabs = el('div', { class: 'tabs', role: 'tablist' }, [['all', '전체']].concat(ORDER.map(function (s) { return [s, STATUS[s].label]; })).map(function (t) {
+      return el('button', { class: 'tab' + (state.filter === t[0] ? ' active' : ''), type: 'button', role: 'tab', 'aria-selected': state.filter === t[0] ? 'true' : 'false', onclick: function () { state.filter = t[0]; render(); }, text: t[1] + ' ' + c[t[0]] });
+    }));
+    var rows = state.inquiries.filter(function (q) { return state.filter === 'all' || q.status === state.filter; });
+    var selected = state.inquiries.filter(function (q) { return q.id === r.id; })[0] || null;
+    if (selected && selected.status === 'new') setStatus(selected.id, 'seen');
+    var list = el('div', { class: 'card list' }, rows.length ? rows.map(function (q) { return rowEl(q, selected && selected.id === q.id, function () { go('#/inbox/' + q.id); }); }) : el('div', { class: 'empty', text: state.filter === 'all' ? '아직 접수된 문의가 없어요.' : '해당 상태의 문의가 없어요.' }));
+    var detail = selected ? el('div', null, el('button', { class: 'back', type: 'button', onclick: function () { go('#/inbox'); }, text: '← 목록으로' }), detailEl(selected))
+      : el('div', { class: 'card empty detail', text: '왼쪽에서 문의를 선택해 주세요.' });
+    return [
+      el('div', { class: 'page-head' }, el('h2', { text: '문의함' }), el('p', { text: '홈페이지 문의 폼으로 접수된 문의입니다. 문의를 열면 자동으로 "확인" 상태가 됩니다.' })),
+      state.error ? el('div', { class: 'msg-error', role: 'alert', text: state.error }) : null,
+      tabs,
+      el('div', { class: 'inbox' + (selected ? ' has-selected' : '') }, list, detail)
+    ];
+  }
+
+  function soonView(label) {
+    return [el('div', { class: 'page-head' }, el('h2', { text: label })), el('div', { class: 'card soon-page', text: '준비 중인 기능입니다.' })];
+  }
+
+  function render() {
+    if (!state.session) { renderLogin(); return; }
+    var r = route();
+    var page = r.page;
+    var body;
+    if (!state.loaded) body = [el('div', { class: 'page-head' }, el('h2', { text: '불러오는 중…' }))];
+    else if (page === 'inbox') body = inboxView();
+    else if (page === 'dashboard') body = dashboardView();
+    else { var n = NAV.filter(function (x) { return x.id === page; })[0]; body = soonView(n ? n.label : '준비 중'); }
+    app.replaceChildren(el('div', { class: 'shell' }, sidebar(page), el('main', { class: 'main' }, body)));
+  }
+
+  function start() {
+    state.loaded = false;
+    render();
+    loadInquiries().then(render);
+  }
+
+  state.session = loadSession();
+  if (state.session) start(); else render();
+})();
+</script>
+</body>
+</html>
