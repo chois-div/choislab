@@ -195,6 +195,37 @@ button.kpi:hover { border-color: #34405a; }
 .panel-foot .sp { flex: 1; }
 .form-error { color: #FF9A9A; font-size: 13px; min-height: 18px; }
 
+/* ---- applications ---- */
+.toolrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+.toolrow .grow { flex: 1; }
+.search { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 12px; font-size: 13px; width: 240px; }
+.apptbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.apptbl th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 9px 12px; background: rgba(28,35,51,0.5); white-space: nowrap; }
+.apptbl td { padding: 12px; border-top: 1px solid var(--border); vertical-align: middle; color: var(--text2); }
+.apptbl tr.click { cursor: pointer; }
+.apptbl tr.click:hover td { background: rgba(255,255,255,0.03); }
+.apptbl td.t { color: var(--text); font-weight: 600; max-width: 360px; }
+.apptbl td.t span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.apptbl td.n { white-space: nowrap; }
+.bars { padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+.bar .top { display: flex; margin-bottom: 6px; font-size: 13px; font-weight: 600; }
+.bar .top .n { margin-left: auto; color: var(--muted); font-weight: 400; font-size: 12px; }
+.track { height: 8px; border-radius: 4px; background: var(--raised); overflow: hidden; }
+.fill { height: 100%; background: var(--blue); border-radius: 4px; min-width: 3px; }
+.fill.ok { background: var(--ok); }
+.hint { color: var(--muted); font-size: 12px; padding: 4px 20px 16px; line-height: 1.6; }
+.import-box { display: flex; flex-direction: column; gap: 12px; }
+.import-box .sum { display: flex; gap: 8px; flex-wrap: wrap; }
+.import-box .warns { background: rgba(245,181,68,0.1); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: var(--text2); line-height: 1.7; max-height: 150px; overflow: auto; }
+.import-box .warns b { color: var(--warn); display: block; margin-bottom: 2px; font-size: 13px; }
+.import-box .file { display: flex; gap: 10px; align-items: center; background: rgba(28,35,51,0.6); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+.import-box .file b { color: var(--text); }
+.import-box input[type=file] { font-size: 13px; color: var(--text2); }
+.pv { width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.pv th, .pv td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+.pv th { color: var(--muted); background: rgba(28,35,51,0.5); font-weight: 600; }
+.pv td { color: var(--text2); }
+
 @media (max-width: 960px) {
   .shell { grid-template-columns: 1fr; }
   .sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 12px 16px; border-right: 0; border-bottom: 1px solid var(--border); }
@@ -251,10 +282,10 @@ button.kpi:hover { border-color: #34405a; }
     { id: 'projects', label: '프로젝트', icon: 'M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z' },
     { id: 'customers', label: '고객', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
     { id: 'quotes', label: '견적서', icon: 'M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM14 2v6h6', href: '/quote/' },
-    { id: 'leads', label: '의뢰 현황', icon: 'M3 3v18h18M7 14l4-4 4 4 5-5', soon: true }
+    { id: 'leads', label: '의뢰 현황', icon: 'M3 3v18h18M7 14l4-4 4 4 5-5' }
   ];
 
-  var state = { session: null, inquiries: [], projects: [], customers: [], loaded: false, error: '', filter: 'all', pfilter: 'all' };
+  var state = { session: null, inquiries: [], projects: [], customers: [], applications: [], loaded: false, error: '', filter: 'all', pfilter: 'all', afilter: 'all', asearch: '', alimit: 50, lastApp: {} };
   var app = document.getElementById('app');
   var closePanel = null;
 
@@ -340,7 +371,7 @@ button.kpi:hover { border-color: #34405a; }
   }
   function signOut() {
     if (closePanel) closePanel();
-    saveSession(null); state.inquiries = []; state.projects = []; state.customers = []; state.loaded = false; render();
+    saveSession(null); state.inquiries = []; state.projects = []; state.customers = []; state.applications = []; state.loaded = false; render();
   }
   function api(path, opts, retried) {
     opts = opts || {};
@@ -370,7 +401,8 @@ button.kpi:hover { border-color: #34405a; }
     var q = {
       inquiries: 'inquiries?select=*,inquiry_files(id,file_name,size_bytes,storage_path)&order=created_at.desc&limit=300',
       projects: 'projects?select=*,customers(id,name),payments(id,kind,amount,due_date,paid_at),invoices(id,kind,amount,issued,issued_at,memo)&order=due_date.asc.nullslast,created_at.desc&limit=500',
-      customers: 'customers?select=*,projects(id,name,stage,contract_amount)&order=created_at.desc&limit=500'
+      customers: 'customers?select=*,projects(id,name,stage,contract_amount)&order=created_at.desc&limit=500',
+      applications: 'applications?select=*&order=applied_on.desc.nullslast,created_at.desc&limit=2000'
     };
     return Promise.all(Object.keys(q).map(function (k) {
       return rest('GET', q[k]).then(function (rows) { state[k] = rows || []; }).catch(function (e) { state.error = '데이터를 불러오지 못했습니다. (' + (e.message || '') + ')'; });
@@ -892,6 +924,311 @@ button.kpi:hover { border-color: #34405a; }
     ];
   }
 
+
+  /* ----- applications (의뢰·지원 현황) ----- */
+  var APP_STATUSES = ['지원완료', '문의중', '미팅', '매칭완료', '불발'];
+  var APP_CONTACTS = ['대기', '회신대기', '회신있음'];
+  var STATUS_CLS = { '지원완료': 'neutral', '문의중': 'warn', '미팅': 'purple', '매칭완료': 'ok', '불발': 'bad' };
+  var CONTACT_CLS = { '대기': 'neutral', '회신대기': 'warn', '회신있음': 'ok' };
+
+  function isReplied(a) { return a.status === '문의중' || a.status === '미팅' || a.status === '매칭완료' || a.contact_status === '회신있음'; }
+  function firstNumber(s) { var m = /[0-9]+(?:[.,][0-9]+)?/.exec(String(s || '')); return m ? parseFloat(m[0].replace(',', '')) : null; }
+  function budgetBucket(a) {
+    var nums = (String(a.budget_text || '').match(/[0-9][0-9,]*(?:\.[0-9]+)?/g) || []).map(function (x) { return parseFloat(x.replace(/,/g, '')); }).filter(function (x) { return isFinite(x); });
+    if (!nums.length) return '협의·미정';
+    var n = nums.length > 1 ? (nums[0] + nums[1]) / 2 : nums[0];
+    return n <= 50 ? '50만원 이하' : n < 150 ? '50~150만원' : '150만원 이상';
+  }
+  function compBucket(a) {
+    if (a.competitors === null || a.competitors === undefined) return null;
+    return a.competitors < 10 ? '10명 미만' : a.competitors < 30 ? '10~30명' : '30명 이상';
+  }
+  function rate(n, d) { return d ? Math.round(n / d * 1000) / 10 : 0; }
+  function appStats(list) {
+    var replied = list.filter(isReplied).length;
+    return { total: list.length, replied: replied, rate: rate(replied, list.length), meeting: list.filter(function (a) { return a.status === '미팅' || a.status === '매칭완료'; }).length, matched: list.filter(function (a) { return a.status === '매칭완료'; }).length };
+  }
+  function groupBy(list, keyFn, order) {
+    var m = {};
+    list.forEach(function (a) { var k = keyFn(a); if (k === null || k === undefined || k === '') return; (m[k] = m[k] || []).push(a); });
+    var keys = order ? order.filter(function (k) { return m[k]; }) : Object.keys(m);
+    return keys.map(function (k) { var s = appStats(m[k]); s.key = k; return s; });
+  }
+  function appMatches(a, q) {
+    if (!q) return true;
+    q = q.toLowerCase();
+    return [a.title, a.memo, a.work_type, a.portfolio, a.message].some(function (x) { return x && String(x).toLowerCase().indexOf(q) > -1; });
+  }
+  function appBadge(label, map) { return el('span', { class: 'badge ' + (map[label] || 'neutral'), text: label }); }
+
+  function appFields(extra) {
+    var known = function (list, cur) { var l = list.slice(); if (cur && l.indexOf(cur) === -1) l.push(cur); return l.map(function (v) { return { value: v, label: v }; }); };
+    return [
+      { key: 'title', label: '의뢰명', required: true, max: 300 },
+      { key: 'applied_on', label: '지원일', type: 'date', row: true },
+      { key: 'platform', label: '플랫폼', row: true, max: 30 },
+      { key: 'work_type', label: '작업유형', row: true, max: 100 },
+      { key: 'portfolio', label: '포트폴리오', row: true, max: 200 },
+      { key: 'budget_text', label: '의뢰 예산(만원)', row: true, max: 100, placeholder: '150~200' },
+      { key: 'bid_text', label: '내 견적(만원)', row: true, max: 100 },
+      { key: 'competitors', label: '경쟁자 수', type: 'number', row: true },
+      { key: 'invoice_need', label: '세금계산서', row: true, max: 30, placeholder: '필요 / 미기재 / 미해당' },
+      { key: 'withholding', label: '3.3% 문의', row: true, max: 30, placeholder: 'O / X / -' },
+      { key: 'status', label: '진행 상태', type: 'select', row: true, options: known(APP_STATUSES, extra && extra.status) },
+      { key: 'contact_status', label: '연락 여부', type: 'select', row: true, options: known(APP_CONTACTS, extra && extra.contact_status) },
+      { key: 'experiment', label: '코멘트 형식 태그', max: 50, placeholder: '예: 새 형식 / 기존 형식' },
+      { key: 'message', label: '지원 메시지', type: 'textarea' },
+      { key: 'memo', label: '메모', type: 'textarea' }
+    ];
+  }
+  function appBody(x) {
+    return {
+      title: x.title.trim(), applied_on: nul(x.applied_on), platform: nul(x.platform) || 'imweb', work_type: nul(x.work_type), portfolio: nul(x.portfolio),
+      budget_text: nul(x.budget_text), bid_text: nul(x.bid_text), competitors: nul(x.competitors) === null ? null : num(x.competitors),
+      invoice_need: nul(x.invoice_need), withholding: nul(x.withholding), status: x.status, contact_status: x.contact_status,
+      experiment: nul(x.experiment), message: nul(x.message), memo: nul(x.memo)
+    };
+  }
+  function applicationPanel(a) {
+    var isNew = !a;
+    var last = state.lastApp || {};
+    var v = a ? {
+      title: a.title, applied_on: a.applied_on, platform: a.platform, work_type: a.work_type, portfolio: a.portfolio, budget_text: a.budget_text, bid_text: a.bid_text,
+      competitors: a.competitors === null || a.competitors === undefined ? '' : String(a.competitors), invoice_need: a.invoice_need, withholding: a.withholding,
+      status: a.status, contact_status: a.contact_status, experiment: a.experiment, message: a.message, memo: a.memo
+    } : { applied_on: todayStr(), platform: last.platform || 'imweb', work_type: last.work_type || '', portfolio: last.portfolio || '', status: '지원완료', contact_status: '대기', experiment: last.experiment || '' };
+    openPanel({
+      title: isNew ? '지원 기록 추가' : '지원 기록 수정', values: v, fields: appFields(a), saveLabel: isNew ? '저장' : '저장',
+      onSave: function (x) {
+        var body = appBody(x);
+        var done = isNew ? rest('POST', 'applications', body, 'return=minimal') : rest('PATCH', 'applications?id=eq.' + encodeURIComponent(a.id), body, 'return=minimal');
+        return done.then(function () {
+          if (isNew) state.lastApp = { platform: body.platform, work_type: body.work_type, portfolio: body.portfolio, experiment: body.experiment };
+          return loadAll().then(render);
+        });
+      },
+      onDelete: isNew ? null : function () { return rest('DELETE', 'applications?id=eq.' + encodeURIComponent(a.id)).then(function () { return loadAll().then(function () { go('#/leads'); }); }); },
+      deleteLabel: '지원 기록 삭제'
+    });
+  }
+  function convertApplication(a, btn) {
+    btn.disabled = true; btn.textContent = '전환 중…';
+    rest('POST', 'rpc/convert_application_to_project', { p_application_id: a.id }).then(function (pid) {
+      return loadAll().then(function () { go('#/projects/' + pid); toast('프로젝트로 전환했어요.'); });
+    }).catch(function (e) { fail(e, '전환하지 못했어요. 다시 시도해 주세요.'); btn.disabled = false; btn.textContent = '프로젝트로 전환 →'; });
+  }
+
+  function leadsView() {
+    var r = route();
+    if (r.id === 'analysis') return analysisView();
+    var all = state.applications;
+    var st = appStats(all);
+    var weekAgo = new Date(Date.now() - 7 * 86400000), wk = all.filter(function (a) { return a.applied_on && new Date(a.applied_on) >= weekAgo; }).length;
+    var ongoing = all.filter(function (a) { return a.status === '문의중' || a.status === '미팅'; });
+    var cnt = { all: all.length }; var statusList = APP_STATUSES.slice();
+    all.forEach(function (a) { cnt[a.status] = (cnt[a.status] || 0) + 1; if (statusList.indexOf(a.status) === -1) statusList.push(a.status); });
+    var kpi = function (l, v, h, color) { return el('div', { class: 'card kpi' }, el('span', { class: 'l', text: l }), el('span', { class: 'v', text: String(v), style: color ? 'color:' + color : null }), el('span', { class: 'h', text: h })); };
+    var tabs = el('div', { class: 'tabs' }, [['all', '전체']].concat(statusList.map(function (s) { return [s, s]; })).map(function (tb) {
+      return el('button', { class: 'tab' + (state.afilter === tb[0] ? ' active' : ''), type: 'button', onclick: function () { state.afilter = tb[0]; state.alimit = 50; render(); }, text: tb[1] + ' ' + (cnt[tb[0]] || 0) });
+    }));
+    var search = el('input', { class: 'search', type: 'search', placeholder: '의뢰명·메모 검색', value: state.asearch, 'aria-label': '검색' });
+    search.addEventListener('input', function () { state.asearch = search.value; state.alimit = 50; clearTimeout(search._t); search._t = setTimeout(function () { var pos = search.selectionStart; render(); var s2 = document.querySelector('.search'); if (s2) { s2.focus(); s2.setSelectionRange(pos, pos); } }, 250); });
+    var rows = all.filter(function (a) { return (state.afilter === 'all' || a.status === state.afilter) && appMatches(a, state.asearch); });
+    var shown = rows.slice(0, state.alimit);
+    var tbody = shown.map(function (a) {
+      var tr = el('tr', { class: 'click', tabindex: '0', onclick: function () { applicationPanelView(a); } },
+        el('td', { class: 'n', text: a.applied_on ? dateOnly(a.applied_on).slice(5) : '(미기재)' }),
+        el('td', { class: 't' }, el('span', { text: a.title })),
+        el('td', { text: a.work_type || '-' }), el('td', { class: 'n', text: a.budget_text || '-' }),
+        el('td', { class: 'n', text: a.competitors === null || a.competitors === undefined ? '-' : a.competitors + '명' }),
+        el('td', null, appBadge(a.status, STATUS_CLS)), el('td', null, appBadge(a.contact_status, CONTACT_CLS)),
+        el('td', { class: 'n', text: a.experiment || '-' }));
+      tr.addEventListener('keydown', function (e) { if (e.key === 'Enter') applicationPanelView(a); });
+      return tr;
+    });
+    var table = rows.length ? el('div', { class: 'tbl-wrap' }, el('table', { class: 'apptbl' }, el('thead', null, el('tr', null, ['지원일', '의뢰명', '작업유형', '예산(만원)', '경쟁', '상태', '연락', '실험'].map(function (h) { return el('th', { text: h }); }))), el('tbody', null, tbody)))
+      : el('div', { class: 'empty', text: all.length ? '조건에 맞는 지원 기록이 없어요.' : '아직 지원 기록이 없어요. "CSV 가져오기"로 시트의 기록을 옮기거나 "+ 지원 기록"으로 추가하세요.' });
+    var more = rows.length > shown.length ? el('div', { class: 'panel-head' }, el('span', { class: 'hint', style: 'padding:0', text: rows.length + '건 중 ' + shown.length + '건 표시' }), el('button', { class: 'linkbtn', type: 'button', onclick: function () { state.alimit += 100; render(); }, text: '더 보기 ▾' })) : null;
+    return [
+      pageHead('의뢰 · 지원 현황', '아임웹 의뢰 지원 기록과 회신·매칭 현황입니다.', el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap' },
+        el('button', { class: 'btn secondary', type: 'button', onclick: importPanel, text: 'CSV 가져오기' }),
+        el('button', { class: 'btn secondary', type: 'button', onclick: function () { go('#/leads/analysis'); }, text: '효과 분석' }),
+        el('button', { class: 'btn', type: 'button', onclick: function () { applicationPanel(null); }, text: '+ 지원 기록' }))),
+      state.error ? el('div', { class: 'msg-error', role: 'alert', text: state.error }) : null,
+      el('div', { class: 'kpis' },
+        kpi('전체 지원', st.total, '이번 주 ' + wk + '건', null), kpi('회신률', st.rate + '%', '회신 있음 ' + st.replied + '건', null),
+        kpi('진행 중', ongoing.length, '문의중 ' + ongoing.filter(function (a) { return a.status === '문의중'; }).length + ' · 미팅 ' + ongoing.filter(function (a) { return a.status === '미팅'; }).length, 'var(--blue)'),
+        kpi('매칭 완료', st.matched, '매칭률 ' + rate(st.matched, st.total) + '%', 'var(--ok)')),
+      el('div', { class: 'toolrow' }, tabs, el('span', { class: 'grow' }), search),
+      el('div', { class: 'card list' }, table, more)
+    ];
+  }
+
+  function applicationPanelView(a) {
+    var seg = el('div', { class: 'seg', role: 'group', 'aria-label': '진행 상태' }, APP_STATUSES.map(function (s) {
+      return el('button', { type: 'button', class: a.status === s ? 'on' : '', 'aria-pressed': a.status === s ? 'true' : 'false', text: s, onclick: function () {
+        var prev = a.status; a.status = s; rest('PATCH', 'applications?id=eq.' + encodeURIComponent(a.id), { status: s }, 'return=minimal').then(function () { document.querySelector('.overlay') && closePanel && closePanel(); applicationPanelView(a); render(); }).catch(function () { a.status = prev; toast('상태를 바꾸지 못했어요.'); });
+      } });
+    }));
+    var kvs = [['지원일', a.applied_on ? dateOnly(a.applied_on) : ''], ['작업유형', a.work_type], ['플랫폼', a.platform], ['의뢰 예산(만원)', a.budget_text], ['내 견적(만원)', a.bid_text], ['경쟁자 수', a.competitors === null || a.competitors === undefined ? '' : a.competitors + '명'], ['세금계산서', a.invoice_need], ['3.3% 문의', a.withholding], ['포트폴리오', a.portfolio]];
+    var grid = el('div', { class: 'panel-body', style: 'gap:14px' },
+      el('div', { style: 'display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px' }, kvs.map(function (p) { return kv(p[0], p[1]); })),
+      el('div', { class: 'field' }, el('span', { class: 'lab', text: '진행 상태' }), seg),
+      a.message ? el('div', { class: 'field' }, el('span', { class: 'lab', text: '지원 메시지' }), el('div', { class: 'bubble', text: a.message })) : null,
+      a.memo ? el('div', { class: 'field' }, el('span', { class: 'lab', text: '메모' }), el('div', { class: 'bubble', text: a.memo })) : null);
+    var conv;
+    if (a.project_id) conv = el('a', { class: 'btn secondary', href: '#/projects/' + a.project_id, style: 'text-decoration:none', text: '프로젝트 보기 →', onclick: function () { closePanel && closePanel(); } });
+    else { conv = el('button', { class: 'btn', type: 'button', text: '프로젝트로 전환 →' }); conv.addEventListener('click', function () { convertApplication(a, conv); }); }
+    var title = el('div', { class: 'panel-top' }, el('h3', { text: a.title }), el('button', { type: 'button', 'aria-label': '닫기', onclick: function () { closePanel && closePanel(); }, text: '✕' }));
+    var foot = el('div', { class: 'panel-foot' }, el('span', { class: 'sp' }), el('button', { class: 'btn secondary', type: 'button', onclick: function () { closePanel && closePanel(); applicationPanel(a); }, text: '수정' }), conv);
+    var panel = el('div', { class: 'panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': a.title }, title, grid, foot);
+    var opener = document.activeElement;
+    if (closePanel) closePanel();
+    var overlay = el('div', { class: 'overlay', onmousedown: function (e) { if (e.target === overlay) close(); } }, panel);
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    function close() { document.removeEventListener('keydown', onKey); overlay.remove(); closePanel = null; if (opener && opener.focus && document.body.contains(opener)) opener.focus(); }
+    closePanel = close; document.addEventListener('keydown', onKey); document.body.appendChild(overlay);
+  }
+
+  function analysisView() {
+    var all = state.applications, scope = state.ascope || '30';
+    var cutoff = scope === '30' ? new Date(Date.now() - 30 * 86400000) : null;
+    var list = cutoff ? all.filter(function (a) { return a.applied_on && new Date(a.applied_on) >= cutoff; }) : all;
+    var seg = el('div', { class: 'seg', role: 'group', 'aria-label': '기간' }, [['30', '최근 30일'], ['all', '전체']].map(function (o) {
+      return el('button', { type: 'button', class: scope === o[0] ? 'on' : '', text: o[1], onclick: function () { state.ascope = o[0]; render(); } });
+    }));
+    var exp = groupBy(list, function (a) { return a.experiment; });
+    var cmpRows = exp.length ? exp.map(function (s) { return el('tr', null, el('td', { class: 't' }, el('span', { text: s.key })), el('td', { text: s.total + '건' }), el('td', { text: s.replied + '건' }), el('td', { text: s.rate + '%' }), el('td', { text: s.meeting + '건' }), el('td', { text: s.matched + '건' })); })
+      : [el('tr', null, el('td', { colspan: '6', class: 'n', text: '코멘트 형식 태그가 입력된 지원 기록이 없어요. 지원 기록의 "코멘트 형식 태그"에 새 형식/기존 형식 등을 입력하면 비교할 수 있어요.' }))];
+    var small = exp.some(function (s) { return s.total < 30; });
+    var cmpCard = el('div', { class: 'card', style: 'margin-bottom:16px' },
+      el('div', { class: 'panel-head' }, el('span', { text: '코멘트 형식별 비교' })),
+      el('div', { class: 'tbl-wrap' }, el('table', { class: 'apptbl' }, el('thead', null, el('tr', null, ['구분', '지원 수', '회신', '회신률', '미팅', '매칭'].map(function (h) { return el('th', { text: h }); }))), el('tbody', null, cmpRows))),
+      small ? el('div', { class: 'hint', style: 'padding-top:12px', text: '표본이 작은 구분(30건 미만)이 있어 차이가 우연일 수 있어요. 기록이 더 쌓이면 다시 비교해 보세요.' }) : null);
+    var barCard = function (title, sub, groups) {
+      var max = Math.max.apply(null, groups.map(function (g) { return g.rate; }).concat([1]));
+      return el('div', { class: 'card' }, el('div', { class: 'panel-head' }, el('span', { text: title })), el('div', { class: 'hint', style: 'padding-top:0', text: sub }),
+        groups.length ? el('div', { class: 'bars' }, groups.map(function (g) {
+          return el('div', { class: 'bar' }, el('div', { class: 'top' }, el('span', { text: g.key }), el('span', { class: 'n', text: g.rate + '% (' + g.replied + ' / ' + g.total + ')' })),
+            el('div', { class: 'track' }, el('div', { class: 'fill' + (g.rate === max && max > 0 ? ' ok' : ''), style: 'width:' + Math.max(0, Math.round(g.rate / max * 100)) + '%' })));
+        })) : el('div', { class: 'empty', text: '데이터가 없어요.' }));
+    };
+    return [
+      pageHead('지원 효과 분석', '코멘트 형식과 조건별로 회신·매칭이 어떻게 달라지는지 비교합니다.', el('div', { style: 'display:flex;gap:8px' }, seg, el('button', { class: 'btn secondary', type: 'button', onclick: function () { go('#/leads'); }, text: '← 목록' })),
+        el('div', { class: 'crumb' }, el('a', { href: '#/leads', text: '의뢰·지원 현황' }), ' / 효과 분석')),
+      cmpCard,
+      el('div', { class: 'two' },
+        barCard('예산대별 회신률', '회신 있음 비율 (회신 / 지원)', groupBy(list, budgetBucket, ['50만원 이하', '50~150만원', '150만원 이상', '협의·미정'])),
+        barCard('경쟁자 수별 회신률', '지원 시점의 경쟁자 수', groupBy(list, compBucket, ['10명 미만', '10~30명', '30명 이상'])))
+    ];
+  }
+
+  /* ----- CSV 가져오기 ----- */
+  function parseCSV(text) {
+    var rows = [], row = [], f = '', q = false, i = 0;
+    text = text.replace(/^﻿/, '');
+    for (; i < text.length; i++) {
+      var c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+      else if (c === '"') q = true;
+      else if (c === ',') { row.push(f); f = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
+      else f += c;
+    }
+    if (f !== '' || row.length) { row.push(f); rows.push(row); }
+    return rows.filter(function (r) { return r.some(function (x) { return String(x).trim() !== ''; }); });
+  }
+  var HEADERS = { '지원일': 'applied_on', '의뢰명': 'title', '플랫폼': 'platform', '작업유형': 'work_type', '예산': 'budget_text', '예산(만원)': 'budget_text', '예산(만원, 내 견적)': 'bid_text', '내견적': 'bid_text', '세금계산서': 'invoice_need', '3.3%문의': 'withholding', '3.3% 문의': 'withholding', '경쟁자수': 'competitors', '경쟁자 수': 'competitors', '포트폴리오': 'portfolio', '상태': 'status', '연락여부': 'contact_status', '메모': 'memo', '지원메시지': 'message', '지원 메시지': 'message' };
+  function normDate(s) {
+    s = String(s || '').trim();
+    if (!s || /미기재/.test(s)) return { v: null };
+    var m = /^(\d{4})[.\-\/]\s*(\d{1,2})[.\-\/]\s*(\d{1,2})\.?$/.exec(s);
+    if (!m) return { v: null, bad: s };
+    var y = +m[1], mo = +m[2], d = +m[3], dt = new Date(y, mo - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return { v: null, bad: s };
+    return { v: y + '-' + pad(mo) + '-' + pad(d) };
+  }
+  function trimTo(s, n) { s = String(s == null ? '' : s).trim(); return s === '' ? null : s.slice(0, n); }
+  function mapCSV(rows) {
+    if (!rows.length) return { items: [], warns: ['빈 파일이에요.'], known: false };
+    var head = rows[0].map(function (h) { return String(h).replace(/\s+/g, ' ').trim(); }), idx = {};
+    head.forEach(function (h, i) { var key = HEADERS[h] || HEADERS[h.replace(/\s/g, '')]; if (key && idx[key] === undefined) idx[key] = i; });
+    if (idx.title === undefined) return { items: [], warns: ['"의뢰명" 열을 찾지 못했어요. 시트의 첫 행(머리글)이 포함된 CSV인지 확인해 주세요.'], known: false };
+    var items = [], warns = [], seen = {};
+    rows.slice(1).forEach(function (r, n) {
+      var line = n + 2, get = function (k) { return idx[k] === undefined ? '' : r[idx[k]]; };
+      var title = trimTo(get('title'), 300);
+      if (!title) { warns.push(line + '행 · 의뢰명이 비어 있어 건너뜀'); return; }
+      var d = normDate(get('applied_on'));
+      if (d.bad) warns.push(line + '행 · 지원일 "' + String(d.bad).slice(0, 20) + '"을(를) 읽지 못해 비워 둠');
+      else if (d.v === null) warns.push(line + '행 · 지원일이 비어 있음 (가져온 뒤 직접 입력)');
+      var comp = firstNumber(get('competitors'));
+      var memo = String(get('memo') || '');
+      var exp = /실험\s*\(?\s*새\s*형식/.test(memo) ? '새 형식' : null;
+      var key = (d.v || '') + '|' + title;
+      if (seen[key]) { warns.push(line + '행 · 같은 지원일·의뢰명이 파일 안에 중복되어 건너뜀'); return; }
+      seen[key] = true;
+      var status = trimTo(get('status'), 30), contact = trimTo(get('contact_status'), 30);
+      if (status && APP_STATUSES.indexOf(status) === -1) warns.push(line + '행 · 새로운 상태값 "' + status + '"을(를) 그대로 가져옴');
+      items.push({ applied_on: d.v, title: title, platform: trimTo(get('platform'), 30) || 'imweb', work_type: trimTo(get('work_type'), 100), budget_text: trimTo(get('budget_text'), 100), bid_text: trimTo(get('bid_text'), 100),
+        invoice_need: trimTo(get('invoice_need'), 30), withholding: trimTo(get('withholding'), 30), competitors: comp === null ? null : Math.round(comp), portfolio: trimTo(get('portfolio'), 200),
+        status: status || '지원완료', contact_status: contact || '대기', memo: trimTo(memo, 5000), message: trimTo(get('message'), 5000), experiment: exp });
+    });
+    return { items: items, warns: warns, known: true };
+  }
+  function importPanel() {
+    if (closePanel) closePanel();
+    var parsed = null;
+    var summary = el('div', { class: 'sum' }), warnBox = el('div', { class: 'warns', hidden: true }), preview = el('div'), fileInfo = el('div', { class: 'file', hidden: true });
+    var errBox = el('div', { class: 'form-error', role: 'alert' });
+    var input = el('input', { type: 'file', accept: '.csv,text/csv', 'aria-label': 'CSV 파일 선택' });
+    var go = el('button', { class: 'btn', type: 'button', disabled: true, text: '가져오기' });
+    var opener = document.activeElement;
+    input.addEventListener('change', function () {
+      var f = input.files[0]; if (!f) return;
+      if (f.size > 5 * 1024 * 1024) { errBox.textContent = '파일이 너무 커요(5MB 이하).'; return; }
+      var rd = new FileReader();
+      rd.onload = function () {
+        parsed = mapCSV(parseCSV(String(rd.result)));
+        errBox.textContent = ''; summary.replaceChildren(); preview.replaceChildren();
+        fileInfo.hidden = false; fileInfo.replaceChildren(el('b', { text: f.name }), el('span', { text: parsed.items.length + '건 인식' }));
+        var existing = {}; state.applications.forEach(function (a) { existing[(a.applied_on || '') + '|' + a.title] = 1; });
+        var dup = parsed.items.filter(function (it) { return existing[(it.applied_on || '') + '|' + it.title]; }).length;
+        summary.appendChild(el('span', { class: 'badge ok', text: '가져올 수 있음 ' + (parsed.items.length - dup) + '건' }));
+        summary.appendChild(el('span', { class: 'badge ' + (dup ? 'neutral' : 'neutral'), text: '이미 있음 ' + dup + '건 (건너뜀)' }));
+        if (parsed.warns.length) summary.appendChild(el('span', { class: 'badge warn', text: '확인 필요 ' + parsed.warns.length + '건' }));
+        warnBox.hidden = !parsed.warns.length; warnBox.replaceChildren();
+        warnBox.appendChild(el('b', { text: '확인이 필요한 항목' }));
+        parsed.warns.slice(0, 40).forEach(function (w) { warnBox.appendChild(el('div', { text: '• ' + w })); });
+        if (parsed.warns.length > 40) warnBox.appendChild(el('div', { text: '… 외 ' + (parsed.warns.length - 40) + '건' }));
+        if (parsed.items.length) preview.appendChild(el('table', { class: 'pv' }, el('thead', null, el('tr', null, ['지원일', '의뢰명', '예산', '상태', '경쟁'].map(function (h) { return el('th', { text: h }); }))),
+          el('tbody', null, parsed.items.slice(0, 5).map(function (it) { return el('tr', null, el('td', { text: it.applied_on ? dateOnly(it.applied_on) : '(미기재)' }), el('td', { text: it.title }), el('td', { text: it.budget_text || '-' }), el('td', { text: it.status }), el('td', { text: it.competitors === null ? '-' : String(it.competitors) })); }))));
+        go.disabled = !parsed.items.length; go.textContent = parsed.items.length ? (parsed.items.length - dup) + '건 가져오기' : '가져올 항목 없음';
+      };
+      rd.readAsText(f, 'utf-8');
+    });
+    go.addEventListener('click', function () {
+      if (!parsed || !parsed.items.length) return;
+      go.disabled = true; go.textContent = '가져오는 중…'; errBox.textContent = '';
+      var chunks = [], i;
+      for (i = 0; i < parsed.items.length; i += 200) chunks.push(parsed.items.slice(i, i + 200));
+      var added = 0;
+      chunks.reduce(function (p, ch) { return p.then(function () { return rest('POST', 'applications?on_conflict=applied_on,title', ch, 'resolution=ignore-duplicates,return=representation').then(function (saved) { added += (saved || []).length; }); }); }, Promise.resolve())
+        .then(function () { close(); toast('가져오기 완료 · 새로 ' + added + '건, 이미 있던 ' + (parsed.items.length - added) + '건은 건너뜀'); return loadAll().then(render); })
+        .catch(function () { go.disabled = false; go.textContent = '다시 시도'; errBox.textContent = '가져오지 못했어요. 일부만 저장됐을 수 있으니 같은 파일을 다시 올리면 중복 없이 이어서 저장돼요.'; });
+    });
+    var panel = el('div', { class: 'panel', style: 'width:640px', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'CSV 가져오기' },
+      el('div', { class: 'panel-top' }, el('h3', { text: '지원 현황 CSV 가져오기' }), el('button', { type: 'button', 'aria-label': '닫기', onclick: function () { close(); }, text: '✕' })),
+      el('div', { class: 'panel-body' }, el('div', { class: 'import-box' },
+        el('div', { class: 'hint', style: 'padding:0', text: '구글 시트에서 파일 → 다운로드 → 쉼표로 구분된 값(.csv)으로 내려받은 파일을 선택하세요. 같은 파일을 다시 올려도 이미 있는 건(지원일+의뢰명 동일)은 건너뛰어 중복되지 않아요.' }),
+        input, fileInfo, summary, warnBox, preview, errBox)),
+      el('div', { class: 'panel-foot' }, el('span', { class: 'sp' }), el('button', { class: 'btn secondary', type: 'button', onclick: function () { close(); }, text: '취소' }), go));
+    var overlay = el('div', { class: 'overlay', onmousedown: function (e) { if (e.target === overlay) close(); } }, panel);
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    function close() { document.removeEventListener('keydown', onKey); overlay.remove(); closePanel = null; if (opener && opener.focus && document.body.contains(opener)) opener.focus(); }
+    closePanel = close; document.addEventListener('keydown', onKey); document.body.appendChild(overlay); input.focus();
+  }
+
   function soonView(label) {
     return [pageHead(label), el('div', { class: 'card empty', text: '준비 중인 기능입니다.' })];
   }
@@ -906,6 +1243,7 @@ button.kpi:hover { border-color: #34405a; }
     else if (page === 'dashboard') body = dashboardView();
     else if (page === 'projects') body = r.id ? projectDetailView(r.id) : projectsView();
     else if (page === 'customers') body = customersView();
+    else if (page === 'leads') body = leadsView();
     else { var n = NAV.filter(function (x) { return x.id === page; })[0]; body = soonView(n ? n.label : '준비 중'); }
     app.replaceChildren(el('div', { class: 'shell' }, sidebar(page), el('main', { class: 'main' }, body)));
   }
