@@ -769,7 +769,11 @@ button.kpi:hover { border-color: #34405a; }
       .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j && j.error ? j.error : 'HTTP ' + r.status); return j; }); })
       .then(function (j) { t.cache[days] = j; })
       .catch(function (e) { t.error = '트래픽 데이터를 불러오지 못했습니다. (' + (e.message || '') + ')'; })
-      .then(function () { t.loading = false; if (state.session && route().page === 'dashboard') render(); });
+      .then(function () { t.loading = false; refreshTrafficCard(); loadTraffic(); });
+  }
+  function refreshTrafficCard() {
+    var old = document.querySelector('.traffic');
+    if (old && state.session && route().page === 'dashboard') old.replaceWith(trafficCard());
   }
   function nfmt(n) { return (Number(n) || 0).toLocaleString('ko-KR'); }
   function durText(s) { s = Math.round(s || 0); return Math.floor(s / 60) + '분 ' + (s % 60) + '초'; }
@@ -792,13 +796,13 @@ button.kpi:hover { border-color: #34405a; }
   function trafficCard() {
     var t = state.traffic;
     var seg = el('div', { class: 'seg', role: 'group', 'aria-label': '조회 기간' }, [7, 30, 90].map(function (d) {
-      return el('button', { type: 'button', class: t.days === d ? 'on' : '', 'aria-pressed': t.days === d ? 'true' : 'false', onclick: function () { t.days = d; t.error = ''; render(); }, text: d + '일' });
+      return el('button', { type: 'button', class: t.days === d ? 'on' : '', 'aria-pressed': t.days === d ? 'true' : 'false', onclick: function () { t.days = d; t.error = ''; refreshTrafficCard(); loadTraffic(); }, text: d + '일' });
     }));
     var head = el('div', { class: 'panel-head' }, el('span', { text: '홈페이지 유입 트래픽' }), seg);
     var d = t.cache[t.days];
     if (!d) {
       var body = t.error
-        ? el('div', { class: 'empty' }, el('p', { text: t.error }), el('button', { class: 'btn secondary', type: 'button', text: '다시 시도', onclick: function () { t.error = ''; render(); } }))
+        ? el('div', { class: 'empty' }, el('p', { text: t.error }), el('button', { class: 'btn secondary', type: 'button', text: '다시 시도', onclick: function () { t.error = ''; refreshTrafficCard(); loadTraffic(); } }))
         : el('div', { class: 'empty', text: '불러오는 중…' });
       return el('div', { class: 'card traffic' }, head, body);
     }
