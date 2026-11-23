@@ -799,12 +799,12 @@ button.kpi:hover { border-color: #34405a; }
     else if (cur > 0) { cls = 'up'; text = '전기간 대비 신규'; }
     return el('span', { class: 'd ' + cls, text: text });
   }
-  function barList(rows, label, value, unit) {
-    if (!rows.length) return el('div', { class: 'empty', text: '데이터가 없어요.' });
+  function barList(rows, label, value, unit, extra, emptyText) {
+    if (!rows.length) return el('div', { class: 'empty', text: emptyText || '데이터가 없어요.' });
     var max = rows.reduce(function (m, r) { return Math.max(m, value(r)); }, 0) || 1;
     return el('div', { class: 'bars' }, rows.map(function (r) {
       return el('div', { class: 'bar' },
-        el('div', { class: 'top' }, el('span', { text: label(r), title: label(r) }), el('span', { class: 'n', text: nfmt(value(r)) + unit })),
+        el('div', { class: 'top' }, el('span', { text: label(r), title: label(r) }), el('span', { class: 'n', text: nfmt(value(r)) + unit + (extra ? ' · ' + extra(r) : '') })),
         el('div', { class: 'track' }, el('div', { class: 'fill', style: 'width:' + Math.max(2, Math.round(value(r) / max * 100)) + '%' })));
     }));
   }
@@ -833,7 +833,12 @@ button.kpi:hover { border-color: #34405a; }
       el('div', null, el('div', { class: 'sub', text: '유입 소스' }),
         el('div', { class: 'naver' }, el('span', { class: 'k', text: '네이버' }), el('b', { text: nfmt(d.naverSessions) + '회' })),
         barList(d.sources, function (r) { return r.name; }, function (r) { return r.sessions; }, '회')),
-      el('div', null, el('div', { class: 'sub', text: '인기 페이지' }), barList(d.pages, function (r) { return r.path; }, function (r) { return r.views; }, '회')));
+      el('div', null, el('div', { class: 'sub', text: '인기 페이지' }), barList(d.pages, function (r) { return r.path; }, function (r) { return r.views; }, '회')),
+      el('div', null, el('div', { class: 'sub', text: '구글 검색 키워드' }),
+        d.keywords === null || d.keywords === undefined
+          ? el('div', { class: 'empty', text: '키워드 데이터를 불러오지 못했어요.' })
+          : barList(d.keywords, function (r) { return r.query; }, function (r) { return r.impressions; }, '노출', function (r) { return '클릭 ' + nfmt(r.clicks) + ' · ' + (Math.round(r.position * 10) / 10) + '위'; }, '아직 수집된 검색어가 없어요. 등록 직후에는 며칠 걸려요.'),
+        el('div', { class: 'hint', text: '네이버 검색어는 공개 API가 없어 아직 연동되지 않았어요.' })));
     return el('div', { class: 'card traffic' }, head,
       el('div', { class: 'tkpis' },
         tk('방문자', nfmt(cur.users), cur.users, prev.users),

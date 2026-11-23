@@ -49,7 +49,7 @@ async function getAccessToken() {
   const claim = b64url(
     JSON.stringify({
       iss: sa.client_email,
-      scope: 'https://www.googleapis.com/auth/analytics.readonly',
+      scope: 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/webmasters.readonly',
       aud: 'https://oauth2.googleapis.com/token',
       iat: now,
       exp: now + 3600,
@@ -74,6 +74,28 @@ type Row = { dimensionValues?: { value: string }[]; metricValues?: { value: stri
 
 const dim = (r: Row, i = 0) => r.dimensionValues?.[i]?.value ?? '';
 const met = (r: Row, i = 0) => Number(r.metricValues?.[i]?.value ?? 0);
+
+const SITE_URL = 'https://chois-lab.site/';
+
+function isoDate(daysAgo: number) {
+  return new Date(Date.now() - daysAgo * 86400000).toISOString().slice(0, 10);
+}
+
+async function fetchKeywords(token: string, days: number) {
+  const res = await fetch('https://searchconsole.googleapis.com/webmasters/v3/sites/' + encodeURIComponent(SITE_URL) + '/searchAnalytics/query', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ startDate: isoDate(days + 1), endDate: isoDate(2), dimensions: ['query'], rowLimit: 15 }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error('search console failed: ' + (data.error?.message ?? res.status));
+  return (data.rows ?? []).map((r: { keys: string[]; clicks: number; impressions: number; position: number }) => ({
+    query: r.keys[0],
+    clicks: r.clicks,
+    impressions: r.impressions,
+    position: r.position,
+  }));
+}
 
 async function buildReport(days: number) {
   const token = await getAccessToken();
@@ -135,6 +157,13 @@ async function buildReport(days: number) {
     if (totals[name]) totals[name] = { users: met(r, 0), sessions: met(r, 1), views: met(r, 2), avgSeconds: met(r, 3) };
   }
 
+  let keywords: unknown = null;
+  try {
+    keywords = await fetchKeywords(token, days);
+  } catch (e) {
+    console.error(e);
+  }
+
   const allSources = (sourceRep.rows ?? []).map((r) => ({ name: dim(r), sessions: met(r, 0) }));
   const naverSessions = allSources.filter((s) => s.name.toLowerCase().includes('naver')).reduce((sum, s) => sum + s.sessions, 0);
 
@@ -145,6 +174,7 @@ async function buildReport(days: number) {
     channels: (channelRep.rows ?? []).map((r) => ({ name: dim(r), sessions: met(r, 0), users: met(r, 1) })),
     sources: allSources.slice(0, 8),
     naverSessions,
+    keywords,
     pages: (pageRep.rows ?? []).map((r) => ({ path: dim(r), views: met(r, 0), users: met(r, 1) })),
     generatedAt: new Date().toISOString(),
   };
