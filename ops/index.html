@@ -214,6 +214,25 @@ button.kpi:hover { border-color: #34405a; }
 .fill { height: 100%; background: var(--blue); border-radius: 4px; min-width: 3px; }
 .fill.ok { background: var(--ok); }
 .hint { color: var(--muted); font-size: 12px; padding: 4px 20px 16px; line-height: 1.6; }
+.traffic { margin-top: 20px; }
+.tkpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; padding: 0 20px 16px; }
+.tk { display: flex; flex-direction: column; gap: 4px; }
+.tk .l { font-size: 12px; font-weight: 600; color: var(--text2); }
+.tk .v { font-size: 22px; font-weight: 800; }
+.tk .d { font-size: 12px; font-weight: 600; color: var(--muted); }
+.tk .d.up { color: var(--ok); }
+.tk .d.down { color: var(--danger); }
+.spark { display: flex; align-items: flex-end; gap: 2px; height: 88px; margin: 0 20px; }
+.spark i { flex: 1; min-width: 2px; background: var(--blue); border-radius: 2px 2px 0 0; opacity: 0.9; }
+.sparkcap { display: flex; justify-content: space-between; padding: 6px 20px 16px; font-size: 11px; color: var(--muted); }
+.tgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 16px; border-top: 1px solid var(--border); }
+.tgrid .sub { padding: 16px 20px 0; font-size: 13px; font-weight: 800; color: var(--text2); }
+.tgrid .bars { padding-top: 12px; }
+.bar .top span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 8px; }
+.bar .top .n { flex-shrink: 0; }
+.naver { display: flex; align-items: baseline; gap: 8px; padding: 12px 20px 0; font-size: 13px; }
+.naver b { color: var(--ok); font-size: 15px; }
+.naver .k { color: var(--muted); font-size: 12px; }
 .import-box { display: flex; flex-direction: column; gap: 12px; }
 .import-box .sum { display: flex; gap: 8px; flex-wrap: wrap; }
 .import-box .warns { background: rgba(245,181,68,0.1); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: var(--text2); line-height: 1.7; max-height: 150px; overflow: auto; }
@@ -285,7 +304,7 @@ button.kpi:hover { border-color: #34405a; }
     { id: 'leads', label: '의뢰 현황', icon: 'M3 3v18h18M7 14l4-4 4 4 5-5' }
   ];
 
-  var state = { session: null, inquiries: [], projects: [], customers: [], applications: [], loaded: false, error: '', filter: 'all', pfilter: 'all', afilter: 'all', asearch: '', alimit: 50, lastApp: {} };
+  var state = { session: null, inquiries: [], projects: [], customers: [], applications: [], loaded: false, error: '', filter: 'all', pfilter: 'all', afilter: 'all', asearch: '', alimit: 50, lastApp: {}, traffic: { days: 30, cache: {}, loading: false, error: '' } };
   var app = document.getElementById('app');
   var closePanel = null;
 
@@ -371,7 +390,7 @@ button.kpi:hover { border-color: #34405a; }
   }
   function signOut() {
     if (closePanel) closePanel();
-    saveSession(null); state.inquiries = []; state.projects = []; state.customers = []; state.applications = []; state.loaded = false; render();
+    saveSession(null); state.inquiries = []; state.projects = []; state.customers = []; state.applications = []; state.traffic = { days: 30, cache: {}, loading: false, error: '' }; state.loaded = false; render();
   }
   function api(path, opts, retried) {
     opts = opts || {};
@@ -735,8 +754,75 @@ button.kpi:hover { border-color: #34405a; }
         kpi('미수금 합계', won(unpaidSum), unpaidProjects + '개 프로젝트', unpaidSum ? 'var(--danger)' : null, '#/projects'),
         kpi('세금 항목 미발행', invPending, '발행 완료 전 항목', null, '#/projects'),
         kpi('플랜 만료 임박', planCount, '30일 이내·만료 포함', planCount ? 'var(--warn)' : null, '#/projects')),
-      el('div', { class: 'two' }, projList, inqList)
+      el('div', { class: 'two' }, projList, inqList),
+      trafficCard()
     ];
+  }
+
+  /* ---------- traffic (GA4 via Edge Function ga4-report) ---------- */
+  var CHANNEL_KO = { 'Direct': '직접 유입', 'Organic Search': '검색(자연)', 'Organic Social': '소셜', 'Referral': '다른 사이트', 'Paid Search': '유료 검색', 'Paid Social': '유료 소셜', 'Email': '이메일', 'Unassigned': '미분류', 'Display': '디스플레이', 'Organic Video': '동영상', 'Cross-network': '크로스 네트워크' };
+  function loadTraffic() {
+    var t = state.traffic, days = t.days;
+    if (t.cache[days] || t.loading || t.error) return;
+    t.loading = true;
+    api('/functions/v1/ga4-report', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ days: days }) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j && j.error ? j.error : 'HTTP ' + r.status); return j; }); })
+      .then(function (j) { t.cache[days] = j; })
+      .catch(function (e) { t.error = '트래픽 데이터를 불러오지 못했습니다. (' + (e.message || '') + ')'; })
+      .then(function () { t.loading = false; if (state.session && route().page === 'dashboard') render(); });
+  }
+  function nfmt(n) { return (Number(n) || 0).toLocaleString('ko-KR'); }
+  function durText(s) { s = Math.round(s || 0); return Math.floor(s / 60) + '분 ' + (s % 60) + '초'; }
+  function gaDate(s) { return s && s.length === 8 ? Number(s.slice(4, 6)) + '/' + Number(s.slice(6, 8)) : (s || ''); }
+  function deltaEl(cur, prev) {
+    var cls = 'flat', text = '전기간 대비 -';
+    if (prev > 0) { var p = Math.round((cur - prev) / prev * 100); cls = p > 0 ? 'up' : p < 0 ? 'down' : 'flat'; text = '전기간 대비 ' + (p > 0 ? '+' : '') + p + '%'; }
+    else if (cur > 0) { cls = 'up'; text = '전기간 대비 신규'; }
+    return el('span', { class: 'd ' + cls, text: text });
+  }
+  function barList(rows, label, value, unit) {
+    if (!rows.length) return el('div', { class: 'empty', text: '데이터가 없어요.' });
+    var max = rows.reduce(function (m, r) { return Math.max(m, value(r)); }, 0) || 1;
+    return el('div', { class: 'bars' }, rows.map(function (r) {
+      return el('div', { class: 'bar' },
+        el('div', { class: 'top' }, el('span', { text: label(r), title: label(r) }), el('span', { class: 'n', text: nfmt(value(r)) + unit })),
+        el('div', { class: 'track' }, el('div', { class: 'fill', style: 'width:' + Math.max(2, Math.round(value(r) / max * 100)) + '%' })));
+    }));
+  }
+  function trafficCard() {
+    var t = state.traffic;
+    var seg = el('div', { class: 'seg', role: 'group', 'aria-label': '조회 기간' }, [7, 30, 90].map(function (d) {
+      return el('button', { type: 'button', class: t.days === d ? 'on' : '', 'aria-pressed': t.days === d ? 'true' : 'false', onclick: function () { t.days = d; t.error = ''; render(); }, text: d + '일' });
+    }));
+    var head = el('div', { class: 'panel-head' }, el('span', { text: '홈페이지 유입 트래픽' }), seg);
+    var d = t.cache[t.days];
+    if (!d) {
+      var body = t.error
+        ? el('div', { class: 'empty' }, el('p', { text: t.error }), el('button', { class: 'btn secondary', type: 'button', text: '다시 시도', onclick: function () { t.error = ''; render(); } }))
+        : el('div', { class: 'empty', text: '불러오는 중…' });
+      return el('div', { class: 'card traffic' }, head, body);
+    }
+    var cur = d.totals.current, prev = d.totals.previous;
+    var tk = function (l, v, c, p) { return el('div', { class: 'tk' }, el('span', { class: 'l', text: l }), el('span', { class: 'v', text: v }), deltaEl(c, p)); };
+    var maxS = d.daily.reduce(function (m, x) { return Math.max(m, x.sessions); }, 0) || 1;
+    var spark = el('div', { class: 'spark', role: 'img', 'aria-label': '일별 방문 수' }, d.daily.map(function (x) {
+      return el('i', { style: 'height:' + Math.max(3, Math.round(x.sessions / maxS * 100)) + '%', title: gaDate(x.date) + ' · 방문 ' + x.sessions + '회' });
+    }));
+    var cap = d.daily.length ? el('div', { class: 'sparkcap' }, el('span', { text: gaDate(d.daily[0].date) }), el('span', { text: '일별 방문' }), el('span', { text: gaDate(d.daily[d.daily.length - 1].date) })) : null;
+    var grid = el('div', { class: 'tgrid' },
+      el('div', null, el('div', { class: 'sub', text: '유입 채널' }), barList(d.channels, function (r) { return CHANNEL_KO[r.name] || r.name; }, function (r) { return r.sessions; }, '회')),
+      el('div', null, el('div', { class: 'sub', text: '유입 소스' }),
+        el('div', { class: 'naver' }, el('span', { class: 'k', text: '네이버' }), el('b', { text: nfmt(d.naverSessions) + '회' })),
+        barList(d.sources, function (r) { return r.name; }, function (r) { return r.sessions; }, '회')),
+      el('div', null, el('div', { class: 'sub', text: '인기 페이지' }), barList(d.pages, function (r) { return r.path; }, function (r) { return r.views; }, '회')));
+    return el('div', { class: 'card traffic' }, head,
+      el('div', { class: 'tkpis' },
+        tk('방문자', nfmt(cur.users), cur.users, prev.users),
+        tk('방문(세션)', nfmt(cur.sessions), cur.sessions, prev.sessions),
+        tk('페이지뷰', nfmt(cur.views), cur.views, prev.views),
+        tk('평균 체류', durText(cur.avgSeconds), cur.avgSeconds, prev.avgSeconds)),
+      spark, cap, grid,
+      el('div', { class: 'hint', text: 'GA4 기준 · 5분마다 갱신 · 당일 수치는 늦게 반영될 수 있어요.' }));
   }
 
   function rowEl(q, selected, onclick) {
@@ -1246,6 +1332,7 @@ button.kpi:hover { border-color: #34405a; }
     else if (page === 'leads') body = leadsView();
     else { var n = NAV.filter(function (x) { return x.id === page; })[0]; body = soonView(n ? n.label : '준비 중'); }
     app.replaceChildren(el('div', { class: 'shell' }, sidebar(page), el('main', { class: 'main' }, body)));
+    if (state.loaded && page === 'dashboard') loadTraffic();
   }
 
   function start() {
