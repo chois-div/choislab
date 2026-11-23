@@ -1097,18 +1097,20 @@ select.cf-input { appearance: none; background-image: linear-gradient(45deg, tra
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: flex-end;
+  align-items: stretch;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .floating-cta.is-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
 .float-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   background: var(--yellow);
   border: none;
   border-radius: var(--radius-pill);
-  padding: 14px 22px 14px 16px;
+  padding: 0 22px 0 16px;
+  height: 48px;
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
@@ -1124,6 +1126,8 @@ select.cf-input { appearance: none; background-image: linear-gradient(45deg, tra
   color: var(--white);
 }
 .float-btn.primary-float:hover { background: #4a3fe0; }
+.float-btn.kakao-float { background: #FEE500; color: #191919; }
+.float-btn.kakao-float svg { width: 18px; height: 18px; flex-shrink: 0; }
 
 /* FOOTER */
 footer {
@@ -1383,8 +1387,8 @@ footer {
 
   /* FLOATING */
   .floating-cta { bottom: 20px; right: 16px; gap: 6px; }
-  .float-btn { padding: 10px 16px; font-size: 11px; }
-  .float-btn:first-child { display: none; } /* 카카오 버튼만 숨김, 문의하기만 노출 */
+  .float-btn { padding: 0 16px; height: 36px; font-size: 11px; }
+  .float-btn.kakao-float svg { width: 15px; height: 15px; }
 
   /* FOOTER */
   footer { padding: 48px 20px 32px; }
@@ -2014,11 +2018,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- FLOATING BUTTONS -->
 <div class="floating-cta">
-  <a href="https://pf.kakao.com/_xaGxaAn" target="_blank" class="float-btn">
-    <span>💬</span>
+  <a href="https://pf.kakao.com/_xaGxaAn" target="_blank" rel="noopener" class="float-btn kakao-float">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.48 3 2 6.58 2 11c0 2.86 1.87 5.37 4.68 6.78-.2.74-.74 2.68-.85 3.1-.13.52.19.51.4.37.17-.11 2.65-1.8 3.73-2.53.67.1 1.35.15 2.04.15 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/></svg>
     <span>카카오 상담</span>
   </a>
-  <a href="https://pf.kakao.com/_xaGxaAn" target="_blank" class="float-btn primary-float">
+  <a href="#contact" class="float-btn primary-float">
     <span>✉</span>
     <span>문의하기</span>
   </a>
