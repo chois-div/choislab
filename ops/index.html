@@ -261,6 +261,21 @@ button.kpi:hover { border-color: #34405a; }
   .grid4 { grid-template-columns: 1fr 1fr; }
   .cols2, .two { grid-template-columns: 1fr; }
   .panel { width: 100%; }
+  .page-head .titles { flex: 1 1 100%; }
+  .kpis { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpi { padding: 14px 16px; }
+  .kpi .v { font-size: 22px; }
+  .toolrow .grow { display: none; }
+  .toolrow .search { width: 100%; }
+}
+@media (max-width: 640px) {
+  .apptbl.apps th:nth-child(3), .apptbl.apps td:nth-child(3),
+  .apptbl.apps th:nth-child(4), .apptbl.apps td:nth-child(4),
+  .apptbl.apps th:nth-child(5), .apptbl.apps td:nth-child(5),
+  .apptbl.apps th:nth-child(8), .apptbl.apps td:nth-child(8) { display: none; }
+  .apptbl.apps th, .apptbl.apps td { padding: 10px 8px; }
+  .apptbl.apps td.t { max-width: none; }
+  .apptbl.apps td.t span { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 }
 </style>
 </head>
@@ -1136,7 +1151,7 @@ button.kpi:hover { border-color: #34405a; }
       tr.addEventListener('keydown', function (e) { if (e.key === 'Enter') applicationPanelView(a); });
       return tr;
     });
-    var table = rows.length ? el('div', { class: 'tbl-wrap' }, el('table', { class: 'apptbl' }, el('thead', null, el('tr', null, ['지원일', '의뢰명', '작업유형', '예산(만원)', '경쟁', '상태', '연락', '실험'].map(function (h) { return el('th', { text: h }); }))), el('tbody', null, tbody)))
+    var table = rows.length ? el('div', { class: 'tbl-wrap' }, el('table', { class: 'apptbl apps' }, el('thead', null, el('tr', null, ['지원일', '의뢰명', '작업유형', '예산(만원)', '경쟁', '상태', '연락', '실험'].map(function (h) { return el('th', { text: h }); }))), el('tbody', null, tbody)))
       : el('div', { class: 'empty', text: all.length ? '조건에 맞는 지원 기록이 없어요.' : '아직 지원 기록이 없어요. "CSV 가져오기"로 시트의 기록을 옮기거나 "+ 지원 기록"으로 추가하세요.' });
     var more = rows.length > shown.length ? el('div', { class: 'panel-head' }, el('span', { class: 'hint', style: 'padding:0', text: rows.length + '건 중 ' + shown.length + '건 표시' }), el('button', { class: 'linkbtn', type: 'button', onclick: function () { state.alimit += 100; render(); }, text: '더 보기 ▾' })) : null;
     return [
