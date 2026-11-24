@@ -230,6 +230,12 @@ button.kpi:hover { border-color: #34405a; }
 .tgrid .bars { padding-top: 12px; }
 .bar .top span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 8px; }
 .bar .top .n { flex-shrink: 0; }
+.daily { padding: 0 20px 16px; }
+.daily summary { cursor: pointer; color: var(--blue); font-weight: 600; font-size: 13px; padding: 4px 0; }
+.daily .tbl-wrap { max-height: 320px; overflow: auto; margin-top: 8px; border: 1px solid var(--border); border-radius: 10px; }
+.daily .apptbl th, .daily .apptbl td { text-align: right; white-space: nowrap; }
+.daily .apptbl th:first-child, .daily .apptbl td:first-child { text-align: left; }
+.daily .apptbl th { position: sticky; top: 0; background: var(--raised); }
 .naver { display: flex; align-items: baseline; gap: 8px; padding: 12px 20px 0; font-size: 13px; }
 .naver b { color: var(--ok); font-size: 15px; }
 .naver .k { color: var(--muted); font-size: 12px; }
@@ -828,6 +834,15 @@ button.kpi:hover { border-color: #34405a; }
       return el('i', { style: 'height:' + Math.max(3, Math.round(x.sessions / maxS * 100)) + '%', title: gaDate(x.date) + ' · 방문 ' + x.sessions + '회' });
     }));
     var cap = d.daily.length ? el('div', { class: 'sparkcap' }, el('span', { text: gaDate(d.daily[0].date) }), el('span', { text: '일별 방문' }), el('span', { text: gaDate(d.daily[d.daily.length - 1].date) })) : null;
+    var DOW = ['일', '월', '화', '수', '목', '금', '토'];
+    var dayLabel = function (s) { return s && s.length === 8 ? gaDate(s) + ' (' + DOW[new Date(Number(s.slice(0, 4)), Number(s.slice(4, 6)) - 1, Number(s.slice(6, 8))).getDay()] + ')' : s; };
+    var dailyTable = d.daily.length ? el('details', { class: 'daily' },
+      el('summary', { text: '일별 상세 보기 (' + d.daily.length + '일)' }),
+      el('div', { class: 'tbl-wrap' }, el('table', { class: 'apptbl' },
+        el('thead', null, el('tr', null, ['날짜', '방문자', '방문(세션)', '페이지뷰'].map(function (h) { return el('th', { text: h }); }))),
+        el('tbody', null, d.daily.slice().reverse().map(function (x) {
+          return el('tr', null, el('td', { text: dayLabel(x.date) }), el('td', { text: nfmt(x.users) }), el('td', { text: nfmt(x.sessions) }), el('td', { text: nfmt(x.views) }));
+        }))))) : null;
     var grid = el('div', { class: 'tgrid' },
       el('div', null, el('div', { class: 'sub', text: '유입 채널' }), barList(d.channels, function (r) { return CHANNEL_KO[r.name] || r.name; }, function (r) { return r.sessions; }, '회')),
       el('div', null, el('div', { class: 'sub', text: '유입 소스' }),
@@ -845,7 +860,7 @@ button.kpi:hover { border-color: #34405a; }
         tk('방문(세션)', nfmt(cur.sessions), cur.sessions, prev.sessions),
         tk('페이지뷰', nfmt(cur.views), cur.views, prev.views),
         tk('평균 체류', durText(cur.avgSeconds), cur.avgSeconds, prev.avgSeconds)),
-      spark, cap, grid,
+      spark, cap, dailyTable, grid,
       el('div', { class: 'hint', text: 'GA4 기준 · 5분마다 갱신 · 당일 수치는 늦게 반영될 수 있어요.' }));
   }
 
